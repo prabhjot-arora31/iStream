@@ -9,20 +9,6 @@ const MovieDetails = ({ MovieDetail }) => {
         flexDirection: "column",
       }}
     >
-      <h1 className="title" style={{ textAlign: "center" }}>
-        {MovieDetail.Title}
-      </h1>
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        <img src={MovieDetail.Cover} style={{ maxWidth: "660px" }} />
-        <p>{MovieDetail.Description}</p>
-      </div>
       <div style={{ height: "500px" }}>
         <iframe
           src={MovieDetail.Watch}
@@ -35,6 +21,58 @@ const MovieDetails = ({ MovieDetail }) => {
           allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
+      </div>
+      <h1 className="title" style={{ textAlign: "center" }}>
+        {MovieDetail.Title}
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {/* <img src={MovieDetail.Cover} style={{ maxWidth: "660px" }} /> */}
+        <p
+          style={{
+            margin: 0,
+            fontWeight: "normal",
+            fontSize: "17px",
+            maxWidth: "800px",
+            textAlign: "center",
+            marginBottom: "25px",
+          }}
+        >
+          {MovieDetail.Description}
+        </p>
+        <div style={{ fontWeight: "bold", fontSize: "20px" }}>
+          {MovieDetail.Release} | {MovieDetail.Duration} min |{" "}
+          {MovieDetail.Country}
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "0.6rem",
+          justifyContent: "center",
+        }}
+      >
+        {MovieDetail.Genre.split(",").map((ele, id) => {
+          return (
+            <p
+              style={{
+                padding: "0.4rem",
+                backgroundColor: "red",
+                color: "white",
+              }}
+            >
+              {ele}
+            </p>
+          );
+        })}
       </div>
     </div>
   );

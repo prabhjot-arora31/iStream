@@ -7,6 +7,11 @@ import axios from "axios";
 import MovieCard from "./components/MovieCard";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MovieDetails from "./components/MovieDetails";
+import { FaSpinner } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
+import { LuLoader2 } from "react-icons/lu";
+import { TbLoaderQuarter } from "react-icons/tb";
+import { BiLoaderCircle } from "react-icons/bi";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -50,7 +55,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <Header /> */}
+        <Header />
         <div
           style={{
             margin: "10px auto",
@@ -98,13 +103,15 @@ function App() {
                   justifyContent: "center",
                 }}
               >
-                {!isLoading
-                  ? movies.map((ele, id) => {
-                      return (
-                        <MovieCard data={ele} getMovieDetail={getMovieDetail} />
-                      );
-                    })
-                  : "Loading"}
+                {!isLoading ? (
+                  movies.map((ele, id) => {
+                    return (
+                      <MovieCard data={ele} getMovieDetail={getMovieDetail} />
+                    );
+                  })
+                ) : (
+                  <BiLoaderCircle size={60} />
+                )}
               </div>
             }
           />

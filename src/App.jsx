@@ -24,6 +24,8 @@ function App() {
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
   };
@@ -31,14 +33,29 @@ function App() {
     setIsLoading(true);
     try {
       const data = await axios.get(
-        `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=1 `
+        `
+        https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${currentPage} 
+        `
       );
       console.log("by name: " + data.data.result.data);
+      console.log("all:", data.data);
+      setCurrentPage(data.data.result.page);
       setMovies(data.data.result.data);
+      setTotalPages(data.data.result.pages);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
     }
+  };
+  const next = async () => {
+    localStorage.setItem("common_page", currentPage + 1);
+    setIsLoading(true);
+    setCurrentPage((prev) => prev + 1);
+  };
+  const prev = async () => {
+    localStorage.setItem("common_page", currentPage - 1);
+    setIsLoading(true);
+    setCurrentPage((prev) => prev - 1);
   };
   const fetchIt = async () => {
     setIsLoading(true);
@@ -53,6 +70,9 @@ function App() {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    fetchByName();
+  }, [currentPage]);
   useEffect(() => {
     fetchIt();
     return () => {};
@@ -111,11 +131,76 @@ function App() {
                   </button>
                 </div>
                 {!isLoading ? (
-                  movies.map((ele, id) => {
-                    return (
-                      <MovieCard data={ele} getMovieDetail={getMovieDetail} />
-                    );
-                  })
+                  <div>
+                    {currentPage != 0 && (
+                      <p style={{ textAlign: "center" }}>
+                        Current Page: {currentPage}
+                      </p>
+                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "0.7rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {movies.length > 0 ? (
+                        movies.map((ele, id) => {
+                          return (
+                            <MovieCard
+                              data={ele}
+                              getMovieDetail={getMovieDetail}
+                            />
+                          );
+                        })
+                      ) : (
+                        <p>No results found!</p>
+                      )}
+                    </div>
+                    {currentPage != 0 && movies.length > 0 && (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "0.4rem",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: "0.8rem",
+                        }}
+                      >
+                        {currentPage != 1 && (
+                          <button
+                            onClick={() => prev()}
+                            style={{
+                              backgroundColor: "red",
+                              color: "white",
+                              padding: "0.8rem",
+                              border: "none",
+                              cursor: "pointer",
+                              borderRadius: "0.3rem",
+                            }}
+                          >
+                            Prev
+                          </button>
+                        )}
+                        1 .. {totalPages}
+                        <button
+                          onClick={() => next()}
+                          style={{
+                            backgroundColor: "red",
+                            color: "white",
+                            padding: "0.8rem",
+                            border: "none",
+                            cursor: "pointer",
+                            borderRadius: "0.3rem",
+                          }}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
                 )}

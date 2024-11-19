@@ -35,7 +35,11 @@ const MovieCard = ({ data, getMovieDetail }) => {
           HD
         </h3>
         <img
-          src={data.Thumbnail}
+          src={
+            data.Thumbnail
+              ? data.Thumbnail
+              : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+          }
           style={{ width: "100%", objectFit: "cover" }}
         />
       </div>

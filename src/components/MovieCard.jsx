@@ -8,6 +8,10 @@ const MovieCard = ({ data, getMovieDetail }) => {
       onClick={() => {
         getMovieDetail(data);
         navigate("/detail/" + data.Id);
+        let movies = JSON.parse(localStorage.getItem("movies")) || [];
+        if (movies.find((movie) => movie.Id === data.Id)) return;
+        movies.push(data);
+        localStorage.setItem("movies", JSON.stringify(movies));
       }}
       style={{
         cursor: "pointer",

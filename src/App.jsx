@@ -12,6 +12,9 @@ import { FiLoader } from "react-icons/fi";
 import { LuLoader2 } from "react-icons/lu";
 import { TbLoaderQuarter } from "react-icons/tb";
 import { BiLoaderCircle } from "react-icons/bi";
+import Country from "./pages/Country";
+import MoviesByCountry from "./pages/MoviesByCountry";
+import History from "./pages/History";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -56,40 +59,7 @@ function App() {
     <>
       <BrowserRouter>
         <Header />
-        <div
-          style={{
-            margin: "10px auto",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            gap: 7,
-            marginBottom: "20px",
-          }}
-        >
-          <input
-            type="text"
-            style={{
-              padding: "0.5rem",
-              borderRadius: "5px",
-              border: "1px solid black",
-            }}
-            value={Search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Enter any movie/series name.."
-          />
-          <button
-            style={{
-              backgroundColor: "yellow",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              fetchByName();
-            }}
-          >
-            Search
-          </button>
-        </div>
+
         <Routes>
           <Route
             path="/"
@@ -103,6 +73,40 @@ function App() {
                   justifyContent: "center",
                 }}
               >
+                <div
+                  style={{
+                    margin: "10px auto",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 7,
+                    marginBottom: "20px",
+                  }}
+                >
+                  <input
+                    type="text"
+                    style={{
+                      padding: "0.5rem",
+                      borderRadius: "5px",
+                      border: "1px solid black",
+                    }}
+                    value={Search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Enter any movie/series name.."
+                  />
+                  <button
+                    style={{
+                      backgroundColor: "yellow",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      fetchByName();
+                    }}
+                  >
+                    Search
+                  </button>
+                </div>
                 {!isLoading ? (
                   movies.map((ele, id) => {
                     return (
@@ -118,6 +122,15 @@ function App() {
           <Route
             path="/detail/:id"
             element={<MovieDetails MovieDetail={MovieDetail} />}
+          />
+          <Route path="/country" element={<Country />} />
+          <Route
+            path="/country/:countryName"
+            element={<MoviesByCountry getMovieDetail={getMovieDetail} />}
+          />
+          <Route
+            path="/history"
+            element={<History getMovieDetail={getMovieDetail} />}
           />
         </Routes>
       </BrowserRouter>

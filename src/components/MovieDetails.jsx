@@ -60,7 +60,7 @@ const MovieDetails = ({ MovieDetail }) => {
           justifyContent: "center",
         }}
       >
-        {MovieDetail.Genre.split(",").map((ele, id) => {
+        {MovieDetail.Genre?.split(",").map((ele, id) => {
           return (
             <p
               style={{

@@ -43,7 +43,7 @@ const History = ({ getMovieDetail }) => {
         }}
       >
         {history.length > 0 ? (
-          history.map((ele, id) => {
+          history.reverse().map((ele, id) => {
             return <MovieCard data={ele} getMovieDetail={getMovieDetail} />;
           })
         ) : (

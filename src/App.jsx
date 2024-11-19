@@ -15,6 +15,9 @@ import { BiLoaderCircle } from "react-icons/bi";
 import Country from "./pages/Country";
 import MoviesByCountry from "./pages/MoviesByCountry";
 import History from "./pages/History";
+import Genres from "./pages/Genres";
+import MoviesByGenres from "./pages/MoviesByGenres";
+import Puff from "react-loading-icons/dist/esm/components/puff";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -114,7 +117,7 @@ function App() {
                     );
                   })
                 ) : (
-                  <BiLoaderCircle size={60} />
+                  <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
                 )}
               </div>
             }
@@ -131,6 +134,11 @@ function App() {
           <Route
             path="/history"
             element={<History getMovieDetail={getMovieDetail} />}
+          />
+          <Route path="/genre" element={<Genres />} />
+          <Route
+            path="/genres/:genre"
+            element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
           />
         </Routes>
       </BrowserRouter>

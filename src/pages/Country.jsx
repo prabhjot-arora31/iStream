@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import Puff from "react-loading-icons/dist/esm/components/puff";
 import { useNavigate } from "react-router-dom";
 
 const Country = () => {
@@ -35,7 +36,9 @@ const Country = () => {
     <div>
       <h2 style={{ textAlign: "center" }}>Search Movies By Countries</h2>
       {isLoading ? (
-        "Loading"
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
+        </div>
       ) : (
         <div
           style={{

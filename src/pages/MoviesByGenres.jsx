@@ -1,49 +1,49 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useActionData, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
 import { BiLoaderCircle } from "react-icons/bi";
+import Circles from "react-loading-icons/dist/esm/components/circles";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 
-const MoviesByCountry = ({ getMovieDetail }) => {
-  const { countryName } = useParams();
+const MoviesByGenres = ({ getMovieDetail }) => {
+  const { genre } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [movies, setMovies] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(
-    localStorage.getItem("country_page") || 0
+    localStorage.getItem("genre_page") || 0
   );
-  const [movieDetail, setMovieDetail] = useState({});
-  const [nextPage, setNextPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const next = async () => {
-    localStorage.setItem("country_page", currentPage + 1);
+    localStorage.setItem("genre_page", currentPage + 1);
     setIsLoading(true);
     setCurrentPage((prev) => prev + 1);
   };
   const prev = async () => {
-    localStorage.setItem("country_page", currentPage - 1);
+    localStorage.setItem("genre_page", currentPage - 1);
     setIsLoading(true);
     setCurrentPage((prev) => prev - 1);
   };
-  const fetchThroughCountryName = async () => {
+  const [movies, setMovies] = useState([]);
+  const fetchMoviesByGenre = async () => {
     const { data } = await axios.get(`
-      https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/countries/${countryName}/${currentPage}
-        `);
+        https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/genres/${genre}/${currentPage}`);
     setMovies(data.result.data);
-    getMovieDetail(data.result.data);
     setCurrentPage(data.result.page);
     setTotalPages(data.result.pages);
+
+    // getMovieDetail(data.result.data);
     setIsLoading(false);
   };
   useEffect(() => {
-    fetchThroughCountryName();
+    fetchMoviesByGenre();
 
     return () => {};
   }, [currentPage]);
 
   return (
-    <>
+    <div>
       <h4 style={{ textAlign: "center" }}>Current Page: {currentPage}</h4>
+
       <div
         style={{
           display: "flex",
@@ -58,6 +58,7 @@ const MoviesByCountry = ({ getMovieDetail }) => {
             return <MovieCard data={ele} getMovieDetail={getMovieDetail} />;
           })
         ) : (
+          //   <BiLoaderCircle size={60} />
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
           </div>
@@ -104,8 +105,8 @@ const MoviesByCountry = ({ getMovieDetail }) => {
           Next
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
-export default MoviesByCountry;
+export default MoviesByGenres;

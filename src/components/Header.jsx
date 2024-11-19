@@ -26,6 +26,12 @@ const Header = () => {
             Country
           </h3>
         </Link>
+        <Link to={"/genre"} style={{ textDecoration: "none" }}>
+          {" "}
+          <h3 style={{ cursor: "pointer" }} className="nav-link">
+            Genre
+          </h3>
+        </Link>
       </div>
     </div>
   );

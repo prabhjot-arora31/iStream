@@ -215,7 +215,12 @@ function App() {
           />
           <Route
             path="/detail/:id"
-            element={<MovieDetails MovieDetail={MovieDetail} />}
+            element={
+              <MovieDetails
+                MovieDetail={MovieDetail}
+                getMovieDetail={getMovieDetail}
+              />
+            }
           />
           <Route path="/country" element={<Country />} />
           <Route

@@ -1,11 +1,17 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MovieCard = ({ data, getMovieDetail }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <div
       onClick={() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "instant", // For instant scrolling, though "instant" is not a valid value
+        });
         getMovieDetail(data);
         navigate("/detail/" + data.Id);
         let movies = JSON.parse(localStorage.getItem("movies")) || [];

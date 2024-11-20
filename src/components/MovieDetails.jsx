@@ -1,16 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./MovieDetails.css";
-
-const MovieDetails = ({ MovieDetail }) => {
+import axios from "axios";
+import Puff from "react-loading-icons/dist/esm/components/puff";
+import MovieCard from "./MovieCard";
+const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
   // Fetch and parse movies from localStorage safely
   const movies = JSON.parse(localStorage.getItem("movies")) || [];
-
+  const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
   // Default to the first movie in localStorage if no MovieDetail is provided
   const movieToRender =
     Object.keys(MovieDetail).length > 0
       ? MovieDetail
       : movies[movies.length - 1];
-
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
+  const fetchRecommendedMovies = async () => {
+    setRecommendedMovieLoading(true);
+    const { data } = await axios.get(
+      `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/recommendations/${movieToRender.Id}`
+    );
+    setRecommendedMovieLoading(false);
+    setRecommendedMovies(data.result.data);
+  };
+  useEffect(() => {
+    fetchRecommendedMovies();
+    return () => {};
+  }, [movieToRender.Id]);
   useEffect(() => {
     console.log("movie detail:", movieToRender);
 
@@ -143,6 +157,28 @@ const MovieDetails = ({ MovieDetail }) => {
               <p style={{ margin: 0 }}>{genre}</p>
             </div>
           ))}
+        </div>
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <h2 style={{ textAlign: "center" }}>You may also like</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "0.6rem",
+          }}
+        >
+          {recommendedMovieLoading ? (
+            <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
+          ) : recommendedMovies.length > 0 ? (
+            recommendedMovies.map((movie, id) => {
+              return <MovieCard data={movie} getMovieDetail={getMovieDetail} />;
+            })
+          ) : (
+            <p>No recommendations!!</p>
+          )}
         </div>
       </div>
     </div>

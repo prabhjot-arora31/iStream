@@ -136,7 +136,7 @@ const History = ({ getMovieDetail }) => {
               }}
             >
               <h3 style={{ textAlign: "center" }}>Search History</h3>
-              {JSON.parse(localStorage.getItem("searches")).length > 0 && (
+              {JSON.parse(localStorage.getItem("searches"))?.length > 0 && (
                 <button
                   onClick={() => {
                     localStorage.setItem("searches", JSON.stringify([]));

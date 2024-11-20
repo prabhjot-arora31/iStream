@@ -35,6 +35,10 @@ const MovieCard = ({ data, getMovieDetail }) => {
             position: "absolute",
             backgroundColor: "yellow",
             right: 0,
+            paddingLeft: "0.2rem",
+            paddingRight: "0.2rem",
+            paddingTop: "0.1rem",
+            paddingBottom: "0.1rem",
             top: 0,
           }}
         >

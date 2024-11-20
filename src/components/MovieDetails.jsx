@@ -59,7 +59,7 @@ const MovieDetails = ({ MovieDetail }) => {
         />
       </div>
 
-      <div style={{ marginLeft: "0.6rem" }}>
+      <div style={{ marginLeft: "0.6rem", marginTop: "1.7rem" }}>
         <h1
           className="title"
           style={{

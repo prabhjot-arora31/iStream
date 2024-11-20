@@ -29,12 +29,12 @@ function App() {
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
   };
-  const fetchByName = async () => {
+  const fetchByName = async (index) => {
     setIsLoading(true);
     try {
       const data = await axios.get(
         `
-        https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${currentPage} 
+        https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${index} 
         `
       );
       console.log("by name: " + data.data.result.data);
@@ -61,7 +61,7 @@ function App() {
     setIsLoading(true);
     try {
       const data = await axios.get(
-        "https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/1"
+        "https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/4"
       );
       console.log(data.data.result.data);
       setMovies(data.data.result.data);
@@ -71,12 +71,18 @@ function App() {
     }
   };
   useEffect(() => {
-    fetchByName();
+    if (currentPage == 0) fetchIt();
+    else fetchByName(currentPage);
+    return () => {
+      setMovies([]);
+    };
   }, [currentPage]);
-  useEffect(() => {
-    fetchIt();
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   fetchByName();
+  //   return () => {
+  //     setMovies([]);
+  //   };
+  // }, [currentPage]);
 
   return (
     <>
@@ -124,7 +130,7 @@ function App() {
                       cursor: "pointer",
                     }}
                     onClick={() => {
-                      fetchByName();
+                      fetchByName(1);
                     }}
                   >
                     Search

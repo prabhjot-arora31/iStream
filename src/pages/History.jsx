@@ -5,6 +5,10 @@ const History = ({ getMovieDetail }) => {
   const [history, setHistory] = useState(
     JSON.parse(localStorage.getItem("movies") || [])
   );
+  const [searches, setSearches] = useState(
+    JSON.parse(localStorage.getItem("searches")) || []
+  );
+  const [tab, setTab] = useState(1);
   const deleteInidividualMovie = (id) => {
     // history.find((ele) => ele.Id === id)
     const filteredItems = history.filter((item) => item.Id !== id);
@@ -15,78 +19,179 @@ const History = ({ getMovieDetail }) => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "0.8rem",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <h3 style={{ textAlign: "center" }}>History</h3>
-        {history.length > 0 && (
-          <button
-            onClick={() => {
-              localStorage.setItem("movies", JSON.stringify([]));
-            }}
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <h3
+          onClick={() => {
+            setTab(1);
+          }}
+          style={{
+            width: "50%",
+            textAlign: "center",
+            backgroundColor: `${tab == 1 ? "red" : "white"}`,
+            padding: "0.3rem",
+            cursor: "pointer",
+          }}
+        >
+          Watch History
+        </h3>
+        <h3
+          onClick={() => {
+            setTab(2);
+          }}
+          style={{
+            width: "50%",
+            textAlign: "center",
+            backgroundColor: `${tab == 2 ? "red" : "white"}`,
+            padding: "0.3rem",
+            cursor: "pointer",
+          }}
+        >
+          Search History
+        </h3>
+      </div>
+      {tab == 1 ? (
+        <>
+          <div
             style={{
-              backgroundColor: "red",
-              color: "white",
-              border: "none",
-              padding: "0.6rem",
-              cursor: "pointer",
-              borderRadius: "0.3rem",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.8rem",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            Delete All
-          </button>
-        )}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "0.7rem",
-          flexWrap: "wrap",
-        }}
-      >
-        {history.length > 0 ? (
-          history.reverse().map((ele, id) => {
-            return (
-              <div
+            <h3 style={{ textAlign: "center" }}>Watch History</h3>
+            {history.length > 0 && (
+              <button
+                onClick={() => {
+                  localStorage.setItem("movies", JSON.stringify([]));
+                }}
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none",
+                  padding: "0.6rem",
+                  cursor: "pointer",
+                  borderRadius: "0.3rem",
                 }}
               >
-                <MovieCard data={ele} getMovieDetail={getMovieDetail} />
+                Delete All
+              </button>
+            )}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "0.7rem",
+              flexWrap: "wrap",
+            }}
+          >
+            {history.length > 0 ? (
+              history.reverse().map((ele, id) => {
+                return (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MovieCard data={ele} getMovieDetail={getMovieDetail} />
+                    <button
+                      onClick={() => {
+                        deleteInidividualMovie(ele.Id);
+                      }}
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        border: "none",
+                        position: "relative",
+                        top: "-14px",
+                        padding: "0.6rem",
+                        borderRadius: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                );
+              })
+            ) : (
+              <h3>Empty!!</h3>
+            )}
+          </div>
+        </>
+      ) : (
+        tab == 2 && (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
+              <h3 style={{ textAlign: "center" }}>Search History</h3>
+              {JSON.parse(localStorage.getItem("searches")).length > 0 && (
                 <button
                   onClick={() => {
-                    deleteInidividualMovie(ele.Id);
+                    localStorage.setItem("searches", JSON.stringify([]));
+                    setSearches([]);
                   }}
                   style={{
                     backgroundColor: "red",
                     color: "white",
                     border: "none",
-                    position: "relative",
-                    top: "-14px",
                     padding: "0.6rem",
-                    borderRadius: "0.4rem",
                     cursor: "pointer",
+                    borderRadius: "0.3rem",
                   }}
                 >
-                  Delete
+                  Delete All
                 </button>
-              </div>
-            );
-          })
-        ) : (
-          <h3>Empty!!</h3>
-        )}
-      </div>
+              )}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexWrap: "wrap",
+                flexDirection: "column",
+                gap: "0.4rem",
+              }}
+            >
+              {JSON.parse(localStorage.getItem("searches"))?.length > 0 ? (
+                searches.map((ele, id) => {
+                  return (
+                    <p
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                        margin: 0,
+                        marginBottom: "0.4rem",
+                        backgroundColor: "orange",
+                        padding: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {ele}
+                    </p>
+                  );
+                })
+              ) : (
+                <p style={{ fontWeight: "bold", fontSize: "18px" }}>
+                  No Search History Available!!!
+                </p>
+              )}
+            </div>
+          </div>
+        )
+      )}
     </div>
   );
 };

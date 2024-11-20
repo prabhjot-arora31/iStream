@@ -130,6 +130,13 @@ function App() {
                       cursor: "pointer",
                     }}
                     onClick={() => {
+                      const searches =
+                        JSON.parse(localStorage.getItem("searches")) || [];
+                      searches.push(Search);
+                      localStorage.setItem(
+                        "searches",
+                        JSON.stringify(searches)
+                      );
                       fetchByName(1);
                     }}
                   >

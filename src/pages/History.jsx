@@ -9,6 +9,7 @@ const History = ({ getMovieDetail }) => {
     // history.find((ele) => ele.Id === id)
     const filteredItems = history.filter((item) => item.Id !== id);
     localStorage.setItem("movies", JSON.stringify(filteredItems));
+    setHistory(filteredItems);
   };
 
   return (
@@ -23,21 +24,23 @@ const History = ({ getMovieDetail }) => {
         }}
       >
         <h3 style={{ textAlign: "center" }}>History</h3>
-        <button
-          onClick={() => {
-            localStorage.setItem("movies", JSON.stringify([]));
-          }}
-          style={{
-            backgroundColor: "red",
-            color: "white",
-            border: "none",
-            padding: "0.6rem",
-            cursor: "pointer",
-            borderRadius: "0.3rem",
-          }}
-        >
-          Delete All
-        </button>
+        {history.length > 0 && (
+          <button
+            onClick={() => {
+              localStorage.setItem("movies", JSON.stringify([]));
+            }}
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              padding: "0.6rem",
+              cursor: "pointer",
+              borderRadius: "0.3rem",
+            }}
+          >
+            Delete All
+          </button>
+        )}
       </div>
       <div
         style={{

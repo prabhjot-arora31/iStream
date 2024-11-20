@@ -40,9 +40,10 @@ const Genres = () => {
               flexWrap: "wrap",
             }}
           >
-            {genres.map((genre) => {
+            {genres.map((genre, id) => {
               return (
                 <div
+                  key={id}
                   onClick={() => {
                     navigate("/genres/" + genre);
                   }}

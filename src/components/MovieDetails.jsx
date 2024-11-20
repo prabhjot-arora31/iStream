@@ -60,7 +60,12 @@ const MovieDetails = ({ MovieDetail }) => {
         />
       </div>
 
-      <div style={{ marginLeft: "0.6rem", marginTop: "1.7rem" }}>
+      <div
+        style={{
+          marginLeft: "0.6rem",
+          marginTop: "1.7rem",
+        }}
+      >
         <h1
           className="title"
           style={{
@@ -114,6 +119,7 @@ const MovieDetails = ({ MovieDetail }) => {
           {MovieDetail.Genre?.split(",").map((ele, id) => {
             return (
               <div
+                id={id}
                 style={{
                   padding: "0.4rem",
                   backgroundColor: "red",

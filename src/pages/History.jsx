@@ -11,6 +11,7 @@ const History = ({ getMovieDetail }) => {
     localStorage.setItem("movies", JSON.stringify(filteredItems));
     setHistory(filteredItems);
   };
+  // trial
 
   return (
     <div>

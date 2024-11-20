@@ -25,7 +25,8 @@ const MovieDetails = ({ MovieDetail }) => {
           src={
             MovieDetail.Cover
               ? MovieDetail.Cover
-              : "https://i1.wp.com/psrinc.biz/wp-content/uploads/2018/03/photo-unavailable.jpg"
+              : // : "https://i1.wp.com/psrinc.biz/wp-content/uploads/2018/03/photo-unavailable.jpg"
+                "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           alt="Movie Cover"
           style={{
@@ -107,6 +108,7 @@ const MovieDetails = ({ MovieDetail }) => {
             flexWrap: "wrap",
             gap: "0.6rem",
             justifyContent: "start",
+            alignItems: "center",
           }}
         >
           {MovieDetail.Genre?.split(",").map((ele, id) => {

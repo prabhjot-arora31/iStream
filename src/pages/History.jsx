@@ -5,6 +5,12 @@ const History = ({ getMovieDetail }) => {
   const [history, setHistory] = useState(
     JSON.parse(localStorage.getItem("movies") || [])
   );
+  const deleteInidividualMovie = (id) => {
+    // history.find((ele) => ele.Id === id)
+    const filteredItems = history.filter((item) => item.Id !== id);
+    localStorage.setItem("movies", JSON.stringify(filteredItems));
+  };
+
   return (
     <div>
       <div
@@ -30,7 +36,7 @@ const History = ({ getMovieDetail }) => {
             borderRadius: "0.3rem",
           }}
         >
-          Delete
+          Delete All
         </button>
       </div>
       <div
@@ -44,7 +50,34 @@ const History = ({ getMovieDetail }) => {
       >
         {history.length > 0 ? (
           history.reverse().map((ele, id) => {
-            return <MovieCard data={ele} getMovieDetail={getMovieDetail} />;
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <MovieCard data={ele} getMovieDetail={getMovieDetail} />
+                <button
+                  onClick={() => {
+                    deleteInidividualMovie(ele.Id);
+                  }}
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    border: "none",
+                    position: "relative",
+                    top: "-14px",
+                    padding: "0.6rem",
+                    borderRadius: "0.4rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            );
           })
         ) : (
           <h3>Empty!!</h3>

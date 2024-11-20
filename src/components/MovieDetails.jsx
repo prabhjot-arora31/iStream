@@ -1,6 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./MovieDetails.css";
+
 const MovieDetails = ({ MovieDetail }) => {
+  // Fetch and parse movies from localStorage safely
+  const movies = JSON.parse(localStorage.getItem("movies")) || [];
+
+  // Default to the first movie in localStorage if no MovieDetail is provided
+  const movieToRender =
+    Object.keys(MovieDetail).length > 0
+      ? MovieDetail
+      : movies[movies.length - 1];
+
+  useEffect(() => {
+    console.log("movie detail:", movieToRender);
+
+    return () => {};
+  }, []);
+
+  // Handle the case where no movie is available
+  if (!movieToRender) {
+    return (
+      <p>No movie details available. Please add movies to localStorage.</p>
+    );
+  }
+
   return (
     <div
       style={{
@@ -10,6 +33,7 @@ const MovieDetails = ({ MovieDetail }) => {
         position: "relative",
       }}
     >
+      {/* Background Image */}
       <div
         style={{
           position: "absolute",
@@ -18,26 +42,27 @@ const MovieDetails = ({ MovieDetail }) => {
           width: "100%",
           height: "100vh",
           zIndex: -1,
-          overflow: "hidden", // Prevents scrollbars from appearing
+          overflow: "hidden",
         }}
       >
         <img
           src={
-            MovieDetail.Cover
-              ? MovieDetail.Cover
-              : // : "https://i1.wp.com/psrinc.biz/wp-content/uploads/2018/03/photo-unavailable.jpg"
+            movieToRender.Cover?.includes("themoviedb")
+              ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+              : movieToRender.Cover ||
                 "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           alt="Movie Cover"
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover", // Ensures the image covers the entire container
+            objectFit: "cover",
             opacity: "70%",
           }}
         />
       </div>
 
+      {/* Movie Player */}
       <div
         style={{
           height: "500px",
@@ -48,65 +73,54 @@ const MovieDetails = ({ MovieDetail }) => {
         }}
       >
         <iframe
-          src={MovieDetail.Watch}
+          src={movieToRender.Watch}
           style={{
             width: "100%",
             height: "100%",
             border: "1px solid black",
-            borderRadius: "8px", // Optional: Add rounded corners if desired
+            borderRadius: "8px",
           }}
           allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
       </div>
 
-      <div
-        style={{
-          marginLeft: "0.6rem",
-          marginTop: "1.7rem",
-        }}
-      >
+      {/* Movie Details */}
+      <div style={{ marginLeft: "0.6rem", marginTop: "1.7rem" }}>
         <h1
           className="title"
           style={{
             textAlign: "left",
             fontWeight: "bolder",
             width: "fit-content",
-            // color: "white",
-            // background: "rgba(255, 255, 255, 0.2)", // Semi-transparent background
-            // backdropFilter: "blur(90px)",
           }}
         >
-          {MovieDetail.Title}
+          {movieToRender.Title}
         </h1>
         <div
           style={{
             display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
             flexDirection: "column",
-            alignItems: "left",
+            alignItems: "flex-start",
+            maxWidth: "800px",
           }}
         >
-          {/* <img src={MovieDetail.Cover} style={{ maxWidth: "660px" }} /> */}
           <p
             style={{
-              margin: 0,
-              fontWeight: "normal",
               fontSize: "16.3px",
               fontWeight: "500",
-              maxWidth: "800px",
-              textAlign: "left",
               marginBottom: "25px",
             }}
           >
-            {MovieDetail.Description}
+            {movieToRender.Description}
           </p>
           <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-            {MovieDetail.Release} | {MovieDetail.Duration} min |{" "}
-            {MovieDetail.Country}
+            {movieToRender.Release} | {movieToRender.Duration} min |{" "}
+            {movieToRender.Country}
           </div>
         </div>
+
+        {/* Genres */}
         <div
           style={{
             display: "flex",
@@ -116,21 +130,19 @@ const MovieDetails = ({ MovieDetail }) => {
             alignItems: "center",
           }}
         >
-          {MovieDetail.Genre?.split(",").map((ele, id) => {
-            return (
-              <div
-                id={id}
-                style={{
-                  padding: "0.4rem",
-                  backgroundColor: "red",
-                  color: "white",
-                  marginTop: "0.9rem",
-                }}
-              >
-                <p style={{ margin: 0 }}>{ele}</p>
-              </div>
-            );
-          })}
+          {movieToRender.Genre?.split(",").map((genre, id) => (
+            <div
+              key={id}
+              style={{
+                padding: "0.4rem",
+                backgroundColor: "red",
+                color: "white",
+                marginTop: "0.9rem",
+              }}
+            >
+              <p style={{ margin: 0 }}>{genre}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

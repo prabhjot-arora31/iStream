@@ -79,7 +79,7 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
       {/* Movie Player */}
       <div
         style={{
-          height: "500px",
+          height: "400px",
           maxWidth: "880px",
           margin: "0 auto",
           position: "relative",
@@ -121,13 +121,38 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
         >
           <p
             style={{
-              fontSize: "16.3px",
+              fontSize: "18.3px",
+              margin: 0,
               fontWeight: "500",
-              marginBottom: "25px",
+              marginBottom: "35px",
             }}
           >
             {movieToRender.Description}
           </p>
+          <div
+            style={{
+              margin: 0,
+              fontWeight: "bold",
+              fontSize: "20px",
+              marginBottom: "7px",
+            }}
+          >
+            Director:{" "}
+            <span style={{ fontWeight: "500" }}>{movieToRender.Director}</span>
+          </div>
+          {movieToRender.Actor.length > 0 && (
+            <div
+              style={{
+                margin: 0,
+                fontWeight: "bold",
+                fontSize: "20px",
+                marginBottom: "7px",
+              }}
+            >
+              Cast:{" "}
+              <span style={{ fontWeight: "500" }}>{movieToRender.Actor}</span>
+            </div>
+          )}
           <div style={{ fontWeight: "bold", fontSize: "20px" }}>
             {movieToRender.Release} | {movieToRender.Duration} min |{" "}
             {movieToRender.Country}
@@ -159,7 +184,7 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
           ))}
         </div>
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "50px" }}>
         <h2 style={{ textAlign: "center" }}>You may also like</h2>
         <div
           style={{

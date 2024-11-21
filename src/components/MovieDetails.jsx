@@ -127,8 +127,9 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
               marginBottom: "35px",
             }}
           >
-            {movieToRender.Description.length > 30 ? movieToRender.Description.split(0,30) + ' ....' : movieToRender.Description}
-          </p>
+            {movieToRender.Description.length > 30 
+  ? `${movieToRender.Description.slice(0, 30)} ....` 
+  : movieToRender.Description}      </p>
           <div
             style={{
               margin: 0,

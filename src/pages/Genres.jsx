@@ -42,9 +42,8 @@ const Genres = () => {
       </div>
       ) : (
         <div>
-          <h3 style={{ textAlign: "center" }}>
-            Browse through the following genres to find your best fit!!!
-          </h3>
+          <h2 style={{ textAlign: "center", fontWeight:'bold' }}>Browse through the following Genres</h2>
+   
           <div
   style={{
     display: "flex",

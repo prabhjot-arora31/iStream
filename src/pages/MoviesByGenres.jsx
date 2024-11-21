@@ -7,6 +7,7 @@ import Circles from "react-loading-icons/dist/esm/components/circles";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 
 const MoviesByGenres = ({ getMovieDetail }) => {
+  const [hoveredDiv, setHoveredDiv] = useState(0);
   const { genre } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(
@@ -49,13 +50,21 @@ const MoviesByGenres = ({ getMovieDetail }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "0.4rem",
+          gap: "0.7rem",
           flexWrap: "wrap",
         }}
       >
         {!isLoading ? (
           movies.map((ele, id) => {
-            return <MovieCard data={ele} getMovieDetail={getMovieDetail} />;
+            return (
+              <MovieCard
+                id={id}
+                setHoveredDiv={setHoveredDiv}
+                hoveredDiv={hoveredDiv}
+                data={ele}
+                getMovieDetail={getMovieDetail}
+              />
+            );
           })
         ) : (
           //   <BiLoaderCircle size={60} />

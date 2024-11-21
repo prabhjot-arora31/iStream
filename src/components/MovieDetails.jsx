@@ -11,6 +11,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
+  const [hoveredDiv, setHoveredDiv] = useState(0);
 
   // Fetch Movie Details by ID
   const fetchById = async () => {
@@ -219,7 +220,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             display: "flex",
             justifyContent: "center",
             flexWrap: "wrap",
-            gap: "0.6rem",
+            gap: "0.7rem",
           }}
         >
           {recommendedMovieLoading ? (
@@ -227,6 +228,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           ) : recommendedMovies.length > 0 ? (
             recommendedMovies.map((movie, idx) => (
               <MovieCard
+                id={idx}
+                setHoveredDiv={setHoveredDiv}
+                hoveredDiv={hoveredDiv}
                 data={movie}
                 key={idx}
                 getMovieDetail={getMovieDetail}

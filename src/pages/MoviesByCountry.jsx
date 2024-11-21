@@ -7,6 +7,8 @@ import Puff from "react-loading-icons/dist/esm/components/puff";
 
 const MoviesByCountry = ({ getMovieDetail }) => {
   const { countryName } = useParams();
+  const [hoveredDiv, setHoveredDiv] = useState(0);
+
   const [isLoading, setIsLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -49,13 +51,21 @@ const MoviesByCountry = ({ getMovieDetail }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "0.4rem",
+          gap: "0.7rem",
           flexWrap: "wrap",
         }}
       >
         {!isLoading ? (
           movies.map((ele, id) => {
-            return <MovieCard data={ele} getMovieDetail={getMovieDetail} />;
+            return (
+              <MovieCard
+                id={id}
+                setHoveredDiv={setHoveredDiv}
+                hoveredDiv={hoveredDiv}
+                data={ele}
+                getMovieDetail={getMovieDetail}
+              />
+            );
           })
         ) : (
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -88,7 +98,35 @@ const MoviesByCountry = ({ getMovieDetail }) => {
             Prev
           </button>
         )}
-        1 .. {totalPages}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setIsLoading(true);
+            setCurrentPage(1);
+          }}
+        >
+          1
+        </span>{" "}
+        ..{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setIsLoading(true);
+            setCurrentPage(totalPages / 2);
+          }}
+        >
+          {Math.floor(totalPages / 2)}
+        </span>{" "}
+        ..{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setIsLoading(true);
+            setCurrentPage(totalPages);
+          }}
+        >
+          {totalPages}
+        </span>
         <button
           onClick={() => next()}
           style={{

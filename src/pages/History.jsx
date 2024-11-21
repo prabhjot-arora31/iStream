@@ -9,6 +9,8 @@ const History = ({ getMovieDetail }) => {
     JSON.parse(localStorage.getItem("searches")) || []
   );
   const [tab, setTab] = useState(1);
+  const [hoveredDiv, setHoveredDiv] = useState(0);
+
   const deleteInidividualMovie = (id) => {
     // history.find((ele) => ele.Id === id)
     const filteredItems = history.filter((item) => item.Id !== id);
@@ -101,7 +103,13 @@ const History = ({ getMovieDetail }) => {
                       alignItems: "center",
                     }}
                   >
-                    <MovieCard data={ele} getMovieDetail={getMovieDetail} />
+                    <MovieCard
+                      id={id}
+                      setHoveredDiv={setHoveredDiv}
+                      hoveredDiv={hoveredDiv}
+                      data={ele}
+                      getMovieDetail={getMovieDetail}
+                    />
                     <button
                       onClick={() => {
                         deleteInidividualMovie(ele.Id);

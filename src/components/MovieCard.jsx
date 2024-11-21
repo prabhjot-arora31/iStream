@@ -8,6 +8,9 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
       onMouseEnter={() => {
         setHoveredDiv(id);
       }}
+      onMouseLeave={() => {
+        setHoveredDiv();
+      }}
       onClick={() => {
         window.scrollTo({
           top: 0,
@@ -25,9 +28,9 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         cursor: "pointer",
         maxWidth: "180px",
         display: "flex",
-        transform: `${id == hoveredDiv ? "scale(1.13)" : ""}`,
-        backgroundColor: `${id == hoveredDiv ? "purple" : "white"}`,
-        zIndex: `${id == hoveredDiv ? 10 : 0}`,
+        // transform: `${id == hoveredDiv ? "scale(1.13)" : ""}`,
+        // backgroundColor: `${id == hoveredDiv ? "purple" : "white"}`,
+        // zIndex: `${id == hoveredDiv ? 10 : 0}`,
         transition: "0.5s ease-in-out",
         flexDirection: "column",
         // justifyContent: "center",
@@ -56,7 +59,12 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
               ? data.Thumbnail
               : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
-          style={{ width: "100%", objectFit: "cover" }}
+          style={{
+            width: "100%",
+            objectFit: "cover",
+            transform: `${id == hoveredDiv ? "scale(1.07)" : "scale(1)"}`,
+            transition: ".13s ease-in-out",
+          }}
         />
       </div>
       <h3 style={{ marginTop: "5px", textAlign: "center" }}>

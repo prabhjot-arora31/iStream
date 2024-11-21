@@ -60,8 +60,10 @@ function App() {
   const fetchIt = async () => {
     setIsLoading(true);
     try {
+      const randomNumber = Math.floor(Math.random() * 500) + 1;
+//console.log(randomNumber);
       const data = await axios.get(
-        "https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/4"
+        `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/${randomNumber}`
       );
       console.log(data.data.result.data);
       setMovies(data.data.result.data);

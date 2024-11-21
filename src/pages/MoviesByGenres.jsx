@@ -89,7 +89,38 @@ const MoviesByGenres = ({ getMovieDetail }) => {
             Prev
           </button>
         )}
-        1 .. {totalPages}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            localStorage.setItem("genre_page", 1);
+            setIsLoading(true);
+            setCurrentPage(1);
+          }}
+        >
+          1
+        </span>{" "}
+        ..{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            localStorage.setItem("genre_page", Math.floor(totalPages / 2));
+            setIsLoading(true);
+            setCurrentPage(Math.floor(totalPages / 2));
+          }}
+        >
+          {Math.floor(totalPages / 2)}
+        </span>{" "}
+        ..
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            localStorage.setItem("genre_page", totalPages);
+            setIsLoading(true);
+            setCurrentPage(totalPages);
+          }}
+        >
+          {totalPages}
+        </span>
         <button
           onClick={() => next()}
           style={{

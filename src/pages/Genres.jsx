@@ -24,22 +24,22 @@ const Genres = () => {
     <div>
       {isLoading ? (
         <div
-        style={{
-          margin: "0 auto",
-          marginTop: "30px",
+          style={{
+            margin: "0 auto",
+            marginTop: "30px",
 
-          width: "80px",
-          height: "80px",
-        }}
-      >
-        <Puff
-          stroke="#ff0000"
-          strokeOpacity={20.125}
-          speed={0.75}
-          width={"100%"}
-          height={"100%"}
-        />
-      </div>
+            width: "80px",
+            height: "80px",
+          }}
+        >
+          <Puff
+            stroke="#ff0000"
+            strokeOpacity={20.125}
+            speed={0.75}
+            width={"100%"}
+            height={"100%"}
+          />
+        </div>
       ) : (
         <div>
           <h3 style={{ textAlign: "center" }}>
@@ -47,11 +47,11 @@ const Genres = () => {
           </h3>
           <div
             style={{
+              marginTop: "0.57rem",
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
               flexWrap: "wrap",
+              gap: "0.6rem",
+              justifyContent: "center",
             }}
           >
             {genres.map((genre, id) => {
@@ -60,13 +60,15 @@ const Genres = () => {
                   key={id}
                   onClick={() => {
                     navigate("/genres/" + genre);
+                    localStorage.setItem("genre_page", 1);
                   }}
                   style={{
-                    padding: "0.7rem",
-                    backgroundColor: "blueviolet",
-                    color: "white",
+                    padding: "0.6rem",
+                    backgroundColor: "purple",
                     cursor: "pointer",
-                    borderRadius: "0.3rem",
+                    borderRadius: "0.5rem",
+                    color: "white",
+                    fontSize: "0.9rem", // Smaller font size for mobile
                   }}
                 >
                   {genre}

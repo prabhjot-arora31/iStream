@@ -26,6 +26,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [hoveredDiv, setHoveredDiv] = useState(0);
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
   };
@@ -39,9 +40,11 @@ function App() {
       );
       console.log("by name: " + data.data.result.data);
       console.log("all:", data.data);
-      setCurrentPage(data.data.result.page);
+      if (data.data.result.data.length > 0) {
+        setCurrentPage(data.data.result.page);
+        setTotalPages(data.data.result.pages);
+      } else setCurrentPage(0);
       setMovies(data.data.result.data);
-      setTotalPages(data.data.result.pages);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -165,7 +168,11 @@ function App() {
                         movies.map((ele, id) => {
                           return (
                             <MovieCard
+                              id={id}
+                              key={id}
                               data={ele}
+                              setHoveredDiv={setHoveredDiv}
+                              hoveredDiv={hoveredDiv}
                               getMovieDetail={getMovieDetail}
                             />
                           );

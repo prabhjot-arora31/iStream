@@ -28,7 +28,7 @@ const History = ({ getMovieDetail }) => {
             width: "50%",
             textAlign: "center",
             backgroundColor: `${tab == 1 ? "red" : "white"}`,
-            border:`${tab == 2 ? '1px solid black' : '' }`,
+            border: `${tab == 2 ? "1px solid black" : ""}`,
             padding: "0.3rem",
             cursor: "pointer",
           }}
@@ -41,7 +41,7 @@ const History = ({ getMovieDetail }) => {
           }}
           style={{
             width: "50%",
-            border:`${tab == 1 ? '1px solid black' : '' }`,
+            border: `${tab == 1 ? "1px solid black" : ""}`,
             textAlign: "center",
             backgroundColor: `${tab == 2 ? "red" : "white"}`,
             padding: "0.3rem",
@@ -67,6 +67,7 @@ const History = ({ getMovieDetail }) => {
               <button
                 onClick={() => {
                   localStorage.setItem("movies", JSON.stringify([]));
+                  setHistory([]);
                 }}
                 style={{
                   backgroundColor: "red",
@@ -163,7 +164,6 @@ const History = ({ getMovieDetail }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexWrap: "wrap",
-                flexDirection: "column",
                 gap: "0.4rem",
               }}
             >

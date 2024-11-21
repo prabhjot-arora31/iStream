@@ -1,16 +1,18 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const MovieCard = ({ data, getMovieDetail }) => {
+const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   return (
     <div
+      onMouseEnter={() => {
+        setHoveredDiv(id);
+      }}
       onClick={() => {
         window.scrollTo({
           top: 0,
           left: 0,
-          behavior: "instant", // For instant scrolling, though "instant" is not a valid value
+          behavior: "auto", // For instant scrolling
         });
         getMovieDetail(data);
         navigate("/detail/" + data.Id);
@@ -23,6 +25,10 @@ const MovieCard = ({ data, getMovieDetail }) => {
         cursor: "pointer",
         maxWidth: "180px",
         display: "flex",
+        transform: `${id == hoveredDiv ? "scale(1.13)" : ""}`,
+        backgroundColor: `${id == hoveredDiv ? "purple" : "white"}`,
+        zIndex: `${id == hoveredDiv ? 10 : 0}`,
+        transition: "0.5s ease-in-out",
         flexDirection: "column",
         // justifyContent: "center",
         alignItems: "center",

@@ -42,40 +42,39 @@ const Genres = () => {
         </div>
       ) : (
         <div>
-          <h3 style={{ textAlign: "center" }}>
-            Browse through the following genres to find your best fit!!!
-          </h3>
+          <h2 style={{ textAlign: "center", fontWeight:'bold' }}>Browse through the following Genres</h2>
+   
           <div
-            style={{
-              marginTop: "0.57rem",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.6rem",
-              justifyContent: "center",
-            }}
-          >
-            {genres.map((genre, id) => {
-              return (
-                <div
-                  key={id}
-                  onClick={() => {
-                    navigate("/genres/" + genre);
-                    localStorage.setItem("genre_page", 1);
-                  }}
-                  style={{
-                    padding: "0.6rem",
-                    backgroundColor: "purple",
-                    cursor: "pointer",
-                    borderRadius: "0.5rem",
-                    color: "white",
-                    fontSize: "0.9rem", // Smaller font size for mobile
-                  }}
-                >
-                  {genre}
-                </div>
-              );
-            })}
-          </div>
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "8px",
+    flexWrap: "wrap",
+    padding: "1rem",
+  }}
+>
+  {genres.map((genre, id) => {
+    return (
+      <div
+        key={id}
+        onClick={() => navigate("/genres/" + genre)}
+        style={{
+          padding: "0.7rem",
+          backgroundColor: "blueviolet",
+          color: "white",
+          cursor: "pointer",
+          borderRadius: "0.3rem",
+          textAlign: "center",
+          minWidth: "calc(100% / 2 - 16px)", // Two items per row on smaller screens
+        }}
+      >
+        {genre}
+      </div>
+    );
+  })}
+</div>
+          
         </div>
       )}
     </div>

@@ -72,7 +72,7 @@ const Country = () => {
                   }}
                   style={{
                     padding: "0.6rem",
-                    backgroundColor: "red",
+                    backgroundColor: "blueviolet",
                     color: "white",
                     cursor: "pointer",
                     borderRadius: "0.7rem",

@@ -61,9 +61,9 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
       >
         <img
           src={
-            movieToRender.Cover?.includes("themoviedb")
+            movieToRender.Thumbnail?.includes("themoviedb")
               ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-              : movieToRender.Cover ||
+              : movieToRender.Thumbnail ||
                 "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           alt="Movie Cover"

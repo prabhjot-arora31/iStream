@@ -71,7 +71,7 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: "70%",
+            opacity: "50%",
           }}
         />
       </div>
@@ -127,8 +127,8 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
               marginBottom: "35px",
             }}
           >
-            {movieToRender.Description.length > 30 
-  ? `${movieToRender.Description.slice(0, 30)} ....` 
+            {movieToRender.Description.length > 53 
+  ? `${movieToRender.Description.slice(0, 53)} ....` 
   : movieToRender.Description}      </p>
           <div
             style={{
@@ -163,6 +163,7 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
         {/* Genres */}
         <div
           style={{
+            marginTop:'0.57rem',
             display: "flex",
             flexWrap: "wrap",
             gap: "0.6rem",
@@ -177,7 +178,7 @@ const MovieDetails = ({ MovieDetail, getMovieDetail }) => {
                 padding: "0.4rem",
                 backgroundColor: "red",
                 color: "white",
-                marginTop: "0.9rem",
+                marginTop: "0",
               }}
             >
               <p style={{ margin: 0 }}>{genre}</p>

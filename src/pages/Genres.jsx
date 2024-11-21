@@ -46,34 +46,36 @@ const Genres = () => {
             Browse through the following genres to find your best fit!!!
           </h3>
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              flexWrap: "wrap",
-            }}
-          >
-            {genres.map((genre, id) => {
-              return (
-                <div
-                  key={id}
-                  onClick={() => {
-                    navigate("/genres/" + genre);
-                  }}
-                  style={{
-                    padding: "0.7rem",
-                    backgroundColor: "blueviolet",
-                    color: "white",
-                    cursor: "pointer",
-                    borderRadius: "0.3rem",
-                  }}
-                >
-                  {genre}
-                </div>
-              );
-            })}
-          </div>
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "8px",
+    flexWrap: "wrap",
+    padding: "1rem",
+  }}
+>
+  {genres.map((genre, id) => {
+    return (
+      <div
+        key={id}
+        onClick={() => navigate("/genres/" + genre)}
+        style={{
+          padding: "0.7rem",
+          backgroundColor: "blueviolet",
+          color: "white",
+          cursor: "pointer",
+          borderRadius: "0.3rem",
+          textAlign: "center",
+          minWidth: "calc(100% / 2 - 16px)", // Two items per row on smaller screens
+        }}
+      >
+        {genre}
+      </div>
+    );
+  })}
+</div>
+          
         </div>
       )}
     </div>

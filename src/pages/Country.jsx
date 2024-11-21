@@ -34,7 +34,7 @@ const Country = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: "center" }}>Search Movies By Countries</h2>
+      <h2 style={{ textAlign: "center" , fontWeight:'bold'}}>Search Movies By Countries</h2>
       {isLoading ? (
         <div
         style={{

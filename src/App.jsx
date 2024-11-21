@@ -61,7 +61,7 @@ function App() {
     setIsLoading(true);
     try {
       const randomNumber = Math.floor(Math.random() * 1100) + 1;
-//console.log(randomNumber);
+      //console.log(randomNumber);
       const data = await axios.get(
         `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/${randomNumber}`
       );

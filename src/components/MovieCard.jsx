@@ -46,7 +46,7 @@ const MovieCard = ({ data, getMovieDetail }) => {
         </h3>
         <img
           src={
-            data.Thumbnail
+            data.Thumbnail || !data.Thumbnail?.includes("themoviedb")
               ? data.Thumbnail
               : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }

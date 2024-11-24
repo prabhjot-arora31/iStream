@@ -152,7 +152,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         </div>
 
         {/* Movie Details */}
-        <div style={{ marginTop: "1.7rem" }}>
+        <div style={{ marginTop: "2.12462rem" }}>
           <h1
             className="title"
             style={{

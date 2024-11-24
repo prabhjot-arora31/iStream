@@ -224,7 +224,23 @@ function App() {
                     )}
                   </div>
                 ) : (
-                  <Puff stroke="#ff0000" strokeOpacity={20.125} speed={0.75} />
+                  <div
+        style={{
+          margin: "0 auto",
+          marginTop: "30px",
+
+          width: "80px",
+          height: "80px",
+        }}
+      >
+        <Puff
+          stroke="#ff0000"
+          strokeOpacity={20.125}
+          speed={0.75}
+          width={"100%"}
+          height={"100%"}
+        />
+      </div>
                 )}
               </div>
             }

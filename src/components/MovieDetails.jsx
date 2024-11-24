@@ -25,6 +25,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         fetchRecommendedMovies(data.result[0].Id);
       }
     } catch (error) {
+      setMovieToRender(MovieDetail);
       console.error("Error fetching movie details:", error);
     } finally {
       setIsLoading(false);

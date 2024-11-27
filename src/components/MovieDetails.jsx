@@ -152,8 +152,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             src={
               movieToRender?.Type === "movie"
-                ? `https://vidsrc.cc/v3/embed/movie/${id}`
-                : `https://vidsrc.cc/v3/embed/tv/${id}/1/1`
+                ? `https://vidsrc.xyz/embed/movie/${id}`
+                : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
           ></iframe>
         </div>

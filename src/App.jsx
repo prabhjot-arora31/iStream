@@ -981,128 +981,219 @@ function App() {
                 ) : (
                   <>
                     {" "}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        gap: "0.7rem",
-                      }}
-                    >
-                      <div>
-                        {currentPage !== 0 && (
-                          <p style={{ textAlign: "center" }}>
-                            Current Page: {currentPage}
-                          </p>
-                        )}
-                        {movies?.length > 0 && (
+                    {movies?.length > 0 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                          gap: "0.7rem",
+                        }}
+                      >
+                        <div>
+                          {currentPage !== 0 && (
+                            <p style={{ textAlign: "center" }}>
+                              Current Page: {currentPage}
+                            </p>
+                          )}
+                          {movies?.length > 0 && (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: "0.5rem",
+                                marginBottom: "1.6rem",
+                              }}
+                            >
+                              <button
+                                onClick={() => {
+                                  setIsLoading(true);
+                                  (async () => {
+                                    const { data } = await axios.get(
+                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                    );
+                                    setMovies(data.Search);
+                                    setIsLoading(false);
+                                  })();
+                                }}
+                                style={{
+                                  padding: "0.38rem",
+                                  borderRadius: "0.3rem",
+                                  backgroundColor: "purple",
+                                  color: "white",
+                                  border: "none",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                All
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setIsLoading(true);
+                                  setTypeText("Movie");
+                                  (async () => {
+                                    const { data } = await axios.get(
+                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                    );
+                                    setMovies(data.Search);
+                                    setIsLoading(false);
+                                  })();
+                                }}
+                                style={{
+                                  padding: "0.38rem",
+                                  borderRadius: "0.3rem",
+                                  backgroundColor: "purple",
+                                  color: "white",
+                                  border: "none",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Movie
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setTypeText("Series");
+                                  setIsLoading(true);
+                                  (async () => {
+                                    const { data } = await axios.get(
+                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                    );
+                                    setMovies(data.Search);
+                                    setIsLoading(false);
+                                  })();
+                                }}
+                                style={{
+                                  padding: "0.38rem",
+                                  border: "none",
+                                  cursor: "pointer",
+
+                                  borderRadius: "0.3rem",
+                                  backgroundColor: "purple",
+                                  color: "white",
+                                }}
+                              >
+                                Web Series
+                              </button>
+                            </div>
+                          )}
+                          {movies?.length > 0 && typeText && (
+                            <h4 style={{ textAlign: "center" }}>{typeText}</h4>
+                          )}
                           <div
                             style={{
                               display: "flex",
                               justifyContent: "center",
-                              gap: "0.5rem",
-                              marginBottom: "1.6rem",
+                              alignItems: "center",
+                              gap: "0.7rem",
+                              flexWrap: "wrap",
                             }}
                           >
-                            <button
-                              onClick={() => {
-                                setIsLoading(true);
-                                (async () => {
-                                  const { data } = await axios.get(
-                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
-                                  );
-                                  setMovies(data.Search);
-                                  setIsLoading(false);
-                                })();
-                              }}
-                              style={{
-                                padding: "0.38rem",
-                                borderRadius: "0.3rem",
-                                backgroundColor: "purple",
-                                color: "white",
-                                border: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              All
-                            </button>
-                            <button
-                              onClick={() => {
-                                setIsLoading(true);
-                                setTypeText("Movie");
-                                (async () => {
-                                  const { data } = await axios.get(
-                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
-                                  );
-                                  setMovies(data.Search);
-                                  setIsLoading(false);
-                                })();
-                              }}
-                              style={{
-                                padding: "0.38rem",
-                                borderRadius: "0.3rem",
-                                backgroundColor: "purple",
-                                color: "white",
-                                border: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Movie
-                            </button>
-                            <button
-                              onClick={() => {
-                                setTypeText("Series");
-                                setIsLoading(true);
-                                (async () => {
-                                  const { data } = await axios.get(
-                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
-                                  );
-                                  setMovies(data.Search);
-                                  setIsLoading(false);
-                                })();
-                              }}
-                              style={{
-                                padding: "0.38rem",
-                                border: "none",
-                                cursor: "pointer",
-
-                                borderRadius: "0.3rem",
-                                backgroundColor: "purple",
-                                color: "white",
-                              }}
-                            >
-                              Web Series
-                            </button>
+                            {movies?.length > 0 &&
+                              movies.map((ele, id) => {
+                                return (
+                                  <MovieCard
+                                    id={id}
+                                    key={id}
+                                    data={ele}
+                                    setHoveredDiv={setHoveredDiv}
+                                    hoveredDiv={hoveredDiv}
+                                    getMovieDetail={getMovieDetail}
+                                  />
+                                );
+                              })}
                           </div>
-                        )}
-                        {movies.length > 0 && typeText && (
-                          <h4 style={{ textAlign: "center" }}>{typeText}</h4>
-                        )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column" }}>
                         <div
                           style={{
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center",
-                            gap: "0.7rem",
-                            flexWrap: "wrap",
+                            gap: "0.5rem",
+                            marginBottom: "1.6rem",
                           }}
                         >
-                          {movies?.length > 0 &&
-                            movies.map((ele, id) => {
-                              return (
-                                <MovieCard
-                                  id={id}
-                                  key={id}
-                                  data={ele}
-                                  setHoveredDiv={setHoveredDiv}
-                                  hoveredDiv={hoveredDiv}
-                                  getMovieDetail={getMovieDetail}
-                                />
-                              );
-                            })}
+                          <button
+                            onClick={() => {
+                              setIsLoading(true);
+                              setTypeText("All");
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              borderRadius: "0.3rem",
+                              backgroundColor: "purple",
+                              color: "white",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            All
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsLoading(true);
+                              setTypeText("Movie");
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              borderRadius: "0.3rem",
+                              backgroundColor: "purple",
+                              color: "white",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Movie
+                          </button>
+                          <button
+                            onClick={() => {
+                              setTypeText("Series");
+                              setIsLoading(true);
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              border: "none",
+                              cursor: "pointer",
+
+                              borderRadius: "0.3rem",
+                              backgroundColor: "purple",
+                              color: "white",
+                            }}
+                          >
+                            Web Series
+                          </button>
+                        </div>
+                        <div
+                          style={{
+                            textAlign: "center",
+                          }}
+                        >
+                          No results found!!!
                         </div>
                       </div>
-                    </div>
+                    )}
                   </>
                 )}
               </div>

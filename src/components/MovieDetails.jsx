@@ -211,14 +211,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               marginTop: "0.6rem",
             }}
           >
-            <span style={{ fontWeight: "bold" }}>Language:</span>{" "}
-            <span
-              style={{
-                fontWeight: "500",
-              }}
-            >
-              {movieToRender?.Language}
-            </span>
+            <span style={{ fontWeight: "bold" }}>
+              Language: {movieToRender?.Language}
+            </span>{" "}
           </div>
           {/* Awards */}
           <div
@@ -231,8 +226,10 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               marginTop: "0.6rem",
             }}
           >
-            <span style={{ fontWeight: "bold" }}>Awards:</span>
-            <span style={{ fontWeight: "500" }}>{movieToRender?.Awards}</span>
+            <span style={{ fontWeight: "bold" }}>
+              Awards: {movieToRender?.Awards}
+            </span>
+            {/* <span style={{ fontWeight: "500" }}></span> */}
           </div>
           {/* Rating */}
           <div

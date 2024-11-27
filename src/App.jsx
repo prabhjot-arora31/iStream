@@ -953,6 +953,7 @@ function App() {
                         "searches",
                         JSON.stringify(searches)
                       );
+                      setTypeText("All");
                       fetchByName();
                     }}
                   >
@@ -1129,9 +1130,15 @@ function App() {
                             style={{
                               padding: "0.38rem",
                               borderRadius: "0.3rem",
-                              backgroundColor: "purple",
-                              color: "white",
-                              border: "none",
+                              backgroundColor: `${
+                                typeText === "All" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "All" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "All" ? "purple" : "white"
+                              }`,
                               cursor: "pointer",
                             }}
                           >
@@ -1152,9 +1159,16 @@ function App() {
                             style={{
                               padding: "0.38rem",
                               borderRadius: "0.3rem",
-                              backgroundColor: "purple",
-                              color: "white",
-                              border: "none",
+                              backgroundColor: `${
+                                typeText === "Movie" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "Movie" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "Movie" ? "purple" : "white"
+                              }`,
+
                               cursor: "pointer",
                             }}
                           >
@@ -1174,12 +1188,18 @@ function App() {
                             }}
                             style={{
                               padding: "0.38rem",
-                              border: "none",
                               cursor: "pointer",
 
                               borderRadius: "0.3rem",
-                              backgroundColor: "purple",
-                              color: "white",
+                              backgroundColor: `${
+                                typeText === "Series" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "Series" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "Series" ? "purple" : "white"
+                              }`,
                             }}
                           >
                             Web Series

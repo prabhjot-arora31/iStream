@@ -20,10 +20,10 @@ import MoviesByGenres from "./pages/MoviesByGenres";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [movie, setMovie] = useState({});
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [hoveredDiv, setHoveredDiv] = useState(0);
@@ -32,20 +32,25 @@ function App() {
   };
   const fetchByName = async (index) => {
     setIsLoading(true);
+    // https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${index}
+
     try {
       const data = await axios.get(
         `
-        https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${index} 
-        `
+        https://www.omdbapi.com/?t=${Search}&apikey=2d70fb93
+`
       );
-      console.log("by name: " + data.data.result.data);
-      console.log("all:", data.data);
-      if (data.data.result.data.length > 0) {
-        setCurrentPage(data.data.result.page);
-        setTotalPages(data.data.result.pages);
-      } else setCurrentPage(0);
-      setMovies(data.data.result.data);
+      // console.log("by name: " + data.data.result.data);
+      console.log("all:", data);
+      setMovie(data.data);
       setIsLoading(false);
+      console.log("movie is:", movie);
+      // if (data.data.result.data.length > 0) {
+      //   setCurrentPage(data.data.result.page);
+      //   setTotalPages(data.data.result.pages);
+      // } else setCurrentPage(0);
+      // setMovies(data.data.result.data);
+      // setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
     }
@@ -66,20 +71,24 @@ function App() {
       const randomNumber = Math.floor(Math.random() * 1100) + 1;
       //console.log(randomNumber);
       const data = await axios.get(
-        `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/${randomNumber}`
+        // `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/${randomNumber}`
+        `
+        https://www.omdbapi.com/?t=fast+and+furios&apikey=2d70fb93
+        `
       );
-      console.log(data.data.result.data);
-      setMovies(data.data.result.data);
+      // console.log(data.data.result.data);
+      setMovie(data.data);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
     }
   };
   useEffect(() => {
-    if (currentPage == 0) fetchIt();
-    else fetchByName(currentPage);
+    // if (currentPage == 0) fetchIt();
+    // else fetchByName(currentPage);
+    // fetchByName(currentPage);
     return () => {
-      setMovies([]);
+      setMovie({});
     };
   }, [currentPage]);
   // useEffect(() => {
@@ -148,9 +157,28 @@ function App() {
                     Search
                   </button>
                 </div>
-                {!isLoading ? (
+                {isLoading === "" ? (
+                  <div></div>
+                ) : isLoading === true ? (
+                  <div
+                    style={{
+                      margin: "0 auto",
+                      marginTop: "30px",
+                      width: "80px",
+                      height: "80px",
+                    }}
+                  >
+                    <Puff
+                      stroke="#ff0000"
+                      strokeOpacity={20.125}
+                      speed={0.75}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                  </div>
+                ) : (
                   <div>
-                    {currentPage != 0 && (
+                    {currentPage !== 0 && (
                       <p style={{ textAlign: "center" }}>
                         Current Page: {currentPage}
                       </p>
@@ -164,83 +192,14 @@ function App() {
                         flexWrap: "wrap",
                       }}
                     >
-                      {movies.length > 0 ? (
-                        movies.map((ele, id) => {
-                          return (
-                            <MovieCard
-                              id={id}
-                              key={id}
-                              data={ele}
-                              setHoveredDiv={setHoveredDiv}
-                              hoveredDiv={hoveredDiv}
-                              getMovieDetail={getMovieDetail}
-                            />
-                          );
-                        })
-                      ) : (
-                        <p>No results found!</p>
-                      )}
+                      <MovieCard
+                        data={movie}
+                        setHoveredDiv={setHoveredDiv}
+                        hoveredDiv={hoveredDiv}
+                        getMovieDetail={getMovieDetail}
+                      />
                     </div>
-                    {currentPage != 0 && movies.length > 0 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.4rem",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginTop: "0.8rem",
-                        }}
-                      >
-                        {currentPage != 1 && (
-                          <button
-                            onClick={() => prev()}
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                              padding: "0.8rem",
-                              border: "none",
-                              cursor: "pointer",
-                              borderRadius: "0.3rem",
-                            }}
-                          >
-                            Prev
-                          </button>
-                        )}
-                        1 .. {totalPages}
-                        <button
-                          onClick={() => next()}
-                          style={{
-                            backgroundColor: "red",
-                            color: "white",
-                            padding: "0.8rem",
-                            border: "none",
-                            cursor: "pointer",
-                            borderRadius: "0.3rem",
-                          }}
-                        >
-                          Next
-                        </button>
-                      </div>
-                    )}
                   </div>
-                ) : (
-                  <div
-        style={{
-          margin: "0 auto",
-          marginTop: "30px",
-
-          width: "80px",
-          height: "80px",
-        }}
-      >
-        <Puff
-          stroke="#ff0000"
-          strokeOpacity={20.125}
-          speed={0.75}
-          width={"100%"}
-          height={"100%"}
-        />
-      </div>
                 )}
               </div>
             }

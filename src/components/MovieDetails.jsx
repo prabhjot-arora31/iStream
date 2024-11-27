@@ -18,12 +18,14 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(
-        `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/movie/${id}`
+        // `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/movie/${id}`
+        `
+        https://www.omdbapi.com/?i=${id}&apikey=2d70fb93`
       );
-      setMovieToRender(data.result[0] || MovieDetail);
-      if (data.result[0]) {
-        fetchRecommendedMovies(data.result[0].Id);
-      }
+      setMovieToRender(data);
+      // if (data.result[0]) {
+      //   fetchRecommendedMovies(data.result[0].Id);
+      // }
     } catch (error) {
       setMovieToRender(MovieDetail);
       console.error("Error fetching movie details:", error);
@@ -99,9 +101,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       >
         <img
           src={
-            movieToRender?.Thumbnail?.includes("themoviedb")
+            movieToRender?.Poster?.includes("themoviedb")
               ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-              : movieToRender?.Thumbnail ||
+              : movieToRender?.Poster ||
                 "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           alt="Movie Cover"
@@ -139,7 +141,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           }}
         >
           <iframe
-            src={movieToRender?.Watch}
+            src={`https://vidsrc.xyz/embed/movie/${id}`}
             style={{
               width: "100%",
               height: "100%",
@@ -168,7 +170,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               fontWeight: "500" /* Adjusted font-size */,
             }}
           >
-            {movieToRender?.Description || "No description available."}
+            {movieToRender?.Plot || "No description available."}
           </p>
           <div
             style={{
@@ -179,13 +181,50 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             Director: {movieToRender?.Director || "Unknown"}
           </div>
           <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            Cast: {movieToRender?.Actor || "Not listed"}
+            Cast: {movieToRender?.Actors || "Not listed"}
           </div>
           <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            {movieToRender?.Release} | {movieToRender?.Duration} min |{" "}
+            {movieToRender?.Released} | {movieToRender?.Runtime} |{" "}
             {movieToRender?.Country}
           </div>
-
+          {/* Rating */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "0.8rem",
+              alignItems: "center",
+              marginTop: "0.6rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
+                viewBox="0 0 24 24"
+                fill="orange"
+                role="presentation"
+              >
+                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+              </svg>
+              <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                {movieToRender?.imdbRating}
+              </span>
+              /10{" "}
+            </div>
+            <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
+              ({movieToRender?.imdbVotes})
+            </span>
+          </div>
           {/* Genres */}
           <div
             style={{
@@ -214,7 +253,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       </div>
 
       {/* Recommended Movies */}
-      <div style={{ marginTop: "50px", position: "relative", zIndex: 1 }}>
+      {/* <div style={{ marginTop: "50px", position: "relative", zIndex: 1 }}>
         <h2 style={{ textAlign: "center" }}>You may also like</h2>
         <div
           style={{
@@ -241,7 +280,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             <p>No recommendations found!</p>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

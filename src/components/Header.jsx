@@ -20,7 +20,7 @@ const Header = () => {
             History
           </h3>
         </Link>
-        <Link to={"/country"} style={{ textDecoration: "none" }}>
+        {/* <Link to={"/country"} style={{ textDecoration: "none" }}>
           {" "}
           <h3 style={{ cursor: "pointer" }} className="nav-link">
             Country
@@ -31,7 +31,7 @@ const Header = () => {
           <h3 style={{ cursor: "pointer" }} className="nav-link">
             Genre
           </h3>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

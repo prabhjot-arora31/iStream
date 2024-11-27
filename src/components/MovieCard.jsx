@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
   const navigate = useNavigate();
+  useEffect(() => {
+    (() => {
+      console.log("in movie card:", data);
+    })();
+
+    return () => {};
+  }, []);
+
   return (
     <div
       onMouseEnter={() => {
@@ -18,9 +26,9 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           behavior: "auto", // For instant scrolling
         });
         getMovieDetail(data);
-        navigate("/detail/" + data.Id);
+        navigate("/detail/" + data.imdbID);
         let movies = JSON.parse(localStorage.getItem("movies")) || [];
-        if (movies.find((movie) => movie.Id === data.Id)) return;
+        if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
         movies.push(data);
         localStorage.setItem("movies", JSON.stringify(movies));
       }}
@@ -55,8 +63,8 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         </h3>
         <img
           src={
-            data.Thumbnail || !data.Thumbnail?.includes("themoviedb")
-              ? data.Thumbnail
+            data.Poster || !data.Poster?.includes("themoviedb")
+              ? data.Poster
               : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           style={{
@@ -68,9 +76,12 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         />
       </div>
       <h3 style={{ marginTop: "5px", textAlign: "center" }}>
-        {data.Title.length > 15
+        {/* {data.Title.length > 15
           ? data.Title.substring(0, 15) + "..."
-          : data.Title}
+          : data.Title} */}
+        {data?.Title?.length > 15
+          ? data?.Title.substring(0, 15) + "..."
+          : data?.Title}
       </h3>
     </div>
   );

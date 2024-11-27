@@ -20,6 +20,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         setHoveredDiv();
       }}
       onClick={() => {
+        localStorage.setItem("movies", JSON.stringify("[]"));
         window.scrollTo({
           top: 0,
           left: 0,

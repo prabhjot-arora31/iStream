@@ -48,7 +48,7 @@ function App() {
       console.log("all:", data);
       setMovies(data.data.Search);
       setIsLoading(false);
-      console.log("movie is:", movie);
+      console.log("movie is:", movies);
       // if (data.data.result.data.length > 0) {
       //   setCurrentPage(data.data.result.page);
       //   setTotalPages(data.data.result.pages);

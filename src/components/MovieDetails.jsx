@@ -140,21 +140,6 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          {/* <iframe
-            src={
-              movieToRender?.Type == "movie"
-                ? `https://vidsrc.xyz/embed/movie/${id}`
-                : `https://vidsrc.dev/embed/tv/${id}/1/1`
-            }
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "1px solid black",
-              borderRadius: "8px",
-            }}
-            allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          /> */}
           <iframe
             style={{
               width: "100%",
@@ -162,13 +147,13 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               border: "1px solid black",
               borderRadius: "8px",
             }}
-            allowfullscreen
+            allowFullScreen // Correct attribute
             scrolling="no"
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             src={
-              movieToRender?.Type == "movie"
+              movieToRender?.Type === "movie"
                 ? `https://vidsrc.xyz/embed/movie/${id}`
-                : `https://vidsrc.dev/embed/tv/${id}/1/1`
+                : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
           ></iframe>
         </div>

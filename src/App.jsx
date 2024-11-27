@@ -20,9 +20,10 @@ import MoviesByGenres from "./pages/MoviesByGenres";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 
 function App() {
-  const [movie, setMovie] = useState({});
+  const [movies, setMovies] = useState([]);
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
+  const [type, setType] = useState("movie");
   const [isLoading, setIsLoading] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -34,16 +35,18 @@ function App() {
   const fetchByName = async (index) => {
     setIsLoading(true);
     // https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${index}
+    // https://www.omdbapi.com/?t=${Search}&apikey=2d70fb93
 
     try {
       const data = await axios.get(
         `
-        https://www.omdbapi.com/?t=${Search}&apikey=2d70fb93
+        https://www.omdbapi.com/?apikey=2d70fb93&s=${Search}&type=${type}&page=1
+
 `
       );
       // console.log("by name: " + data.data.result.data);
       console.log("all:", data);
-      setMovie(data.data);
+      setMovies(data.data.Search);
       setIsLoading(false);
       console.log("movie is:", movie);
       // if (data.data.result.data.length > 0) {
@@ -78,7 +81,7 @@ function App() {
         `
       );
       // console.log(data.data.result.data);
-      setMovie(data.data);
+      setMovies(data.data);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -88,6 +91,31 @@ function App() {
     localStorage.setItem(
       "movies",
       JSON.stringify([
+        {
+          Title: "My Demon",
+          Year: "2023–2024",
+          Rated: "TV-14",
+          Released: "24 Nov 2023",
+          Runtime: "N/A",
+          Genre: "Comedy, Drama, Fantasy",
+          Director: "N/A",
+          Writer: "N/A",
+          Actors: "Kim Yoo-jung, Song Kang, Lee Sang-yi",
+          Plot: "A pitiless demon becomes powerless after getting entangled with an icy heiress, who may hold the key to his lost abilities -- and his heart.",
+          Language: "Korean",
+          Country: "South Korea",
+          Awards: "3 wins",
+          Poster:
+            "https://m.media-amazon.com/images/M/MV5BNTg5YmU0OTYtNzIzNy00MzM1LWI0OWEtYzc5ZmRlNmJlODk5XkEyXkFqcGc@._V1_SX300.jpg",
+          Ratings: [{ Source: "Internet Movie Database", Value: "7.7/10" }],
+          Metascore: "N/A",
+          imdbRating: "7.7",
+          imdbVotes: "12,314",
+          imdbID: "tt29569035",
+          Type: "series",
+          totalSeasons: "1",
+          Response: "True",
+        },
         {
           imdbID: "tt4213764",
           Id: 358403,
@@ -850,9 +878,15 @@ function App() {
     // else fetchByName(currentPage);
     // fetchByName(currentPage);
     return () => {
-      setMovie({});
+      setMovies({});
     };
   }, [currentPage]);
+  useEffect(() => {
+    fetchByName(currentPage);
+
+    return () => {};
+  }, [type]);
+
   // useEffect(() => {
   //   fetchByName();
   //   return () => {
@@ -939,27 +973,82 @@ function App() {
                     />
                   </div>
                 ) : (
-                  <div>
-                    {currentPage !== 0 && (
-                      <p style={{ textAlign: "center" }}>
-                        Current Page: {currentPage}
-                      </p>
-                    )}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      gap: "0.7rem",
+                    }}
+                  >
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center",
-                        gap: "0.7rem",
-                        flexWrap: "wrap",
+                        gap: "0.5rem",
                       }}
                     >
-                      <MovieCard
-                        data={movie}
-                        setHoveredDiv={setHoveredDiv}
-                        hoveredDiv={hoveredDiv}
-                        getMovieDetail={getMovieDetail}
-                      />
+                      <button
+                        onClick={() => {
+                          setType("movie");
+                        }}
+                        style={{
+                          padding: "0.38rem",
+                          borderRadius: "0.3rem",
+                          backgroundColor: "purple",
+                          color: "white",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Movie
+                      </button>
+                      <button
+                        onClick={() => {
+                          setType("series");
+                        }}
+                        style={{
+                          padding: "0.38rem",
+                          border: "none",
+                          cursor: "pointer",
+
+                          borderRadius: "0.3rem",
+                          backgroundColor: "purple",
+                          color: "white",
+                        }}
+                      >
+                        Web Series
+                      </button>
+                    </div>
+                    <div>
+                      {currentPage !== 0 && (
+                        <p style={{ textAlign: "center" }}>
+                          Current Page: {currentPage}
+                        </p>
+                      )}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "0.7rem",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {movies?.length > 0 &&
+                          movies.map((ele, id) => {
+                            return (
+                              <MovieCard
+                                id={id}
+                                key={id}
+                                data={ele}
+                                setHoveredDiv={setHoveredDiv}
+                                hoveredDiv={hoveredDiv}
+                                getMovieDetail={getMovieDetail}
+                              />
+                            );
+                          })}
+                      </div>
                     </div>
                   </div>
                 )}

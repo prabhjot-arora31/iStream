@@ -140,8 +140,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          <iframe
-            src={`https://vidsrc.xyz/embed/movie/${id}`}
+          {/* <iframe
+            src={
+              movieToRender?.Type == "movie"
+                ? `https://vidsrc.xyz/embed/movie/${id}`
+                : `https://vidsrc.dev/embed/tv/${id}/1/1`
+            }
             style={{
               width: "100%",
               height: "100%",
@@ -150,7 +154,23 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             }}
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          />
+          /> */}
+          <iframe
+            style={{
+              width: "100%",
+              height: "100%",
+              border: "1px solid black",
+              borderRadius: "8px",
+            }}
+            allowfullscreen
+            scrolling="no"
+            allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            src={
+              movieToRender?.Type == "movie"
+                ? `https://vidsrc.xyz/embed/movie/${id}`
+                : `https://vidsrc.dev/embed/tv/${id}/1/1`
+            }
+          ></iframe>
         </div>
 
         {/* Movie Details */}
@@ -225,6 +245,17 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               ({movieToRender?.imdbVotes})
             </span>
           </div>
+          {/* Seasons */}
+          {movieToRender?.Type == "series" && (
+            <div style={{ marginTop: "0.6rem", marginBottom: "0.6rem" }}>
+              <span style={{ fontWeight: "500", fontSize: "18px" }}>
+                Total Seasons:{" "}
+              </span>
+              <span style={{ fontWeight: "900", fontSize: "18px" }}>
+                {movieToRender?.totalSeasons}
+              </span>
+            </div>
+          )}
           {/* Genres */}
           <div
             style={{

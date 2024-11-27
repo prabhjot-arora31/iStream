@@ -152,8 +152,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             src={
               movieToRender?.Type === "movie"
-                ? `https://vidsrc.xyz/embed/movie/${id}`
-                : `https://vidsrc.xyz/embed/tv/${id}/1/1`
+                ? `https://vidsrc.cc/v3/embed/movie/${id}`
+                : `https://vidsrc.cc/v3/embed/tv/${id}/1/1`
             }
           ></iframe>
         </div>
@@ -183,6 +183,14 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               fontSize: "1rem" /* Adjusted font-size */,
             }}
           >
+            Writer: {movieToRender?.Writer || "Unknown"}
+          </div>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1rem" /* Adjusted font-size */,
+            }}
+          >
             Director: {movieToRender?.Director || "Unknown"}
           </div>
           <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
@@ -191,6 +199,40 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
             {movieToRender?.Released} | {movieToRender?.Runtime} |{" "}
             {movieToRender?.Country}
+          </div>
+          {/* Language */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "0.8rem",
+              alignItems: "center",
+              marginTop: "0.6rem",
+            }}
+          >
+            <span style={{ fontWeight: "bold" }}>Language:</span>{" "}
+            <span
+              style={{
+                fontWeight: "500",
+              }}
+            >
+              {movieToRender?.Language}
+            </span>
+          </div>
+          {/* Awards */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "0.8rem",
+              alignItems: "center",
+              marginTop: "0.6rem",
+            }}
+          >
+            <span style={{ fontWeight: "bold" }}>Awards:</span>
+            <span style={{ fontWeight: "500" }}>{movieToRender?.Awards}</span>
           </div>
           {/* Rating */}
           <div
@@ -230,6 +272,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               ({movieToRender?.imdbVotes})
             </span>
           </div>
+
           {/* Seasons */}
           {movieToRender?.Type == "series" && (
             <div style={{ marginTop: "0.6rem", marginBottom: "0.6rem" }}>

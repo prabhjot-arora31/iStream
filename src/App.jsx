@@ -23,7 +23,9 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
-  const [type, setType] = useState("movie");
+  const [error, seterror] = useState("");
+  const [typeText, setTypeText] = useState("Movie");
+  const [type, setType] = useState("");
   const [isLoading, setIsLoading] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -32,32 +34,38 @@ function App() {
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
   };
-  const fetchByName = async (index) => {
-    setIsLoading(true);
+  const fetchByName = async () => {
+    setType("movie");
+    if (type) {
+      setIsLoading(true);
+      try {
+        const data = await axios.get(
+          `
+          https://www.omdbapi.com/?apikey=2d70fb93&s=${Search.trim()}&page=1
+  
+  `
+        );
+        // console.log("by name: " + data.data.result.data);
+        console.log("all:", data);
+        setMovies(data.data.Search);
+        setTypeText("All");
+        if (data.data.Search.length <= 0) {
+          seterror("No results found");
+        }
+        setIsLoading(false);
+        console.log("movie is:", movies);
+        // if (data.data.result.data.length > 0) {
+        //   setCurrentPage(data.data.result.page);
+        //   setTotalPages(data.data.result.pages);
+        // } else setCurrentPage(0);
+        // setMovies(data.data.result.data);
+        // setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+      }
+    }
     // https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/search?query=${Search}&page=${index}
     // https://www.omdbapi.com/?t=${Search}&apikey=2d70fb93
-
-    try {
-      const data = await axios.get(
-        `
-        https://www.omdbapi.com/?apikey=2d70fb93&s=${Search.trim()}&type=${type}&page=1
-
-`
-      );
-      // console.log("by name: " + data.data.result.data);
-      console.log("all:", data);
-      setMovies(data.data.Search);
-      setIsLoading(false);
-      console.log("movie is:", movies);
-      // if (data.data.result.data.length > 0) {
-      //   setCurrentPage(data.data.result.page);
-      //   setTotalPages(data.data.result.pages);
-      // } else setCurrentPage(0);
-      // setMovies(data.data.result.data);
-      // setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-    }
   };
   const next = async () => {
     localStorage.setItem("common_page", currentPage + 1);
@@ -880,10 +888,8 @@ function App() {
     return () => {
       setMovies({});
     };
-  }, [currentPage]);
+  }, []);
   useEffect(() => {
-    fetchByName(currentPage);
-
     return () => {};
   }, [type]);
 
@@ -947,7 +953,7 @@ function App() {
                         "searches",
                         JSON.stringify(searches)
                       );
-                      fetchByName(1);
+                      fetchByName();
                     }}
                   >
                     Search
@@ -973,84 +979,131 @@ function App() {
                     />
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      gap: "0.7rem",
-                    }}
-                  >
+                  <>
+                    {" "}
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
-                        gap: "0.5rem",
+                        flexDirection: "column",
+                        gap: "0.7rem",
                       }}
                     >
-                      <button
-                        onClick={() => {
-                          setType("movie");
-                        }}
-                        style={{
-                          padding: "0.38rem",
-                          borderRadius: "0.3rem",
-                          backgroundColor: "purple",
-                          color: "white",
-                          border: "none",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Movie
-                      </button>
-                      <button
-                        onClick={() => {
-                          setType("series");
-                        }}
-                        style={{
-                          padding: "0.38rem",
-                          border: "none",
-                          cursor: "pointer",
+                      <div>
+                        {currentPage !== 0 && (
+                          <p style={{ textAlign: "center" }}>
+                            Current Page: {currentPage}
+                          </p>
+                        )}
+                        {movies?.length > 0 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              gap: "0.5rem",
+                              marginBottom: "1.6rem",
+                            }}
+                          >
+                            <button
+                              onClick={() => {
+                                setIsLoading(true);
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
+                              style={{
+                                padding: "0.38rem",
+                                borderRadius: "0.3rem",
+                                backgroundColor: "purple",
+                                color: "white",
+                                border: "none",
+                                cursor: "pointer",
+                              }}
+                            >
+                              All
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsLoading(true);
+                                setTypeText("Movie");
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
+                              style={{
+                                padding: "0.38rem",
+                                borderRadius: "0.3rem",
+                                backgroundColor: "purple",
+                                color: "white",
+                                border: "none",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Movie
+                            </button>
+                            <button
+                              onClick={() => {
+                                setTypeText("Series");
+                                setIsLoading(true);
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
+                              style={{
+                                padding: "0.38rem",
+                                border: "none",
+                                cursor: "pointer",
 
-                          borderRadius: "0.3rem",
-                          backgroundColor: "purple",
-                          color: "white",
-                        }}
-                      >
-                        Web Series
-                      </button>
-                    </div>
-                    <div>
-                      {currentPage !== 0 && (
-                        <p style={{ textAlign: "center" }}>
-                          Current Page: {currentPage}
-                        </p>
-                      )}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: "0.7rem",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {movies?.length > 0 &&
-                          movies.map((ele, id) => {
-                            return (
-                              <MovieCard
-                                id={id}
-                                key={id}
-                                data={ele}
-                                setHoveredDiv={setHoveredDiv}
-                                hoveredDiv={hoveredDiv}
-                                getMovieDetail={getMovieDetail}
-                              />
-                            );
-                          })}
+                                borderRadius: "0.3rem",
+                                backgroundColor: "purple",
+                                color: "white",
+                              }}
+                            >
+                              Web Series
+                            </button>
+                          </div>
+                        )}
+                        {movies.length > 0 && typeText && (
+                          <h4 style={{ textAlign: "center" }}>{typeText}</h4>
+                        )}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "0.7rem",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {movies?.length > 0 &&
+                            movies.map((ele, id) => {
+                              return (
+                                <MovieCard
+                                  id={id}
+                                  key={id}
+                                  data={ele}
+                                  setHoveredDiv={setHoveredDiv}
+                                  hoveredDiv={hoveredDiv}
+                                  getMovieDetail={getMovieDetail}
+                                />
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </>
                 )}
               </div>
             }

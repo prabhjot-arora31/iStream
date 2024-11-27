@@ -68,7 +68,10 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
               : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           style={{
-            width: "100%",
+            width: "170px",
+            height: "230px",
+            maxHeight: "230px",
+            borderRadius: "10px",
             objectFit: "cover",
             transform: `${id == hoveredDiv ? "scale(1.07)" : "scale(1)"}`,
             transition: ".13s ease-in-out",

@@ -40,7 +40,7 @@ function App() {
     try {
       const data = await axios.get(
         `
-        https://www.omdbapi.com/?apikey=2d70fb93&s=${Search}&type=${type}&page=1
+        https://www.omdbapi.com/?apikey=2d70fb93&s=${Search.trim()}&type=${type}&page=1
 
 `
       );

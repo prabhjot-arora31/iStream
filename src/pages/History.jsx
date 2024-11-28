@@ -223,10 +223,11 @@ const History = ({ getMovieDetail }) => {
               {JSON.parse(localStorage.getItem("searches"))?.length > 0 ? (
                 searches.map((ele, id) => {
                   return (
-                    <p
+                    <button
                       style={{
                         fontWeight: "bold",
                         fontSize: "18px",
+                        border: "none",
                         margin: 0,
                         marginBottom: "0.4rem",
                         backgroundColor: "orange",
@@ -235,7 +236,7 @@ const History = ({ getMovieDetail }) => {
                       }}
                     >
                       {ele}
-                    </p>
+                    </button>
                   );
                 })
               ) : (

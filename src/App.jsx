@@ -1085,11 +1085,13 @@ function App() {
                     onClick={() => {
                       const searches =
                         JSON.parse(localStorage.getItem("searches")) || [];
-                      searches.push(Search);
-                      localStorage.setItem(
-                        "searches",
-                        JSON.stringify(searches)
-                      );
+                      if (!searches.find((ele, id) => ele === Search)) {
+                        searches.push(Search);
+                        localStorage.setItem(
+                          "searches",
+                          JSON.stringify(searches)
+                        );
+                      }
                       setTypeText("All");
                       fetchByName();
                     }}

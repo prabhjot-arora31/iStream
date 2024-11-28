@@ -1051,7 +1051,7 @@ function App() {
                               style={{
                                 fontSize: "13px",
                                 color: "gray",
-                                marginBottom: "14px",
+                                marginBottom: id != 4 ? "6px" : "0",
                                 cursor: "pointer",
                               }}
                             >

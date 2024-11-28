@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 const Header = () => {
+  const [headerTab, setHeaderTab] = useState(
+    localStorage.getItem("headerTab") || 1
+  );
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>
@@ -9,14 +12,49 @@ const Header = () => {
         <span style={{ color: "darkblue" }}>tre</span>
         <span style={{ color: "darkgoldenrod" }}>am</span>
       </h1>
-      <div style={{ display: "flex", justifyContent: "center", gap: "30px" }}>
-        <Link to={"/"} style={{ textDecoration: "none" }}>
-          <h3 style={{ cursor: "pointer" }} className="nav-link">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "30px",
+          alignItems: "center",
+        }}
+      >
+        <Link
+          to={"/"}
+          style={{
+            textDecoration: "none",
+            color: headerTab == 1 ? "red" : "black",
+            padding: "0.3rem",
+          }}
+          onClick={() => {
+            setHeaderTab(1);
+            localStorage.setItem("headerTab", 1);
+          }}
+        >
+          <h3
+            style={{ cursor: "pointer", margin: 0, padding: 0 }}
+            className="nav-link"
+          >
             Home
           </h3>
         </Link>
-        <Link to={"/history"} style={{ textDecoration: "none" }}>
-          <h3 style={{ cursor: "pointer" }} className="nav-link">
+        <Link
+          to={"/history"}
+          style={{
+            textDecoration: "none",
+            color: `${headerTab == 2 ? "red" : "black"}`,
+            padding: "0.3rem",
+          }}
+          onClick={() => {
+            setHeaderTab(2);
+            localStorage.setItem("headerTab", 2);
+          }}
+        >
+          <h3
+            style={{ cursor: "pointer", margin: 0, padding: 0 }}
+            className="nav-link"
+          >
             History
           </h3>
         </Link>

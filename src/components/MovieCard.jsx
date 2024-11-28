@@ -16,7 +16,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
       onMouseEnter={() => {
         setHoveredDiv(id);
       }}
-      onMouseLeave={() => {
+      onMouseOut={() => {
         setHoveredDiv();
       }}
       onClick={() => {
@@ -46,7 +46,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
       }}
     >
       <div style={{ position: "relative" }}>
-        <h3
+        {/* <h3
           style={{
             marginTop: 0,
             position: "absolute",
@@ -60,7 +60,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           }}
         >
           HD
-        </h3>
+        </h3> */}
         <img
           src={
             data.Poster || !data.Poster?.includes("themoviedb")

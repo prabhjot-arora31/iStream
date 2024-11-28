@@ -1,10 +1,6 @@
-.nav-link{
-    /* background-color: red; */
-    color: black;
-    padding: 0.23rem;
-    transition: .2s ease-in-out;
-}
-.nav-link:hover{
-    background-color: red;
-    color: white;
+.nav-link {
+  /* background-color: red; */
+  /* color: black; */
+  /* padding: 0.23rem; */
+  transition: 0.2s ease-in-out;
 }

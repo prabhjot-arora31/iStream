@@ -12,6 +12,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
   const [hoveredDiv, setHoveredDiv] = useState(0);
+  const [rbHover, setRbHover] = useState(false);
 
   // Fetch Movie Details by ID
   const fetchById = async () => {
@@ -92,14 +93,14 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           width: "100%",
           height: "100vh",
           zIndex: -1,
-          background: `linear-gradient(
-          rgba(0, 0, 0, 0.7), /* Top - darker */
-          rgba(0, 0, 0, 0.3) /* Bottom - lighter */
-        )`,
+          //   background: `linear-gradient(
+          //   rgba(0, 0, 0, 0.7), /* Top - darker */
+          //   rgba(0, 0, 0, 0.3) /* Bottom - lighter */
+          // )`,
           overflow: "hidden",
         }}
       >
-        <img
+        {/* <img
           src={
             movieToRender?.Poster?.includes("themoviedb")
               ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
@@ -113,7 +114,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             objectFit: "cover",
             opacity: 0.35,
           }}
-        />
+        /> */}
       </div>
 
       {/* Content Inside the Background Image */}
@@ -169,14 +170,42 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           >
             {movieToRender?.Title}
           </h1>
-          <p
+          <div
             style={{
-              fontSize: "1rem",
-              fontWeight: "500" /* Adjusted font-size */,
+              display: "flex",
+              justifyContent: "center",
+              gap: "10px",
+              marginBottom: "20px",
+              alignItems: "center",
             }}
           >
-            {movieToRender?.Plot || "No description available."}
-          </p>
+            <img
+              src={
+                movieToRender?.Poster?.includes("themoviedb")
+                  ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                  : movieToRender?.Poster ||
+                    "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+              }
+              alt="Movie Cover"
+              style={{
+                width: "140px",
+                height: "170px",
+                objectFit: "cover",
+              }}
+            />
+            <p
+              style={{
+                fontSize: "1rem",
+                maxWidth: "270px",
+                textAlign: "left",
+                // height: "130px",
+                height: "40%",
+                fontWeight: "500" /* Adjusted font-size */,
+              }}
+            >
+              {movieToRender?.Plot || "No description available."}
+            </p>
+          </div>
           <div
             style={{
               fontWeight: "bold",
@@ -304,6 +333,28 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 {genre}
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: "20px" }}>
+            <button
+              onMouseOver={() => {
+                setRbHover(true);
+              }}
+              onMouseOut={() => {
+                setRbHover(false);
+              }}
+              style={{
+                padding: "0.7rem",
+                borderRadius: "7px",
+                border: "none",
+                background: rbHover
+                  ? "linear-gradient(to right , blue , purple)"
+                  : "linear-gradient(to right , purple, blue)",
+                color: "white",
+                cursor: "pointer",
+              }}
+            >
+              Show Recommendations
+            </button>
           </div>
         </div>
       </div>

@@ -13,7 +13,24 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
   const [hoveredDiv, setHoveredDiv] = useState(0);
   const [rbHover, setRbHover] = useState(false);
-
+  const [rMovies, setRMovies] = useState([]);
+  async function recommendedMovieCall(movieToRender) {
+    if (movieToRender?.Type == "movie") {
+      const { data } = await axios.get(
+        `https://tastedive.com/api/similar?q=${movieToRender?.Title}&type=movie&limit=5&k=1040827-iStreamW-E8459B8B `
+      );
+      console.log("recommendations: " + data);
+      setRecommendedMovieLoading(false);
+      setRMovies(data.similar.results);
+    } else {
+      const { data } = await axios.get(
+        `https://tastedive.com/api/similar?q=${movieToRender?.Title}&type=show&limit=5&k=1040827-iStreamW-E8459B8B `
+      );
+      console.log("recommendations: ", data);
+      setRecommendedMovieLoading(false);
+      setRMovies(data.similar.results);
+    }
+  }
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
@@ -141,7 +158,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          <iframe
+          {/* <iframe
             style={{
               width: "100%",
               height: "100%",
@@ -156,7 +173,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ? `https://vidsrc.xyz/embed/movie/${id}`
                 : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
-          ></iframe>
+          ></iframe> */}
         </div>
 
         {/* Movie Details */}
@@ -334,27 +351,86 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: "20px" }}>
-            <button
-              onMouseOver={() => {
-                setRbHover(true);
-              }}
-              onMouseOut={() => {
-                setRbHover(false);
-              }}
+          {/* Recommendations */}
+          {recommendedMovieLoading && (
+            <div
               style={{
-                padding: "0.7rem",
-                borderRadius: "7px",
-                border: "none",
-                background: rbHover
-                  ? "linear-gradient(to right , blue , purple)"
-                  : "linear-gradient(to right , purple, blue)",
-                color: "white",
-                cursor: "pointer",
+                margin: "0 auto",
+                marginTop: "30px",
+
+                width: "80px",
+                height: "80px",
               }}
             >
-              Show Recommendations
-            </button>
+              <Puff
+                stroke="#ff0000"
+                strokeOpacity={20.125}
+                speed={0.75}
+                width={"100%"}
+                height={"100%"}
+              />
+            </div>
+          )}
+          <div style={{ marginTop: "20px" }}>
+            {!recommendedMovieLoading && !rMovies.length > 0 && (
+              <button
+                onClick={() => {
+                  setRecommendedMovieLoading(true);
+                  recommendedMovieCall(movieToRender);
+                }}
+                onMouseOver={() => {
+                  setRbHover(true);
+                }}
+                onMouseOut={() => {
+                  setRbHover(false);
+                }}
+                style={{
+                  padding: "0.7rem",
+                  borderRadius: "7px",
+                  border: "none",
+                  background: rbHover
+                    ? "linear-gradient(to right , blue , purple)"
+                    : "linear-gradient(to right , purple, blue)",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+              >
+                Show Recommendations
+              </button>
+            )}
+            {rMovies.length > 0 && (
+              <div style={{ marginTop: "2.6rem" }}>
+                <h3 style={{ margin: 0, marginBottom: "0.4rem" }}>
+                  Recommendations!!
+                </h3>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "5px",
+                    marginTop: "0.5rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {rMovies.map((ele, id) => {
+                    return (
+                      <button
+                        style={{
+                          cursor: "pointer",
+                          backgroundColor: "orange",
+                          padding: "0.45rem",
+                          borderRadius: "10px",
+                          border: "none",
+                        }}
+                      >
+                        {ele.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

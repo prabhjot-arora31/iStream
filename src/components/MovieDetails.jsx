@@ -16,6 +16,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [hoveredDiv, setHoveredDiv] = useState(0);
   const [rbHover, setRbHover] = useState(false);
   const [rMovies, setRMovies] = useState([]);
+  const [recommendationError, setRecommendationError] = useState("");
   async function recommendedMovieCall(movieToRender) {
     if (!movieToRender) return;
 
@@ -29,8 +30,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       console.log("Recommendations:", data);
       setRecommendedMovieLoading(false);
       setRMovies(data?.similar?.results || []);
+      if (data?.similar?.results.length == 0)
+        setRecommendationError("No recommendations");
     } catch (error) {
       console.error("Error fetching recommendations:", error);
+      setRecommendationError("No Result!!");
       setRecommendedMovieLoading(false);
       setRMovies([]);
     }
@@ -163,7 +167,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          <iframe
+          {/* <iframe
             style={{
               width: "100%",
               height: "100%",
@@ -178,7 +182,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ? `https://vidsrc.xyz/embed/movie/${id}`
                 : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
-          ></iframe>
+          ></iframe> */}
         </div>
 
         {/* Movie Details */}
@@ -377,31 +381,38 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             </div>
           )}
           <div style={{ marginTop: "20px" }}>
-            {!recommendedMovieLoading && !rMovies?.length > 0 && (
-              <button
-                onClick={() => {
-                  setRecommendedMovieLoading(true);
-                  recommendedMovieCall(movieToRender);
-                }}
-                onMouseOver={() => {
-                  setRbHover(true);
-                }}
-                onMouseOut={() => {
-                  setRbHover(false);
-                }}
-                style={{
-                  padding: "0.7rem",
-                  borderRadius: "7px",
-                  border: "none",
-                  background: rbHover
-                    ? "linear-gradient(to right , blue , purple)"
-                    : "linear-gradient(to right , purple, blue)",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Show Recommendations
-              </button>
+            {!recommendedMovieLoading &&
+              !rMovies?.length > 0 &&
+              !recommendationError && (
+                <button
+                  onClick={() => {
+                    setRecommendedMovieLoading(true);
+                    recommendedMovieCall(movieToRender);
+                  }}
+                  onMouseOver={() => {
+                    setRbHover(true);
+                  }}
+                  onMouseOut={() => {
+                    setRbHover(false);
+                  }}
+                  style={{
+                    padding: "0.7rem",
+                    borderRadius: "7px",
+                    border: "none",
+                    background: rbHover
+                      ? "linear-gradient(to right , blue , purple)"
+                      : "linear-gradient(to right , purple, blue)",
+                    color: "white",
+                    cursor: "pointer",
+                  }}
+                >
+                  Show Recommendations
+                </button>
+              )}
+            {recommendationError && (
+              <h3 style={{ margin: 0, marginBottom: "0.4rem" }}>
+                No Recommendations!!
+              </h3>
             )}
             {rMovies?.length > 0 && (
               <div style={{ marginTop: "2.6rem" }}>

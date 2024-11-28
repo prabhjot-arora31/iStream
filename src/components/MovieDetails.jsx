@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 
 const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const { id } = useParams(); // Get movie ID from route params
+  const corsProxy = "https://cors-anywhere.herokuapp.com/";
+  const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
@@ -15,22 +17,25 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [rbHover, setRbHover] = useState(false);
   const [rMovies, setRMovies] = useState([]);
   async function recommendedMovieCall(movieToRender) {
-    if (movieToRender?.Type == "movie") {
-      const { data } = await axios.get(
-        `https://tastedive.com/api/similar?q=${movieToRender?.Title}&type=movie&limit=5&k=1040827-iStreamW-E8459B8B `
-      );
-      console.log("recommendations: " + data);
+    if (!movieToRender) return;
+
+    const corsProxy = "https://cors-anywhere.herokuapp.com/";
+    const tastediveURL = "https://tastedive.com/api/similar";
+    const type = movieToRender?.Type === "movie" ? "movie" : "show";
+    const query = `${corsProxy}${tastediveURL}?q=${movieToRender?.Title}&type=${type}&limit=5&k=1040827-iStreamW-E8459B8B`;
+
+    try {
+      const { data } = await axios.get(query);
+      console.log("Recommendations:", data);
       setRecommendedMovieLoading(false);
-      setRMovies(data.similar.results);
-    } else {
-      const { data } = await axios.get(
-        `https://tastedive.com/api/similar?q=${movieToRender?.Title}&type=show&limit=5&k=1040827-iStreamW-E8459B8B `
-      );
-      console.log("recommendations: ", data);
+      setRMovies(data?.similar?.results || []);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
       setRecommendedMovieLoading(false);
-      setRMovies(data.similar.results);
+      setRMovies([]);
     }
   }
+
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
@@ -372,7 +377,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             </div>
           )}
           <div style={{ marginTop: "20px" }}>
-            {!recommendedMovieLoading && !rMovies.length > 0 && (
+            {!recommendedMovieLoading && !rMovies?.length > 0 && (
               <button
                 onClick={() => {
                   setRecommendedMovieLoading(true);
@@ -398,7 +403,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 Show Recommendations
               </button>
             )}
-            {rMovies.length > 0 && (
+            {rMovies?.length > 0 && (
               <div style={{ marginTop: "2.6rem" }}>
                 <h3 style={{ margin: 0, marginBottom: "0.4rem" }}>
                   Recommendations!!

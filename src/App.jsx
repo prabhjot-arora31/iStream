@@ -1074,17 +1074,19 @@ function App() {
                       setSearchBtnHover(false);
                     }}
                     style={{
-                      background: searchBtnHover
-                        ? "linear-gradient(to right , red, orange)"
-                        : "linear-gradient(to right , orange, red)",
-                      border: "none",
-                      color: "white",
+                      backgroundColor: searchBtnHover ? "white" : "lightsalmon",
+                      // background: searchBtnHover
+                      //   ? "linear-gradient(to right , red, orange)"
+                      //   : "linear-gradient(to right , orange, red)",
+                      color: "black",
                       alignSelf: "flex-start",
-                      borderRadius: "20px",
+                      borderRadius: "7px",
                       padding: "0.4rem",
                       paddingLeft: "0.8rem",
                       paddingRight: "0.8rem",
                       cursor: "pointer",
+                      fontSize: "14px",
+                      border: searchBtnHover ? "1px solid black" : "none",
                     }}
                     onClick={() => {
                       const searches =

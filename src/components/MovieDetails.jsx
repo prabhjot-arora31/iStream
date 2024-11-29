@@ -176,7 +176,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          {/* <iframe
+          <iframe
             style={{
               width: "100%",
               height: "100%",
@@ -191,7 +191,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ? `https://vidsrc.xyz/embed/movie/${id}`
                 : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
-          ></iframe> */}
+          ></iframe>
         </div>
 
         {/* Movie Details */}

@@ -26,7 +26,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
     const query = `${corsProxy}${tastediveURL}?q=${movieToRender?.Title}&type=${type}&limit=5&k=1040827-iStreamW-E8459B8B`;
 
     try {
-      const { data } = await axios.get(query);
+      const { data } = await axios.post(
+        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title}/${type}`,
+        {
+          secret: "nb&%*4#GtyuiEWQA09%@!",
+        }
+      );
       console.log("Recommendations:", data);
       setRecommendedMovieLoading(false);
       setRMovies(data?.similar?.results || []);
@@ -167,7 +172,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          <iframe
+          {/* <iframe
             style={{
               width: "100%",
               height: "100%",
@@ -182,7 +187,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ? `https://vidsrc.xyz/embed/movie/${id}`
                 : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
-          ></iframe>
+          ></iframe> */}
         </div>
 
         {/* Movie Details */}

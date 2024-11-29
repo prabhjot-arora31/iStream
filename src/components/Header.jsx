@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 const Header = () => {
+  const location = useLocation();
   const [headerTab, setHeaderTab] = useState(
     localStorage.getItem("headerTab") || 1
   );
@@ -24,7 +25,7 @@ const Header = () => {
           to={"/"}
           style={{
             textDecoration: "none",
-            color: headerTab == 1 ? "red" : "black",
+            color: headerTab == 1 && location.pathname == "/" ? "red" : "black",
             padding: "0.3rem",
           }}
           onClick={() => {
@@ -43,7 +44,11 @@ const Header = () => {
           to={"/history"}
           style={{
             textDecoration: "none",
-            color: `${headerTab == 2 ? "red" : "black"}`,
+            color: `${
+              headerTab == 2 && location.pathname == "/history"
+                ? "red"
+                : "black"
+            }`,
             padding: "0.3rem",
           }}
           onClick={() => {

@@ -3,7 +3,7 @@ import "./MovieDetails.css";
 import axios from "axios";
 import { Puff } from "react-loading-icons";
 import MovieCard from "./MovieCard";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const { id } = useParams(); // Get movie ID from route params
@@ -14,8 +14,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
   const [hoveredDiv, setHoveredDiv] = useState(0);
+  const navigate = useNavigate();
   const [rbHover, setRbHover] = useState(false);
-  const [rMovies, setRMovies] = useState([]);
+
+  const [rMovies, setRMovies] = useState(
+    JSON.parse(localStorage.getItem("rMovies")) || []
+  );
   const [recommendationError, setRecommendationError] = useState("");
   async function recommendedMovieCall(movieToRender) {
     if (!movieToRender) return;
@@ -172,7 +176,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             maxWidth: "100%", // Ensures iframe scales
           }}
         >
-          <iframe
+          {/* <iframe
             style={{
               width: "100%",
               height: "100%",
@@ -187,7 +191,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ? `https://vidsrc.xyz/embed/movie/${id}`
                 : `https://vidsrc.xyz/embed/tv/${id}/1/1`
             }
-          ></iframe>
+          ></iframe> */}
         </div>
 
         {/* Movie Details */}
@@ -403,11 +407,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                   style={{
                     padding: "0.7rem",
                     borderRadius: "7px",
-                    border: "none",
+                    border: rbHover ? "1px solid purple" : "1px solid purple",
                     background: rbHover
                       ? "linear-gradient(to right , blue , purple)"
-                      : "linear-gradient(to right , purple, blue)",
-                    color: "white",
+                      : "white",
+                    color: rbHover ? "white" : "purple",
                     cursor: "pointer",
                   }}
                 >
@@ -443,6 +447,20 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                           padding: "0.45rem",
                           borderRadius: "10px",
                           border: "none",
+                        }}
+                        onClick={() => {
+                          navigate("/recommended/" + ele.name);
+                          let movies =
+                            JSON.parse(localStorage.getItem("movies")) || [];
+                          if (
+                            movies.find((movie) => movie.imdbID === data.imdbID)
+                          )
+                            return;
+                          movies.push(data);
+                          localStorage.setItem(
+                            "movies",
+                            JSON.stringify(movies)
+                          );
                         }}
                       >
                         {ele.name}

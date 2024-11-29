@@ -5,7 +5,7 @@ import "./App.css";
 import Header from "./components/Header";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import MovieDetails from "./components/MovieDetails";
 import { FaSpinner } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
@@ -19,12 +19,14 @@ import History from "./pages/History";
 import Genres from "./pages/Genres";
 import MoviesByGenres from "./pages/MoviesByGenres";
 import Puff from "react-loading-icons/dist/esm/components/puff";
+import RecommendedMovies from "./pages/RecommendedMovies";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
   const [error, seterror] = useState("");
+  // const location = useLocation();
   const [isInputClicked, setIsInputClicked] = useState(false);
   const [typeText, setTypeText] = useState("Movie");
   const [type, setType] = useState("");
@@ -982,6 +984,7 @@ function App() {
   const [selectedMovies, setSelectedMovies] = useState([]);
   useEffect(() => {
     setSelectedMovies(getRandomMovies());
+    localStorage.setItem("isRecommendedFetch", false);
   }, []);
   return (
     <>
@@ -989,6 +992,7 @@ function App() {
         <Header />
 
         <Routes>
+          <Route path="/recommended/:movie" element={<RecommendedMovies />} />
           <Route
             path="/"
             exact

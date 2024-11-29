@@ -113,14 +113,13 @@ const History = ({ getMovieDetail }) => {
           >
             <input
               type="text"
-              placeholder="Enter search term"
+              placeholder="Search History..."
               value={searchTerm}
               onChange={(e) => {
                 setsearchTerm(e.target.value);
-                const searchResult = history1.filter((searchTerm1) =>
-                  searchTerm1.Title.toLowerCase().includes(searchTerm)
-                );
-                if (searchResult.length > 0) setHistory(searchResult);
+                if (e.target.value.trim().length == 0) {
+                  setHistory(JSON.parse(localStorage.getItem("movies")) || []);
+                }
               }}
               style={{
                 padding: "0.5rem",
@@ -128,6 +127,25 @@ const History = ({ getMovieDetail }) => {
                 border: "2px solid black",
               }}
             />
+            <button
+              style={{
+                backgroundColor: "lightsalmon",
+                border: "none",
+                cursor: "pointer",
+                marginLeft: "3px",
+                borderRadius: "4px",
+              }}
+              onClick={() => {
+                if (searchTerm.length > 0) {
+                  const searchResult = history1.filter((searchTerm1) =>
+                    searchTerm1.Title.toLowerCase().includes(searchTerm)
+                  );
+                  if (searchResult.length > 0) setHistory(searchResult);
+                }
+              }}
+            >
+              Search
+            </button>
           </div>
           <div
             style={{

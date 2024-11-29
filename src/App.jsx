@@ -33,7 +33,7 @@ function App() {
   const [isLoading, setIsLoading] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [hoveredDiv, setHoveredDiv] = useState(0);
+  const [hoveredDiv, setHoveredDiv] = useState();
   const [searchBtnHover, setSearchBtnHover] = useState(false);
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
@@ -1029,6 +1029,7 @@ function App() {
                       style={{
                         padding: "0.5rem",
                         borderRadius: "5px",
+                        fontSize: "15px",
                         border: "1px solid black",
                       }}
                       value={Search}
@@ -1080,12 +1081,12 @@ function App() {
                       //   : "linear-gradient(to right , orange, red)",
                       color: "black",
                       alignSelf: "flex-start",
-                      borderRadius: "7px",
-                      padding: "0.4rem",
+                      borderRadius: "5px",
+                      padding: "0.5rem",
                       paddingLeft: "0.8rem",
                       paddingRight: "0.8rem",
                       cursor: "pointer",
-                      fontSize: "14px",
+                      fontSize: "15px",
                       border: searchBtnHover ? "1px solid black" : "none",
                     }}
                     onClick={() => {
@@ -1154,6 +1155,7 @@ function App() {
                               <button
                                 onClick={() => {
                                   setIsLoading(true);
+                                  setTypeText("All");
                                   (async () => {
                                     const { data } = await axios.get(
                                       `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
@@ -1165,9 +1167,15 @@ function App() {
                                 style={{
                                   padding: "0.38rem",
                                   borderRadius: "0.3rem",
-                                  backgroundColor: "purple",
-                                  color: "white",
-                                  border: "none",
+                                  fontSize: "15px",
+
+                                  backgroundColor:
+                                    typeText == "All" ? "purple" : "white",
+                                  color: typeText != "All" ? "purple" : "white",
+                                  border:
+                                    typeText != "All"
+                                      ? "1px solid purple"
+                                      : "none",
                                   cursor: "pointer",
                                 }}
                               >
@@ -1188,9 +1196,16 @@ function App() {
                                 style={{
                                   padding: "0.38rem",
                                   borderRadius: "0.3rem",
-                                  backgroundColor: "purple",
-                                  color: "white",
-                                  border: "none",
+                                  fontSize: "15px",
+
+                                  backgroundColor:
+                                    typeText == "Movie" ? "purple" : "white",
+                                  color:
+                                    typeText != "Movie" ? "purple" : "white",
+                                  border:
+                                    typeText != "Movie"
+                                      ? "1px solid purple"
+                                      : "none",
                                   cursor: "pointer",
                                 }}
                               >
@@ -1210,12 +1225,17 @@ function App() {
                                 }}
                                 style={{
                                   padding: "0.38rem",
-                                  border: "none",
                                   cursor: "pointer",
-
+                                  fontSize: "15px",
                                   borderRadius: "0.3rem",
-                                  backgroundColor: "purple",
-                                  color: "white",
+                                  backgroundColor:
+                                    typeText == "Series" ? "purple" : "white",
+                                  color:
+                                    typeText != "Series" ? "purple" : "white",
+                                  border:
+                                    typeText != "Series"
+                                      ? "1px solid purple"
+                                      : "none",
                                 }}
                               >
                                 Web Series
@@ -1223,7 +1243,7 @@ function App() {
                             </div>
                           )}
                           {movies?.length > 0 && typeText && (
-                            <h4 style={{ textAlign: "center" }}>{typeText}</h4>
+                            <h3 style={{ textAlign: "center" }}>{typeText}</h3>
                           )}
                           <div
                             style={{

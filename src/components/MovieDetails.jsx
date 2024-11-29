@@ -200,7 +200,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             className="title"
             style={{
               fontWeight: "bolder",
-              fontSize: "1.5rem" /* Adjusted font-size */,
+              fontSize: "2rem" /* Adjusted font-size */,
             }}
           >
             {movieToRender?.Title}
@@ -244,56 +244,109 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           <div
             style={{
               fontWeight: "bold",
-              fontSize: "1rem" /* Adjusted font-size */,
+              fontSize: "1.3rem" /* Adjusted font-size */,
             }}
           >
-            Writer: {movieToRender?.Writer || "Unknown"}
+            Writer <br />
+            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
+              {movieToRender?.Writer || "Unknown"}
+            </span>
           </div>
           <div
             style={{
               fontWeight: "bold",
-              fontSize: "1rem" /* Adjusted font-size */,
+              fontSize: "1.3rem" /* Adjusted font-size */,
+              marginTop: "0.7rem",
             }}
           >
-            Director: {movieToRender?.Director || "Unknown"}
+            Director <br />
+            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+              {movieToRender?.Director || "Unknown"}
+            </span>
           </div>
-          <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            Cast: {movieToRender?.Actors || "Not listed"}
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.3rem" /* Adjusted font-size */,
+              margin: "0.7rem 0",
+            }}
+          >
+            Cast{" "}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "0.6rem",
+                fontWeight: 500,
+                fontSize: "1rem",
+                margin: "0.4rem 0",
+                flexWrap: "wrap",
+              }}
+            >
+              {movieToRender?.Actors.split(",").map((actor, id) => {
+                return (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      // justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      width={"60px"}
+                      src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+                    />
+                    <span
+                      style={{
+                        margin: 0,
+                        fontSize: "0.86rem",
+                        width: "50px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {actor}
+                    </span>
+                  </div>
+                );
+              }) || "Not listed"}
+            </div>
           </div>
-          <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.3rem" /* Adjusted font-size */,
+              margin: "1.89rem 0",
+            }}
+          >
             {movieToRender?.Released} | {movieToRender?.Runtime} |{" "}
             {movieToRender?.Country}
           </div>
           {/* Language */}
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "0.8rem",
-              alignItems: "center",
-              marginTop: "0.6rem",
+              fontWeight: "bold",
+              fontSize: "1.3rem" /* Adjusted font-size */,
+              marginTop: "0.7rem",
             }}
           >
-            <span style={{ fontWeight: "bold" }}>
-              Language: {movieToRender?.Language}
-            </span>{" "}
+            Language <br />
+            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+              {movieToRender?.Language || "Unknown"}
+            </span>
           </div>
           {/* Awards */}
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "0.8rem",
-              alignItems: "center",
-              marginTop: "0.6rem",
+              fontWeight: "bold",
+              fontSize: "1.3rem" /* Adjusted font-size */,
+              margin: "0.7rem 0",
             }}
           >
-            <span style={{ fontWeight: "bold" }}>
-              Awards: {movieToRender?.Awards}
+            Awards <br />
+            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+              {movieToRender?.Awards || "Unknown"}
             </span>
-            {/* <span style={{ fontWeight: "500" }}></span> */}
           </div>
           {/* Rating */}
           <div
@@ -303,7 +356,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               justifyContent: "center",
               gap: "0.8rem",
               alignItems: "center",
-              marginTop: "0.6rem",
+              margin: "0.6rem 0",
             }}
           >
             <div
@@ -327,7 +380,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               <span style={{ fontSize: "20px", fontWeight: "bold" }}>
                 {movieToRender?.imdbRating}
               </span>
-              /10{" "}
+              &nbsp; /10{" "}
             </div>
             <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
               ({movieToRender?.imdbVotes})
@@ -336,12 +389,16 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
 
           {/* Seasons */}
           {movieToRender?.Type == "series" && (
-            <div style={{ marginTop: "0.6rem", marginBottom: "0.6rem" }}>
-              <span style={{ fontWeight: "500", fontSize: "18px" }}>
-                Total Seasons:{" "}
-              </span>
-              <span style={{ fontWeight: "900", fontSize: "18px" }}>
-                {movieToRender?.totalSeasons}
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.3rem" /* Adjusted font-size */,
+                margin: "0.9rem 0",
+              }}
+            >
+              Total Seasons <br />
+              <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+                {movieToRender?.totalSeasons || "Unknown"}
               </span>
             </div>
           )}

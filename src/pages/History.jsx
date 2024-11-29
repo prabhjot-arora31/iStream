@@ -13,7 +13,7 @@ const History = ({ getMovieDetail }) => {
   );
   const [searchTerm, setsearchTerm] = useState("");
   const [tab, setTab] = useState(1);
-  const [hoveredDiv, setHoveredDiv] = useState(0);
+  const [hoveredDiv, setHoveredDiv] = useState();
 
   const deleteInidividualMovie = (id) => {
     // history.find((ele) => ele.Id === id)

@@ -17,7 +17,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         setHoveredDiv(id);
       }}
       onMouseOut={() => {
-        setHoveredDiv();
+        setHoveredDiv(-1);
       }}
       onClick={() => {
         window.scrollTo({
@@ -77,6 +77,38 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
             transition: ".13s ease-in-out",
           }}
         />
+        <h4
+          style={{
+            position: "absolute",
+            top: "0",
+            right: 0,
+            opacity: 1,
+            textAlign: "center",
+            margin: "0 auto",
+            padding: "0.12rem",
+            borderTopRightRadius: "10px",
+            background:
+              "linear-gradient(to top , rgba(0,0,0,0.8) , rgba(0,0,0,0.5))",
+          }}
+        >
+          <span style={{ opacity: 1, color: "white" }}>{data?.Year}</span>
+        </h4>
+        <h4
+          style={{
+            position: "absolute",
+            top: "0",
+            left: 0,
+            opacity: 1,
+            textAlign: "center",
+            margin: "0 auto",
+            padding: "0.12rem",
+            borderTopLeftRadius: "10px",
+            background:
+              "linear-gradient(to top , rgba(0,0,0,0.8) , rgba(0,0,0,0.5))",
+          }}
+        >
+          <span style={{ opacity: 1, color: "white" }}>{data?.Type}</span>
+        </h4>
       </div>
       <h3 style={{ marginTop: "5px", textAlign: "center" }}>
         {/* {data.Title.length > 15

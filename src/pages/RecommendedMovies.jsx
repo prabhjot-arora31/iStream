@@ -139,8 +139,8 @@ const RecommendedMovies = () => {
           allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           src={
             movieInfo?.Type === "movie"
-              ? `https://vidsrc.xyz/embed/movie/${id}`
-              : `https://vidsrc.xyz/embed/tv/${id}/1/1`
+              ? `https://vidsrc.xyz/embed/movie/${movieInfo?.imdbID}`
+              : `https://vidsrc.xyz/embed/tv/${movieInfo?.imdbID}/1/1`
           }
         ></iframe> 
           </div>

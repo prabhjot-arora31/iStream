@@ -19,7 +19,7 @@ const RecommendedMovies = () => {
 
     try {
       const { data } = await axios.post(
-        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title}/${type}`,
+        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title.replace('/:/g',' ')}/${type}`,
         {
           secret: "nb&%*4#GtyuiEWQA09%@!",
         }

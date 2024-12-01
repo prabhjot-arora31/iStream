@@ -1067,6 +1067,7 @@ function App() {
                       }}
                       value={Search}
                       onChange={(e) => {
+                        setIsInputClicked(true);
                         setSearch(e.target.value);
                         searching(Search);
                       }}

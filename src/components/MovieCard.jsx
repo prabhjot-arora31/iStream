@@ -63,9 +63,11 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         </h3> */}
         <img
           src={
-            data.Poster || !data.Poster?.includes("themoviedb")
-              ? data.Poster
-              : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+            data.Poster.includes("themoviedb")
+              ? data.Poster.replace("themoviedb", "tmbd")
+              : data.Poster
+            // ? data.Poster
+            // : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           style={{
             width: "170px",

@@ -45,7 +45,7 @@ function App() {
       const { data } = await axios.get(
         // `https://istream-proxy-search-suggestions.vercel.app/searching/${searches}`,
         // `http://localhost:9005/searching/${searches}`,
-        `https://api.tmdb.org/3/search/movie?api_key=fafef439971c0bedf1c12e7a5be971c2&query=${searches}`
+        `https://api.tmdb.org/3/search/movie?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&query=${searches}`
       );
       console.log("search result:", data);
       setSearchResults(data.results);
@@ -1087,23 +1087,31 @@ function App() {
                         }}
                       >
                         {searchResults?.length > 0 &&
-                          searchResults?.map((ele, id) => {
-                            return (
-                              <span
-                                onClick={() => {
-                                  setSearch(ele?.original_title);
-                                }}
-                                style={{
-                                  fontSize: "13px",
-                                  color: "gray",
-                                  marginBottom: id != 4 ? "6px" : "0",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {ele?.original_title}
-                              </span>
-                            );
-                          })}
+                          searchResults
+                            .filter(
+                              (value, index, self) =>
+                                // Filter by unique 'title' (no duplicates)
+                                index ===
+                                self.findIndex((t) => t.title === value.title)
+                            )
+                            .map((ele, id) => {
+                              return (
+                                <span
+                                  key={id}
+                                  onClick={() => {
+                                    setSearch(ele?.title);
+                                  }}
+                                  style={{
+                                    fontSize: "13px",
+                                    color: "gray",
+                                    marginBottom: id !== 4 ? "6px" : "0",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  {ele?.title}
+                                </span>
+                              );
+                            })}
                       </div>
                     )}
                   </div>

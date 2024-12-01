@@ -3,13 +3,19 @@ import MovieCard from "../components/MovieCard";
 
 const History = ({ getMovieDetail }) => {
   const [history, setHistory] = useState(
-    JSON.parse(localStorage.getItem("movies") || [])
+    (localStorage.getItem("movies") &&
+      JSON.parse(localStorage?.getItem("movies"))) ||
+      []
   );
   const [history1, setHistory1] = useState(
-    JSON.parse(localStorage.getItem("movies") || [])
+    (localStorage.getItem("movies") &&
+      JSON.parse(localStorage?.getItem("movies"))) ||
+      []
   );
   const [searches, setSearches] = useState(
-    JSON.parse(localStorage.getItem("searches")) || []
+    (localStorage.getItem("searches") &&
+      JSON.parse(localStorage?.getItem("searches"))) ||
+      []
   );
   const [searchTerm, setsearchTerm] = useState("");
   const [tab, setTab] = useState(1);

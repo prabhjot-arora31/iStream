@@ -5,7 +5,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
   const navigate = useNavigate();
   useEffect(() => {
     (() => {
-      console.log("in movie card:", data);
+      // console.log("in movie card:", data);
     })();
 
     return () => {};

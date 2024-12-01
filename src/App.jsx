@@ -23,8 +23,40 @@ import RecommendedMovies from "./pages/RecommendedMovies";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const searching = async (searches) => {
+    // fetch(
+    //   `https://cors-anywhere.herokuapp.com/https://iosmirror.cc/search.php?s=end`
+    // )
+    //   .then((response) => {
+    //     // Check if the response is successful
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     return response.json(); // Parse the response as JSON
+    //   })
+    //   .then((data) => {
+    //     console.log("from fetch:", data); // Log the parsed data
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error:", err); // Log any errors that occur
+    //   });
+
+    try {
+      const { data } = await axios.get(
+        // `https://istream-proxy-search-suggestions.vercel.app/searching/${searches}`,
+        // `http://localhost:9005/searching/${searches}`,
+        `https://api.tmdb.org/3/search/movie?api_key=fafef439971c0bedf1c12e7a5be971c2&query=${searches}`
+      );
+      console.log("search result:", data);
+      setSearchResults(data.results);
+    } catch (e) {
+      console.log("Error:", e.message);
+      setSearchResults([]);
+    }
+  };
   const [Search, setSearch] = useState("");
   const [MovieDetail, setMovieDetail] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
   const [error, seterror] = useState("");
   // const location = useLocation();
   const [isInputClicked, setIsInputClicked] = useState(false);
@@ -896,8 +928,9 @@ function App() {
     };
   }, []);
   useEffect(() => {
+    // setHoveredDiv();
     return () => {};
-  }, [type]);
+  }, [type, hoveredDiv]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest("input") === null) {
@@ -1033,10 +1066,13 @@ function App() {
                         border: "1px solid black",
                       }}
                       value={Search}
-                      onChange={(e) => setSearch(e.target.value)}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        searching(Search);
+                      }}
                       placeholder="Enter any movie/series name.."
                     />
-                    {isInputClicked && (
+                    {isInputClicked && searchResults?.length > 0 && (
                       <div
                         style={{
                           display: "flex",
@@ -1045,25 +1081,29 @@ function App() {
                           marginLeft: "0.18rem",
                           boxShadow: "0 0 5px black",
                           padding: "0.23rem",
+                          maxHeight: "120px",
+                          overflowY: "auto",
+                          maxWidth: "185px",
                         }}
                       >
-                        {selectedMovies.map((ele, id) => {
-                          return (
-                            <span
-                              onClick={() => {
-                                setSearch(ele);
-                              }}
-                              style={{
-                                fontSize: "13px",
-                                color: "gray",
-                                marginBottom: id != 4 ? "6px" : "0",
-                                cursor: "pointer",
-                              }}
-                            >
-                              {ele}
-                            </span>
-                          );
-                        })}
+                        {searchResults?.length > 0 &&
+                          searchResults?.map((ele, id) => {
+                            return (
+                              <span
+                                onClick={() => {
+                                  setSearch(ele?.original_title);
+                                }}
+                                style={{
+                                  fontSize: "13px",
+                                  color: "gray",
+                                  marginBottom: id != 4 ? "6px" : "0",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {ele?.original_title}
+                              </span>
+                            );
+                          })}
                       </div>
                     )}
                   </div>

@@ -6,7 +6,8 @@ import MovieCard from "./MovieCard";
 import { useNavigate, useParams } from "react-router-dom";
 
 const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
-  const { id } = useParams(); // Get movie ID from route params
+  const { id, tv } = useParams(); // Get movie ID from route params
+  const [idToUse, setIdToUse] = useState(id);
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
@@ -31,7 +32,10 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
 
     try {
       const { data } = await axios.post(
-        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title.replace(/:/g,' ')}/${type}`,
+        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title.replace(
+          /:/g,
+          " "
+        )}/${type}`,
         {
           secret: "nb&%*4#GtyuiEWQA09%@!",
         }
@@ -52,41 +56,50 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
+      const apiKey = "2d70fb93";
       setIsLoading(true);
-      const { data } = await axios.get(
-        // `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/movie/${id}`
-        `
-        https://www.omdbapi.com/?i=${id}&apikey=2d70fb93`
-      );
+      let url;
+      let imdbId = idToUse;
+
+      // Determine if we need to fetch IMDb ID from TMDB
+      if (!idToUse?.startsWith("tt")) {
+        // TMDB ID search
+        console.log("Fetching IMDb ID from TMDB...");
+        var tmdbUrl;
+        if (tv?.length > 0) {
+          tmdbUrl = `https://api.tmdb.org/3/tv/${id}/external_ids?api_key=fafef439971c0bedf1c12e7a5be971c2`;
+        } else {
+          tmdbUrl = `https://api.tmdb.org/3/movie/${id}?api_key=fafef439971c0bedf1c12e7a5be971c2`;
+        }
+        const { data: tmdbData } = await axios.get(tmdbUrl);
+        imdbId = tmdbData.imdb_id; // Extract IMDb ID
+        setIdToUse(imdbId); // Update `idToUse`
+      }
+
+      // Fetch movie details from OMDB
+      url = `https://www.omdbapi.com/?i=${imdbId}&apikey=${apiKey}`;
+      console.log("Fetching movie details from OMDB...");
+      const { data } = await axios.get(url);
+
+      // Update state with fetched movie data
       setMovieToRender(data);
-      // if (data.result[0]) {
-      //   fetchRecommendedMovies(data.result[0].Id);
-      // }
+      let movies = JSON.parse(localStorage.getItem("movies")) || [];
+      if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
+      movies.push(data);
+      localStorage.setItem("movies", JSON.stringify(movies));
+      console.log("Movie data fetched successfully:", data);
     } catch (error) {
-      setMovieToRender(MovieDetail);
       console.error("Error fetching movie details:", error);
+      setMovieToRender(MovieDetail); // Fallback movie details
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fetch Recommended Movies
-  const fetchRecommendedMovies = async (movieId) => {
-    try {
-      setRecommendedMovieLoading(true);
-      const { data } = await axios.get(
-        `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/recommendations/${movieId}`
-      );
-      setRecommendedMovies(data.result.data || []);
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-    } finally {
-      setRecommendedMovieLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchById();
+    // Only trigger `fetchById` on the initial render or when `id` changes
+    // Do not depend on `idToUse` here to avoid infinite loop
   }, [id]);
 
   if (isLoading) {
@@ -166,33 +179,35 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         }}
       >
         {/* Movie Player */}
-        <div
-          style={{
-            height: "400px",
-            margin: "0 auto",
-            position: "relative",
-            top: "18px",
-            width: "100%",
-            maxWidth: "100%", // Ensures iframe scales
-          }}
-        >
-          <iframe
+        {movieToRender?.Type != "game" && (
+          <div
             style={{
+              height: "400px",
+              margin: "0 auto",
+              position: "relative",
+              top: "18px",
               width: "100%",
-              height: "100%",
-              border: "1px solid black",
-              borderRadius: "8px",
+              maxWidth: "100%", // Ensures iframe scales
             }}
-            allowFullScreen // Correct attribute
-            scrolling="no"
-            allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            src={
-              movieToRender?.Type === "movie"
-                ? `https://vidsrc.xyz/embed/movie/${id}`
-                : `https://vidsrc.xyz/embed/tv/${id}/1/1`
-            }
-          ></iframe>
-        </div>
+          >
+            <iframe
+              style={{
+                width: "100%",
+                height: "100%",
+                border: "1px solid black",
+                borderRadius: "8px",
+              }}
+              allowFullScreen // Correct attribute
+              scrolling="no"
+              allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              src={
+                movieToRender?.Type === "movie"
+                  ? `https://vidsrc.xyz/embed/movie/${id}`
+                  : `https://vidsrc.xyz/embed/tv/${id}/1/1`
+              }
+            ></iframe>
+          </div>
+        )}
 
         {/* Movie Details */}
         <div style={{ marginTop: "2.12462rem" }}>
@@ -203,7 +218,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               fontSize: "2rem" /* Adjusted font-size */,
             }}
           >
-            {movieToRender?.Title}
+            {movieToRender?.Title ||
+              movieToRender?.title ||
+              movieToRender?.name}
           </h1>
           <div
             style={{
@@ -216,10 +233,13 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           >
             <img
               src={
-                movieToRender?.Poster?.includes("themoviedb")
-                  ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-                  : movieToRender?.Poster ||
-                    "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                movieToRender?.Poster
+                  ? movieToRender?.Poster?.includes("themoviedb")
+                    ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                    : movieToRender?.Poster ||
+                      "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                  : "https://image.tmdb.org/t/p/w500" +
+                    movieToRender?.poster_path
               }
               alt="Movie Cover"
               style={{
@@ -238,7 +258,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 fontWeight: "500" /* Adjusted font-size */,
               }}
             >
-              {movieToRender?.Plot || "No description available."}
+              {movieToRender?.Plot ||
+                movieToRender?.overview ||
+                "No description available."}
             </p>
           </div>
           <div
@@ -260,7 +282,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             }}
           >
             Director <br />
-            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
               {movieToRender?.Director || "Unknown"}
             </span>
           </div>
@@ -283,7 +305,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 flexWrap: "wrap",
               }}
             >
-              {movieToRender?.Actors.split(",").map((actor, id) => {
+              {movieToRender?.Actors?.split(",").map((actor, id) => {
                 return (
                   <div
                     style={{
@@ -303,6 +325,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                         fontSize: "0.86rem",
                         width: "50px",
                         textAlign: "center",
+                        fontWeight: "400",
                       }}
                     >
                       {actor}
@@ -331,7 +354,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             }}
           >
             Language <br />
-            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
               {movieToRender?.Language || "Unknown"}
             </span>
           </div>
@@ -344,7 +367,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             }}
           >
             Awards <br />
-            <span style={{ fontSize: "1rem", fontWeight: "500" }}>
+            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
               {movieToRender?.Awards || "Unknown"}
             </span>
           </div>

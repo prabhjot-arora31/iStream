@@ -26,7 +26,11 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           behavior: "auto", // For instant scrolling
         });
         getMovieDetail(data);
-        navigate("/detail/" + data.imdbID);
+        if (data.imdbID) navigate("/detail/" + data.imdbID);
+        else if (data.id) {
+          if (!data.first_air_date) navigate("/detail/" + data.id);
+          else navigate("/detail/" + data.id + "/tv");
+        }
         let movies = JSON.parse(localStorage.getItem("movies")) || [];
         if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
         movies.push(data);
@@ -63,11 +67,14 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
         </h3> */}
         <img
           src={
-            data.Poster.includes("themoviedb")
-              ? data.Poster.replace("themoviedb", "tmbd")
-              : data.Poster
+            data?.Poster
+              ? data?.Poster == "N/A"
+                ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                : data?.Poster?.includes("themoviedb")
+                ? data.Poster.replace("themoviedb", "tmbd")
+                : data?.Poster
+              : "https://image.tmdb.org/t/p/w500" + data?.poster_path
             // ? data.Poster
-            // : "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
           }
           style={{
             width: "170px",
@@ -93,7 +100,9 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
               "linear-gradient(to top , rgba(0,0,0,0.8) , rgba(0,0,0,0.5))",
           }}
         >
-          <span style={{ opacity: 1, color: "white" }}>{data?.Year}</span>
+          <span style={{ opacity: 1, color: "white" }}>
+            {data?.Year || data?.release_date?.substring(0, 4)}
+          </span>
         </h4>
         <h4
           style={{
@@ -109,16 +118,28 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
               "linear-gradient(to top , rgba(0,0,0,0.8) , rgba(0,0,0,0.5))",
           }}
         >
-          <span style={{ opacity: 1, color: "white" }}>{data?.Type}</span>
+          <span style={{ opacity: 1, color: "white" }}>
+            {data?.Type || "movie"}
+          </span>
         </h4>
       </div>
       <h3 style={{ marginTop: "5px", textAlign: "center" }}>
         {/* {data.Title.length > 15
           ? data.Title.substring(0, 15) + "..."
           : data.Title} */}
-        {data?.Title?.length > 15
-          ? data?.Title.substring(0, 15) + "..."
-          : data?.Title}
+        {data?.Title
+          ? data.Title.length > 15
+            ? data.Title.substring(0, 15) + "..."
+            : data.Title
+          : data?.title
+          ? data.title.length > 15
+            ? data.title.substring(0, 15) + "..."
+            : data.title
+          : data?.name
+          ? data.name.length > 15
+            ? data.name.substring(0, 15) + "..."
+            : data.name
+          : null}
       </h3>
     </div>
   );

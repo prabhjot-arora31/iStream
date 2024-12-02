@@ -52,7 +52,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       setRMovies([]);
     }
   }
-
+  const [createdBy, setCreatedBy] = useState([]);
+  const [productionCompanies, setProductionCompanies] = useState([]);
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
@@ -73,6 +74,10 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         }
         const { data: tmdbData } = await axios.get(tmdbUrl);
         imdbId = tmdbData.imdb_id; // Extract IMDb ID
+        setCreatedBy(tmdbData.created_by);
+        setProductionCompanies(tmdbData.production_companies);
+        console.log("real data:", tmdbData);
+        console.log("created by: " + tmdbData.created_by);
         setIdToUse(imdbId); // Update `idToUse`
       }
 
@@ -263,6 +268,59 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 "No description available."}
             </p>
           </div>
+          {createdBy && createdBy.length > 0 && (
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.3rem" /* Adjusted font-size */,
+                margin: "0.7rem 0",
+              }}
+            >
+              Created By{" "}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "0.6rem",
+                  fontWeight: 500,
+                  fontSize: "1rem",
+                  margin: "0.4rem 0",
+                  flexWrap: "wrap",
+                }}
+              >
+                {movieToRender?.createdBy.map((creator, id) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        // justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        width={"60px"}
+                        src={
+                          "https://image.tmdb.org/p/w500" + creator.profile_path
+                        }
+                      />
+                      <span
+                        style={{
+                          margin: 0,
+                          fontSize: "0.86rem",
+                          width: "50px",
+                          textAlign: "center",
+                          fontWeight: "400",
+                        }}
+                      >
+                        {actor}
+                      </span>
+                    </div>
+                  );
+                }) || "Not listed"}
+              </div>
+            </div>
+          )}
           <div
             style={{
               fontWeight: "bold",
@@ -371,6 +429,63 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               {movieToRender?.Awards || "Unknown"}
             </span>
           </div>
+          {/* Production Companies */}
+          {productionCompanies && productionCompanies.length > 0 && (
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.3rem" /* Adjusted font-size */,
+                margin: "0.7rem 0",
+              }}
+            >
+              Production Companies <br />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  justifyContent: "center",
+
+                  flexWrap: "wrap",
+                }}
+              >
+                {productionCompanies.map((productionCompany, id) => {
+                  return (
+                    <span
+                      style={{
+                        fontSize: "1rem",
+                        fontWeight: "400",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "lightgray",
+                        padding: "0.6rem",
+                        gap: "0.2rem",
+                        display: "flex",
+                        marginTop: "0.8rem",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <img
+                        src={
+                          "https://image.tmdb.org/t/p/w500" +
+                          productionCompany.logo_path
+                        }
+                        width={"60px"}
+                      />
+                      <h4
+                        style={{
+                          fontSize: "1rem",
+                          fontWeight: "400",
+                          margin: 0,
+                        }}
+                      >
+                        {productionCompany.name}
+                      </h4>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           {/* Rating */}
           <div
             style={{

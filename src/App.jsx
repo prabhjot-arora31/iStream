@@ -30,7 +30,7 @@ function App() {
   const [topRatedMovieLoading, setTopRatedMovieLoading] = useState(true);
   const topRatedTv = async () => {
     try {
-      var page = Math.floor(Math.random() * 500);
+      var page = Math.floor(Math.random() * 104);
       const { data } = await axios.get(
         `https://api.tmdb.org/3/tv/top_rated?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&page=${page}`
       );
@@ -287,6 +287,7 @@ function App() {
                 style={{
                   display: "flex",
                   gap: "0.7rem",
+                  marginTop: "2rem",
                   flexWrap: "wrap",
                   justifyContent: "center",
                   position: "relative",
@@ -417,6 +418,7 @@ function App() {
                       border: searchBtnHover ? "1px solid black" : "none",
                     }}
                     onClick={() => {
+                      setTopRatedTvShows([]);
                       const searches =
                         JSON.parse(localStorage.getItem("searches")) || [];
                       if (!searches.find((ele, id) => ele === Search)) {
@@ -657,11 +659,12 @@ function App() {
                               )}
                             </div>
                           )}
-                          {movies[0].poster_path && (
-                            <h2 style={{ textAlign: "center" }}>
-                              Top Rated TV Shows
-                            </h2>
-                          )}
+                          {movies[0].poster_path &&
+                            topRatedTvShows?.length > 0 && (
+                              <h2 style={{ textAlign: "center" }}>
+                                Top Rated TV Shows
+                              </h2>
+                            )}
                           {topRatedTvShowsLoading ? (
                             <div
                               style={{

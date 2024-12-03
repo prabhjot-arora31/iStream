@@ -25,12 +25,12 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           left: 0,
           behavior: "auto", // For instant scrolling
         });
-        getMovieDetail(data);
         if (data.imdbID) navigate("/detail/" + data.imdbID);
         else if (data.id) {
           if (!data.first_air_date) navigate("/detail/" + data.id);
           else navigate("/detail/" + data.id + "/tv");
         }
+        getMovieDetail(data);
         let movies = JSON.parse(localStorage.getItem("movies")) || [];
         if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
         movies.push(data);

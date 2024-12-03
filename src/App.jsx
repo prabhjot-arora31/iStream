@@ -5,7 +5,13 @@ import "./App.css";
 import Header from "./components/Header";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import MovieDetails from "./components/MovieDetails";
 import { FaSpinner } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
@@ -23,6 +29,7 @@ import RecommendedMovies from "./pages/RecommendedMovies";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const navigate = useNavigate();
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [suggestedBtnHover, setSuggestedBtnHover] = useState("");
   const [topRatedTvShowsLoading, setTopRatedTvShowsLoading] = useState(true);
@@ -271,322 +278,440 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Header />
+      <Header />
 
-        <Routes>
-          <Route path="/recommended/:movie" element={<RecommendedMovies />} />
-          <Route
-            path="/"
-            exact
-            element={
+      <Routes>
+        <Route path="/recommended/:movie" element={<RecommendedMovies />} />
+        <Route
+          path="/"
+          exact
+          element={
+            <div
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setIsInputClicked(false);
+              }}
+              style={{
+                display: "flex",
+                gap: "0.7rem",
+                marginTop: "2rem",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                position: "relative",
+              }}
+            >
               <div
-                onClick={(e) => {
-                  if (e.target === e.currentTarget) setIsInputClicked(false);
-                }}
                 style={{
+                  // margin: "10px auto",
+                  // width: "100%",
                   display: "flex",
-                  gap: "0.7rem",
-                  marginTop: "2rem",
-                  flexWrap: "wrap",
                   justifyContent: "center",
-                  position: "relative",
+                  gap: 7,
+                  marginBottom: "20px",
+                  position: "absolute",
+                  zIndex: "10",
                 }}
               >
                 <div
                   style={{
-                    // margin: "10px auto",
-                    // width: "100%",
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
-                    gap: 7,
-                    marginBottom: "20px",
-                    position: "absolute",
-                    zIndex: "10",
+                    alignItems: "center",
+                    backgroundColor: "white",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "white",
+                  <input
+                    onClick={(e) => {
+                      setIsInputClicked(true);
+                      setSelectedMovies(getRandomMovies());
+                      e.stopPropagation();
                     }}
-                  >
-                    <input
-                      onClick={(e) => {
-                        setIsInputClicked(true);
-                        setSelectedMovies(getRandomMovies());
-                        e.stopPropagation();
-                      }}
-                      type="text"
+                    type="text"
+                    style={{
+                      padding: "0.5rem",
+                      borderRadius: "5px",
+                      fontSize: "15px",
+                      border: "1px solid black",
+                    }}
+                    value={Search}
+                    onChange={(e) => {
+                      setIsInputClicked(true);
+                      setSearch(e.target.value);
+                      setSearchResults([]);
+                      searching(Search);
+                    }}
+                    placeholder="Enter any movie/series name.."
+                  />
+                  {isInputClicked && searchResults?.length > 0 && (
+                    <div
                       style={{
-                        padding: "0.5rem",
-                        borderRadius: "5px",
-                        fontSize: "15px",
-                        border: "1px solid black",
+                        display: "flex",
+                        flexDirection: "column",
+                        marginTop: "0.24rem",
+                        marginLeft: "0.18rem",
+                        boxShadow: "0 0 5px black",
+                        padding: "0.432rem",
+                        // padding: "0.23rem",
+                        maxHeight: "620px",
+                        overflowY: "auto",
+                        maxWidth: "285px",
+                        borderTopLeftRadius: "10px",
+                        borderBottomLeftRadius: "10px",
                       }}
-                      value={Search}
-                      onChange={(e) => {
-                        setIsInputClicked(true);
-                        setSearch(e.target.value);
-                        searching(Search);
-                      }}
-                      placeholder="Enter any movie/series name.."
-                    />
-                    {isInputClicked && searchResults?.length > 0 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          marginTop: "0.24rem",
-                          marginLeft: "0.18rem",
-                          boxShadow: "0 0 5px black",
-                          // padding: "0.23rem",
-                          maxHeight: "220px",
-                          overflowY: "auto",
-                          maxWidth: "225px",
-                          borderTopLeftRadius: "10px",
-                          borderBottomLeftRadius: "10px",
-                        }}
-                      >
-                        {searchResults?.length > 0 &&
-                          searchResults
-                            .filter(
-                              (value, index, self) =>
-                                // Filter by unique 'title' (no duplicates)
-                                index ===
-                                self.findIndex((t) => t.title === value.title)
-                            )
-                            .map((ele, id) => {
-                              return (
-                                <button
-                                  key={id}
-                                  onMouseOver={() => {
-                                    setSuggestedBtnHover(ele?.title);
-                                  }}
-                                  onClick={() => {
-                                    setSearch(ele?.title);
-                                  }}
+                    >
+                      {searchResults?.length > 0 ? (
+                        searchResults
+                          .filter(
+                            (value, index, self) =>
+                              // Filter by unique 'title' (no duplicates)
+                              index ===
+                              self.findIndex((t) => t.title === value.title)
+                          )
+                          .map((ele, id) => {
+                            return (
+                              <div
+                                key={id}
+                                onMouseOver={() => {
+                                  setSuggestedBtnHover(ele?.title);
+                                }}
+                                onClick={() => {
+                                  // setSearch(ele?.title);
+                                  window.scrollTo({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: "auto", // For instant scrolling
+                                  });
+                                  if (ele.imdbID)
+                                    navigate("/detail/" + ele.imdbID);
+                                  else if (ele.id) {
+                                    if (!ele.first_air_date)
+                                      navigate("/detail/" + ele.id);
+                                    else navigate("/detail/" + ele.id + "/tv");
+                                  }
+                                }}
+                                style={{
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  gap: "7px",
+                                  padding: "0.23rem",
+                                  justifyContent: "start",
+                                  marginTop: "10px",
+                                  alignItems: "center",
+                                  backgroundColor:
+                                    suggestedBtnHover == ele?.title
+                                      ? "black"
+                                      : " white",
+                                }}
+                              >
+                                <div>
+                                  <img
+                                    src={
+                                      "https://image.tmdb.org/t/p/w500" +
+                                      ele?.poster_path
+                                    }
+                                    width={"100%"}
+                                    style={{
+                                      width: "60px",
+                                      height: "90px",
+                                      border:
+                                        suggestedBtnHover == ele?.title
+                                          ? "1px solid white"
+                                          : "",
+                                      maxHeight: "230px",
+                                      borderRadius: "10px",
+                                      objectFit: "cover",
+                                      transition: ".13s ease-in-out",
+                                    }}
+                                  />
+                                </div>
+                                <div
                                   style={{
-                                    fontSize: "13px",
-                                    color:
-                                      suggestedBtnHover == ele?.title
-                                        ? "black"
-                                        : "gray",
-                                    marginBottom: "6px",
-                                    cursor: "pointer",
-                                    border: "none",
-                                    padding: "0.3rem",
-                                    textAlign: "left",
-                                    backgroundColor:
-                                      suggestedBtnHover == ele?.title
-                                        ? "lightsalmon"
-                                        : "",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "left",
                                   }}
                                 >
-                                  {ele?.title.length > 35
-                                    ? ele?.title.substring(0, 35) + "..."
-                                    : ele?.title}
-                                </button>
-                              );
-                            })}
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    onMouseOver={() => {
-                      setSearchBtnHover(true);
-                    }}
-                    onMouseOut={() => {
-                      setSearchBtnHover(false);
-                    }}
-                    style={{
-                      backgroundColor: searchBtnHover ? "white" : "lightsalmon",
-                      // background: searchBtnHover
-                      //   ? "linear-gradient(to right , red, orange)"
-                      //   : "linear-gradient(to right , orange, red)",
-                      color: "black",
-                      alignSelf: "flex-start",
-                      borderRadius: "5px",
-                      padding: "0.5rem",
-                      paddingLeft: "0.8rem",
-                      paddingRight: "0.8rem",
-                      cursor: "pointer",
-                      fontSize: "15px",
-                      border: searchBtnHover ? "1px solid black" : "none",
-                    }}
-                    onClick={() => {
-                      setTopRatedTvShows([]);
-                      const searches =
-                        JSON.parse(localStorage.getItem("searches")) || [];
-                      if (!searches.find((ele, id) => ele === Search)) {
-                        searches.push(Search);
-                        localStorage.setItem(
-                          "searches",
-                          JSON.stringify(searches)
-                        );
-                      }
-                      setTypeText("All");
-                      fetchByName();
-                    }}
-                  >
-                    Search
-                  </button>
+                                  <h5
+                                    style={{
+                                      color:
+                                        suggestedBtnHover == ele?.title
+                                          ? "salmon"
+                                          : "black",
+                                      margin: 0,
+                                      marginBottom: "6px",
+                                      cursor: "pointer",
+                                      border: "none",
+                                      // backgroundColor:
+                                      //   suggestedBtnHover == ele?.title
+                                      //     ? "lightsalmon"
+                                      //     : "",
+                                    }}
+                                  >
+                                    {ele?.title.length > 70
+                                      ? ele?.title.substring(0, 70) + "..."
+                                      : ele?.title}
+                                  </h5>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontSize: "13.5px",
+                                      color:
+                                        suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black",
+                                    }}
+                                  >
+                                    {ele?.release_date?.substring(0, 4)}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })
+                      ) : (
+                        <div
+                          style={{
+                            margin: "0 auto",
+                            marginTop: "30px",
+                            width: "80px",
+                            height: "80px",
+                            position: "absolute",
+                            top: "5rem",
+                          }}
+                        >
+                          <Puff
+                            stroke="#ff0000"
+                            strokeOpacity={20.125}
+                            speed={0.75}
+                            width={"100%"}
+                            height={"100%"}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-                {isLoading === "" ? (
-                  <div></div>
-                ) : isLoading === true ? (
-                  <div
-                    style={{
-                      margin: "0 auto",
-                      marginTop: "30px",
-                      width: "80px",
-                      height: "80px",
-                      position: "absolute",
-                      top: "5rem",
-                    }}
-                  >
-                    <Puff
-                      stroke="#ff0000"
-                      strokeOpacity={20.125}
-                      speed={0.75}
-                      width={"100%"}
-                      height={"100%"}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    {" "}
-                    {movies?.length > 0 ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                          position: "absolute",
-                          top: "5rem",
-                          gap: "0.7rem",
-                        }}
-                      >
-                        <div>
-                          {currentPage !== 0 && (
-                            <p style={{ textAlign: "center" }}>
-                              Current Page: {currentPage}
-                            </p>
-                          )}
-                          {movies?.length > 0 && !movies[0].poster_path && (
-                            <div
+                <button
+                  onMouseOver={() => {
+                    setSearchBtnHover(true);
+                  }}
+                  onMouseOut={() => {
+                    setSearchBtnHover(false);
+                  }}
+                  style={{
+                    backgroundColor: searchBtnHover ? "white" : "lightsalmon",
+                    // background: searchBtnHover
+                    //   ? "linear-gradient(to right , red, orange)"
+                    //   : "linear-gradient(to right , orange, red)",
+                    color: "black",
+                    alignSelf: "flex-start",
+                    borderRadius: "5px",
+                    padding: "0.5rem",
+                    paddingLeft: "0.8rem",
+                    paddingRight: "0.8rem",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    border: searchBtnHover ? "1px solid black" : "none",
+                  }}
+                  onClick={() => {
+                    setTopRatedTvShows([]);
+                    const searches =
+                      JSON.parse(localStorage.getItem("searches")) || [];
+                    if (!searches.find((ele, id) => ele === Search)) {
+                      searches.push(Search);
+                      localStorage.setItem(
+                        "searches",
+                        JSON.stringify(searches)
+                      );
+                    }
+                    setTypeText("All");
+                    fetchByName();
+                  }}
+                >
+                  Search
+                </button>
+              </div>
+              {isLoading === "" ? (
+                <div></div>
+              ) : isLoading === true ? (
+                <div
+                  style={{
+                    margin: "0 auto",
+                    marginTop: "30px",
+                    width: "80px",
+                    height: "80px",
+                    position: "absolute",
+                    top: "5rem",
+                  }}
+                >
+                  <Puff
+                    stroke="#ff0000"
+                    strokeOpacity={20.125}
+                    speed={0.75}
+                    width={"100%"}
+                    height={"100%"}
+                  />
+                </div>
+              ) : (
+                <>
+                  {" "}
+                  {movies?.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        position: "absolute",
+                        top: "5rem",
+                        gap: "0.7rem",
+                      }}
+                    >
+                      <div>
+                        {currentPage !== 0 && (
+                          <p style={{ textAlign: "center" }}>
+                            Current Page: {currentPage}
+                          </p>
+                        )}
+                        {movies?.length > 0 && !movies[0].poster_path && (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              gap: "0.5rem",
+                              marginBottom: "1.6rem",
+                            }}
+                          >
+                            <button
+                              onClick={() => {
+                                setIsLoading(true);
+                                setTypeText("All");
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
                               style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                gap: "0.5rem",
-                                marginBottom: "1.6rem",
+                                padding: "0.38rem",
+                                borderRadius: "0.3rem",
+                                fontSize: "15px",
+
+                                backgroundColor:
+                                  typeText == "All" ? "purple" : "white",
+                                color: typeText != "All" ? "purple" : "white",
+                                border:
+                                  typeText != "All"
+                                    ? "1px solid purple"
+                                    : "none",
+                                cursor: "pointer",
                               }}
                             >
-                              <button
-                                onClick={() => {
-                                  setIsLoading(true);
-                                  setTypeText("All");
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  borderRadius: "0.3rem",
-                                  fontSize: "15px",
+                              All
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsLoading(true);
+                                setTypeText("Movie");
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
+                              style={{
+                                padding: "0.38rem",
+                                borderRadius: "0.3rem",
+                                fontSize: "15px",
 
-                                  backgroundColor:
-                                    typeText == "All" ? "purple" : "white",
-                                  color: typeText != "All" ? "purple" : "white",
-                                  border:
-                                    typeText != "All"
-                                      ? "1px solid purple"
-                                      : "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                All
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setIsLoading(true);
-                                  setTypeText("Movie");
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  borderRadius: "0.3rem",
-                                  fontSize: "15px",
-
-                                  backgroundColor:
-                                    typeText == "Movie" ? "purple" : "white",
-                                  color:
-                                    typeText != "Movie" ? "purple" : "white",
-                                  border:
-                                    typeText != "Movie"
-                                      ? "1px solid purple"
-                                      : "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                Movie
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setTypeText("Series");
-                                  setIsLoading(true);
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  cursor: "pointer",
-                                  fontSize: "15px",
-                                  borderRadius: "0.3rem",
-                                  backgroundColor:
-                                    typeText == "Series" ? "purple" : "white",
-                                  color:
-                                    typeText != "Series" ? "purple" : "white",
-                                  border:
-                                    typeText != "Series"
-                                      ? "1px solid purple"
-                                      : "none",
-                                }}
-                              >
-                                Web Series
-                              </button>
-                            </div>
+                                backgroundColor:
+                                  typeText == "Movie" ? "purple" : "white",
+                                color: typeText != "Movie" ? "purple" : "white",
+                                border:
+                                  typeText != "Movie"
+                                    ? "1px solid purple"
+                                    : "none",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Movie
+                            </button>
+                            <button
+                              onClick={() => {
+                                setTypeText("Series");
+                                setIsLoading(true);
+                                (async () => {
+                                  const { data } = await axios.get(
+                                    `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                  );
+                                  setMovies(data.Search);
+                                  setIsLoading(false);
+                                })();
+                              }}
+                              style={{
+                                padding: "0.38rem",
+                                cursor: "pointer",
+                                fontSize: "15px",
+                                borderRadius: "0.3rem",
+                                backgroundColor:
+                                  typeText == "Series" ? "purple" : "white",
+                                color:
+                                  typeText != "Series" ? "purple" : "white",
+                                border:
+                                  typeText != "Series"
+                                    ? "1px solid purple"
+                                    : "none",
+                              }}
+                            >
+                              Web Series
+                            </button>
+                          </div>
+                        )}
+                        {movies?.length > 0 &&
+                          !movies[0].poster_path &&
+                          typeText && (
+                            <h3 style={{ textAlign: "center" }}>{typeText}</h3>
                           )}
+                        {movies[0].poster_path && (
+                          <h2 style={{ textAlign: "center" }}>
+                            Popular Movies
+                          </h2>
+                        )}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "0.7rem",
+                            opacity:
+                              isInputClicked && searchResults?.length > 0
+                                ? "0.4"
+                                : 1,
+                            flexWrap: "wrap",
+                          }}
+                        >
                           {movies?.length > 0 &&
-                            !movies[0].poster_path &&
-                            typeText && (
-                              <h3 style={{ textAlign: "center" }}>
-                                {typeText}
-                              </h3>
-                            )}
-                          {movies[0].poster_path && (
-                            <h2 style={{ textAlign: "center" }}>
-                              Popular Movies
-                            </h2>
-                          )}
+                            movies.map((ele, id) => {
+                              return (
+                                <MovieCard
+                                  id={id}
+                                  key={id}
+                                  data={ele}
+                                  setHoveredDiv={setHoveredDiv}
+                                  hoveredDiv={hoveredDiv}
+                                  getMovieDetail={getMovieDetail}
+                                />
+                              );
+                            })}
+                        </div>
+                        {movies[0].poster_path && (
+                          <h2 style={{ textAlign: "center" }}>
+                            Top Rated Movies
+                          </h2>
+                        )}
+                        {movies[0].poster_path && (
                           <div
                             style={{
                               display: "flex",
@@ -596,8 +721,75 @@ function App() {
                               flexWrap: "wrap",
                             }}
                           >
-                            {movies?.length > 0 &&
-                              movies.map((ele, id) => {
+                            {topRatedMovieLoading && movies[0].poster_path ? (
+                              <div
+                                style={{
+                                  margin: "0 auto",
+                                  marginTop: "30px",
+                                  width: "80px",
+                                  height: "80px",
+                                }}
+                              >
+                                <Puff
+                                  stroke="#ff0000"
+                                  strokeOpacity={20.125}
+                                  speed={0.75}
+                                  width={"100%"}
+                                  height={"100%"}
+                                />
+                              </div>
+                            ) : (
+                              topRatedMovies?.length > 0 &&
+                              topRatedMovies.map((ele, id) => {
+                                return (
+                                  <MovieCard
+                                    id={id}
+                                    key={id}
+                                    data={ele}
+                                    setHoveredDiv={setHoveredDiv}
+                                    hoveredDiv={hoveredDiv}
+                                    getMovieDetail={getMovieDetail}
+                                  />
+                                );
+                              })
+                            )}
+                          </div>
+                        )}
+                        {movies[0].poster_path &&
+                          topRatedTvShows?.length > 0 && (
+                            <h2 style={{ textAlign: "center" }}>
+                              Top Rated TV Shows
+                            </h2>
+                          )}
+                        {topRatedTvShowsLoading ? (
+                          <div
+                            style={{
+                              margin: "0 auto",
+                              marginTop: "30px",
+                              width: "80px",
+                              height: "80px",
+                            }}
+                          >
+                            <Puff
+                              stroke="#ff0000"
+                              strokeOpacity={20.125}
+                              speed={0.75}
+                              width={"100%"}
+                              height={"100%"}
+                            />
+                          </div>
+                        ) : (
+                          topRatedTvShows?.length > 0 && (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: "0.7rem",
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              {topRatedTvShows.map((ele, id) => {
                                 return (
                                   <MovieCard
                                     id={id}
@@ -609,253 +801,154 @@ function App() {
                                   />
                                 );
                               })}
-                          </div>
-                          {movies[0].poster_path && (
-                            <h2 style={{ textAlign: "center" }}>
-                              Top Rated Movies
-                            </h2>
-                          )}
-                          {movies[0].poster_path && (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                gap: "0.7rem",
-                                flexWrap: "wrap",
-                              }}
-                            >
-                              {topRatedMovieLoading && movies[0].poster_path ? (
-                                <div
-                                  style={{
-                                    margin: "0 auto",
-                                    marginTop: "30px",
-                                    width: "80px",
-                                    height: "80px",
-                                  }}
-                                >
-                                  <Puff
-                                    stroke="#ff0000"
-                                    strokeOpacity={20.125}
-                                    speed={0.75}
-                                    width={"100%"}
-                                    height={"100%"}
-                                  />
-                                </div>
-                              ) : (
-                                topRatedMovies?.length > 0 &&
-                                topRatedMovies.map((ele, id) => {
-                                  return (
-                                    <MovieCard
-                                      id={id}
-                                      key={id}
-                                      data={ele}
-                                      setHoveredDiv={setHoveredDiv}
-                                      hoveredDiv={hoveredDiv}
-                                      getMovieDetail={getMovieDetail}
-                                    />
-                                  );
-                                })
-                              )}
                             </div>
-                          )}
-                          {movies[0].poster_path &&
-                            topRatedTvShows?.length > 0 && (
-                              <h2 style={{ textAlign: "center" }}>
-                                Top Rated TV Shows
-                              </h2>
-                            )}
-                          {topRatedTvShowsLoading ? (
-                            <div
-                              style={{
-                                margin: "0 auto",
-                                marginTop: "30px",
-                                width: "80px",
-                                height: "80px",
-                              }}
-                            >
-                              <Puff
-                                stroke="#ff0000"
-                                strokeOpacity={20.125}
-                                speed={0.75}
-                                width={"100%"}
-                                height={"100%"}
-                              />
-                            </div>
-                          ) : (
-                            topRatedTvShows?.length > 0 && (
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  gap: "0.7rem",
-                                  flexWrap: "wrap",
-                                }}
-                              >
-                                {topRatedTvShows.map((ele, id) => {
-                                  return (
-                                    <MovieCard
-                                      id={id}
-                                      key={id}
-                                      data={ele}
-                                      setHoveredDiv={setHoveredDiv}
-                                      hoveredDiv={hoveredDiv}
-                                      getMovieDetail={getMovieDetail}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            )
-                          )}
-                        </div>
+                          )
+                        )}
                       </div>
-                    ) : (
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          gap: "0.5rem",
+                          marginBottom: "1.6rem",
+                          position: "relative",
+                          top: "5rem",
+                          // position: "absolute",
+                          // left: "45%",
+                          // top: "5rem",
+                        }}
+                      >
+                        <button
+                          onClick={() => {
+                            setIsLoading(true);
+                            setTypeText("All");
+                            (async () => {
+                              const { data } = await axios.get(
+                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                              );
+                              setMovies(data.Search);
+                              setIsLoading(false);
+                            })();
+                          }}
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: "0.5rem",
-                            marginBottom: "1.6rem",
-                            position: "relative",
-                            top: "5rem",
-                            // position: "absolute",
-                            // left: "45%",
-                            // top: "5rem",
+                            padding: "0.38rem",
+                            borderRadius: "0.3rem",
+                            backgroundColor: `${
+                              typeText === "All" ? "purple" : "white"
+                            }`,
+                            border: `${
+                              typeText !== "All" ? "2px solid purple" : ""
+                            }`,
+                            color: `${typeText !== "All" ? "purple" : "white"}`,
+                            cursor: "pointer",
                           }}
                         >
-                          <button
-                            onClick={() => {
-                              setIsLoading(true);
-                              setTypeText("All");
-                              (async () => {
-                                const { data } = await axios.get(
-                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
-                                );
-                                setMovies(data.Search);
-                                setIsLoading(false);
-                              })();
-                            }}
-                            style={{
-                              padding: "0.38rem",
-                              borderRadius: "0.3rem",
-                              backgroundColor: `${
-                                typeText === "All" ? "purple" : "white"
-                              }`,
-                              border: `${
-                                typeText !== "All" ? "2px solid purple" : ""
-                              }`,
-                              color: `${
-                                typeText !== "All" ? "purple" : "white"
-                              }`,
-                              cursor: "pointer",
-                            }}
-                          >
-                            All
-                          </button>
-                          <button
-                            onClick={() => {
-                              setIsLoading(true);
-                              setTypeText("Movie");
-                              (async () => {
-                                const { data } = await axios.get(
-                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
-                                );
-                                setMovies(data.Search);
-                                setIsLoading(false);
-                              })();
-                            }}
-                            style={{
-                              padding: "0.38rem",
-                              borderRadius: "0.3rem",
-                              backgroundColor: `${
-                                typeText === "Movie" ? "purple" : "white"
-                              }`,
-                              border: `${
-                                typeText !== "Movie" ? "2px solid purple" : ""
-                              }`,
-                              color: `${
-                                typeText !== "Movie" ? "purple" : "white"
-                              }`,
-
-                              cursor: "pointer",
-                            }}
-                          >
-                            Movie
-                          </button>
-                          <button
-                            onClick={() => {
-                              setTypeText("Series");
-                              setIsLoading(true);
-                              (async () => {
-                                const { data } = await axios.get(
-                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
-                                );
-                                setMovies(data.Search);
-                                setIsLoading(false);
-                              })();
-                            }}
-                            style={{
-                              padding: "0.38rem",
-                              cursor: "pointer",
-
-                              borderRadius: "0.3rem",
-                              backgroundColor: `${
-                                typeText === "Series" ? "purple" : "white"
-                              }`,
-                              border: `${
-                                typeText !== "Series" ? "2px solid purple" : ""
-                              }`,
-                              color: `${
-                                typeText !== "Series" ? "purple" : "white"
-                              }`,
-                            }}
-                          >
-                            Web Series
-                          </button>
-                        </div>
-                        <div
+                          All
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsLoading(true);
+                            setTypeText("Movie");
+                            (async () => {
+                              const { data } = await axios.get(
+                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                              );
+                              setMovies(data.Search);
+                              setIsLoading(false);
+                            })();
+                          }}
                           style={{
-                            textAlign: "center",
-                            position: "relative",
-                            top: "6.4rem",
+                            padding: "0.38rem",
+                            borderRadius: "0.3rem",
+                            backgroundColor: `${
+                              typeText === "Movie" ? "purple" : "white"
+                            }`,
+                            border: `${
+                              typeText !== "Movie" ? "2px solid purple" : ""
+                            }`,
+                            color: `${
+                              typeText !== "Movie" ? "purple" : "white"
+                            }`,
+
+                            cursor: "pointer",
                           }}
                         >
-                          No results found!!!
-                        </div>
+                          Movie
+                        </button>
+                        <button
+                          onClick={() => {
+                            setTypeText("Series");
+                            setIsLoading(true);
+                            (async () => {
+                              const { data } = await axios.get(
+                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                              );
+                              setMovies(data.Search);
+                              setIsLoading(false);
+                            })();
+                          }}
+                          style={{
+                            padding: "0.38rem",
+                            cursor: "pointer",
+
+                            borderRadius: "0.3rem",
+                            backgroundColor: `${
+                              typeText === "Series" ? "purple" : "white"
+                            }`,
+                            border: `${
+                              typeText !== "Series" ? "2px solid purple" : ""
+                            }`,
+                            color: `${
+                              typeText !== "Series" ? "purple" : "white"
+                            }`,
+                          }}
+                        >
+                          Web Series
+                        </button>
                       </div>
-                    )}
-                  </>
-                )}
-              </div>
-            }
-          />
-          <Route
-            path="/detail/:id/:tv?"
-            element={
-              <MovieDetails
-                MovieDetail={MovieDetail}
-                getMovieDetail={getMovieDetail}
-              />
-            }
-          />
-          <Route path="/country" element={<Country />} />
-          <Route
-            path="/country/:countryName"
-            element={<MoviesByCountry getMovieDetail={getMovieDetail} />}
-          />
-          <Route
-            path="/history"
-            element={<History getMovieDetail={getMovieDetail} />}
-          />
-          <Route path="/genre" element={<Genres />} />
-          <Route
-            path="/genres/:genre"
-            element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
-          />
-        </Routes>
-      </BrowserRouter>
+                      <div
+                        style={{
+                          textAlign: "center",
+                          position: "relative",
+                          top: "6.4rem",
+                        }}
+                      >
+                        No results found!!!
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          }
+        />
+        <Route
+          path="/detail/:id/:tv?"
+          element={
+            <MovieDetails
+              MovieDetail={MovieDetail}
+              getMovieDetail={getMovieDetail}
+            />
+          }
+        />
+        <Route path="/country" element={<Country />} />
+        <Route
+          path="/country/:countryName"
+          element={<MoviesByCountry getMovieDetail={getMovieDetail} />}
+        />
+        <Route
+          path="/history"
+          element={<History getMovieDetail={getMovieDetail} />}
+        />
+        <Route path="/genre" element={<Genres />} />
+        <Route
+          path="/genres/:genre"
+          element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
+        />
+      </Routes>
     </>
   );
 }

@@ -484,6 +484,7 @@ function App() {
                                     margin: 0,
                                     marginBottom: "6px",
                                     cursor: "pointer",
+                                    fontSize: "15.8px",
                                     fontWeight: "bold",
                                     border: "none",
                                     // backgroundColor:

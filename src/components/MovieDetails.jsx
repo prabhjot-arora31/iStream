@@ -54,6 +54,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   }
   const [createdBy, setCreatedBy] = useState([]);
   const [productionCompanies, setProductionCompanies] = useState([]);
+  const [vote, setVote] = useState("");
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
@@ -76,6 +77,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         imdbId = tmdbData.imdb_id; // Extract IMDb ID
         setCreatedBy(tmdbData.created_by);
         setProductionCompanies(tmdbData.production_companies);
+        setVote(tmdbData.vote_average);
         console.log("real data:", tmdbData);
         console.log("created by: " + tmdbData.created_by);
         setIdToUse(imdbId); // Update `idToUse`
@@ -516,7 +518,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
               </svg>
               <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                {movieToRender?.imdbRating}
+                {vote.toString().substring(0, 3) || movieToRender?.imdbRating}
               </span>
               &nbsp; /10{" "}
             </div>

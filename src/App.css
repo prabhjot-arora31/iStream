@@ -1,0 +1,3 @@
+.movie-suggestions::-webkit-scrollbar {
+  display: none;
+}

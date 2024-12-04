@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Header from "./components/Header";
 import axios from "axios";
+// import "./App.css";
 import MovieCard from "./components/MovieCard";
 import {
   BrowserRouter,
@@ -332,6 +333,7 @@ function App() {
                       borderRadius: "5px",
                       fontSize: "15px",
                       border: "1px solid black",
+                      width: "230px",
                     }}
                     value={Search}
                     onChange={(e) => {
@@ -341,153 +343,6 @@ function App() {
                     }}
                     placeholder="Enter any movie/series name.."
                   />
-                  {isInputClicked && searchResults?.length > 0 && (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        marginTop: "0.24rem",
-                        marginLeft: "0.18rem",
-                        boxShadow: "0 0 5px black",
-                        padding: "0.432rem",
-                        // padding: "0.23rem",
-                        maxHeight: "620px",
-                        overflowY: "auto",
-                        maxWidth: "285px",
-                        borderTopLeftRadius: "10px",
-                        borderBottomLeftRadius: "10px",
-                      }}
-                    >
-                      {searchResults?.length > 0 ? (
-                        searchResults
-                          .filter(
-                            (value, index, self) =>
-                              // Filter by unique 'title' (no duplicates)
-                              index ===
-                              self.findIndex((t) => t.title === value.title)
-                          )
-                          .map((ele, id) => {
-                            return (
-                              <div
-                                key={id}
-                                onMouseOver={() => {
-                                  setSuggestedBtnHover(ele?.title);
-                                }}
-                                onClick={() => {
-                                  // setSearch(ele?.title);
-                                  window.scrollTo({
-                                    top: 0,
-                                    left: 0,
-                                    behavior: "auto", // For instant scrolling
-                                  });
-                                  if (ele.imdbID)
-                                    navigate("/detail/" + ele.imdbID);
-                                  else if (ele.id) {
-                                    if (!ele.first_air_date)
-                                      navigate("/detail/" + ele.id);
-                                    else navigate("/detail/" + ele.id + "/tv");
-                                  }
-                                }}
-                                style={{
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  gap: "7px",
-                                  padding: "0.23rem",
-                                  justifyContent: "start",
-                                  marginTop: "10px",
-                                  alignItems: "center",
-                                  backgroundColor:
-                                    suggestedBtnHover == ele?.title
-                                      ? "black"
-                                      : " white",
-                                }}
-                              >
-                                <div>
-                                  <img
-                                    src={
-                                      "https://image.tmdb.org/t/p/w500" +
-                                      ele?.poster_path
-                                    }
-                                    width={"100%"}
-                                    style={{
-                                      width: "60px",
-                                      height: "90px",
-                                      border:
-                                        suggestedBtnHover == ele?.title
-                                          ? "1px solid white"
-                                          : "",
-                                      maxHeight: "230px",
-                                      borderRadius: "10px",
-                                      objectFit: "cover",
-                                      transition: ".13s ease-in-out",
-                                    }}
-                                  />
-                                </div>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "left",
-                                  }}
-                                >
-                                  <h5
-                                    style={{
-                                      color:
-                                        suggestedBtnHover == ele?.title
-                                          ? "salmon"
-                                          : "black",
-                                      margin: 0,
-                                      marginBottom: "6px",
-                                      cursor: "pointer",
-                                      border: "none",
-                                      // backgroundColor:
-                                      //   suggestedBtnHover == ele?.title
-                                      //     ? "lightsalmon"
-                                      //     : "",
-                                    }}
-                                  >
-                                    {ele?.title.length > 70
-                                      ? ele?.title.substring(0, 70) + "..."
-                                      : ele?.title}
-                                  </h5>
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontSize: "13.5px",
-                                      color:
-                                        suggestedBtnHover == ele?.title
-                                          ? "white"
-                                          : "black",
-                                    }}
-                                  >
-                                    {ele?.release_date?.substring(0, 4)}
-                                  </p>
-                                </div>
-                              </div>
-                            );
-                          })
-                      ) : (
-                        <div
-                          style={{
-                            margin: "0 auto",
-                            marginTop: "30px",
-                            width: "80px",
-                            height: "80px",
-                            position: "absolute",
-                            top: "5rem",
-                          }}
-                        >
-                          <Puff
-                            stroke="#ff0000"
-                            strokeOpacity={20.125}
-                            speed={0.75}
-                            width={"100%"}
-                            height={"100%"}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
                 <button
                   onMouseOver={() => {
@@ -528,6 +383,202 @@ function App() {
                 >
                   Search
                 </button>
+              </div>
+              <div style={{ zIndex: 10, position: "relative", top: "40px" }}>
+                {isInputClicked && searchResults?.length > 0 && (
+                  <div
+                    className="movie-suggestions"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginTop: "0.24rem",
+                      marginLeft: "0.18rem",
+                      boxShadow: "0 0 5px black",
+                      padding: "0.432rem",
+                      // padding: "0.23rem",
+                      maxHeight: "620px",
+                      backgroundColor: "white",
+                      overflowY: "auto",
+                      width: "300px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    {searchResults?.length > 0 ? (
+                      searchResults
+                        .filter(
+                          (value, index, self) =>
+                            // Filter by unique 'title' (no duplicates)
+                            index ===
+                            self.findIndex((t) => t.title === value.title)
+                        )
+                        .map((ele, id) => {
+                          return (
+                            <div
+                              key={id}
+                              onMouseOver={() => {
+                                setSuggestedBtnHover(ele?.title);
+                              }}
+                              onClick={() => {
+                                // setSearch(ele?.title);
+                                window.scrollTo({
+                                  top: 0,
+                                  left: 0,
+                                  behavior: "auto", // For instant scrolling
+                                });
+                                if (ele.imdbID)
+                                  navigate("/detail/" + ele.imdbID);
+                                else if (ele.id) {
+                                  if (!ele.first_air_date)
+                                    navigate("/detail/" + ele.id);
+                                  else navigate("/detail/" + ele.id + "/tv");
+                                }
+                              }}
+                              style={{
+                                cursor: "pointer",
+                                display: "flex",
+                                gap: "7px",
+                                padding: "0.23rem",
+                                justifyContent: "start",
+                                marginTop: "10px",
+                                alignItems: "center",
+                                backgroundColor:
+                                  suggestedBtnHover == ele?.title
+                                    ? "black"
+                                    : " white",
+                              }}
+                            >
+                              <div>
+                                <img
+                                  src={
+                                    "https://image.tmdb.org/t/p/w500" +
+                                    ele?.poster_path
+                                  }
+                                  width={"100%"}
+                                  style={{
+                                    width: "60px",
+                                    height: "90px",
+                                    border:
+                                      suggestedBtnHover == ele?.title
+                                        ? "1px solid white"
+                                        : "1px solid black",
+                                    maxHeight: "230px",
+                                    borderRadius: "10px",
+                                    objectFit: "cover",
+                                    transition: ".13s ease-in-out",
+                                  }}
+                                />
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "left",
+                                }}
+                              >
+                                <h5
+                                  style={{
+                                    color:
+                                      suggestedBtnHover == ele?.title
+                                        ? "salmon"
+                                        : "black",
+                                    margin: 0,
+                                    marginBottom: "6px",
+                                    cursor: "pointer",
+                                    fontWeight: "bold",
+                                    border: "none",
+                                    // backgroundColor:
+                                    //   suggestedBtnHover == ele?.title
+                                    //     ? "lightsalmon"
+                                    //     : "",
+                                  }}
+                                >
+                                  {ele?.title.length > 70
+                                    ? ele?.title.substring(0, 70) + "..."
+                                    : ele?.title}
+                                </h5>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "start",
+                                    gap: "0.5rem",
+                                    margin: 0,
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontSize: "13.5px",
+                                      color:
+                                        suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black",
+                                    }}
+                                  >
+                                    {ele?.release_date?.substring(0, 4)}
+                                    <span
+                                      style={{
+                                        marginLeft: "1.2rem",
+                                        fontWeight: "bold",
+                                        marginRight: "0.4rem",
+                                      }}
+                                    >
+                                      |{" "}
+                                    </span>
+                                  </p>{" "}
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="23"
+                                    height="23"
+                                    style={{ margin: 0 }}
+                                    class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
+                                    viewBox="0 0 24 24"
+                                    fill="orange"
+                                    role="presentation"
+                                  >
+                                    <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                                  </svg>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontSize: "13.5px",
+                                      color:
+                                        suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black",
+                                    }}
+                                  >
+                                    {ele?.vote_average
+                                      .toString()
+                                      .substring(0, 3)}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                    ) : (
+                      <div
+                        style={{
+                          margin: "0 auto",
+                          marginTop: "30px",
+                          width: "80px",
+                          height: "80px",
+                          position: "absolute",
+                          top: "5rem",
+                        }}
+                      >
+                        <Puff
+                          stroke="#ff0000"
+                          strokeOpacity={20.125}
+                          speed={0.75}
+                          width={"100%"}
+                          height={"100%"}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               {isLoading === "" ? (
                 <div></div>

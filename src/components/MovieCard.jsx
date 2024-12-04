@@ -124,7 +124,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           }}
         >
           <span style={{ opacity: 1, color: "white" }}>
-            {data?.Type || "movie"}
+            {data?.Type || data?.first_air_date ? "series" : "movie"}
           </span>
         </h4>
       </div>

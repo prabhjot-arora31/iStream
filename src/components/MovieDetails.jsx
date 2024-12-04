@@ -11,8 +11,10 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
+  const [castHover, setCastHover] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
+  const [credits, setCredits] = useState([]);
   const [currentSeason, setCurrentSeason] = useState(1);
   const [currentEpisode, setCurrentEpisode] = useState(1);
   const [mappingImdbIdToTmdbId, setMappingImdbIdToTmdbId] = useState();
@@ -91,6 +93,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           const { data } = await axios.get(
             `https://api.tmdb.org/3/tv/${id}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
           );
+
           console.log("for episode: ", data);
           setTotalEpisodes(data.episodes);
         } else {
@@ -98,6 +101,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           tmdbUrl = `https://api.tmdb.org/3/movie/${id}?api_key=fafef439971c0bedf1c12e7a5be971c2`;
         }
         const { data: tmdbData } = await axios.get(tmdbUrl);
+        console.log("ACTUAL TMDB DATA:", tmdbData);
         imdbId = tmdbData.imdb_id; // Extract IMDb ID
         setCreatedBy(tmdbData.created_by);
         setProductionCompanies(tmdbData.production_companies);
@@ -112,9 +116,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
           );
           console.log("hihaa 😂:", data1);
-          setMappingImdbIdToTmdbId(data1.data.tv_results[0].id);
+          setMappingImdbIdToTmdbId(data1?.data?.tv_results[0]?.id);
           const { data } = await axios.get(
-            `https://api.tmdb.org/3/tv/${data1.data.tv_results[0].id}/season/1?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+            `https://api.tmdb.org/3/tv/${data1?.data?.tv_results[0]?.id}/season/1?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
           );
           console.log("for episode: ", data);
           setTotalEpisodes(data.episodes);
@@ -125,7 +129,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       url = `https://www.omdbapi.com/?i=${imdbId}&apikey=${apiKey}`;
       console.log("Fetching movie details from OMDB...");
       const { data } = await axios.get(url);
-
+      const creditData = await axios.get(
+        `https://api.tmdb.org/3/movie/${id}/credits?api_key=fafef439971c0bedf1c12e7a5be971c2`
+      );
+      setCredits(creditData?.data?.cast);
+      console.log("credits are:", creditData);
       // Update state with fetched movie data
       setMovieToRender(data);
       let movies = JSON.parse(localStorage.getItem("movies")) || [];
@@ -177,49 +185,13 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         position: "relative",
       }}
     >
-      {/* Background Image */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          zIndex: -1,
-          //   background: `linear-gradient(
-          //   rgba(0, 0, 0, 0.7), /* Top - darker */
-          //   rgba(0, 0, 0, 0.3) /* Bottom - lighter */
-          // )`,
-          overflow: "hidden",
-        }}
-      >
-        {/* <img
-          src={
-            movieToRender?.Poster?.includes("themoviedb")
-              ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-              : movieToRender?.Poster ||
-                "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-          }
-          alt="Movie Cover"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: 0.35,
-          }}
-        /> */}
-      </div>
-
-      {/* Content Inside the Background Image */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
           padding: "1rem",
           color: "black",
-          maxWidth: "880px",
-          margin: "0 auto",
-          width: "90%", // Added for responsiveness
+          // Added for responsiveness
           textAlign: "center", // Better alignment on smaller screens
         }}
       >
@@ -227,51 +199,114 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         {movieToRender?.Type != "game" && (
           <div
             style={{
-              height: "400px",
-              margin: "0 auto",
               position: "relative",
               top: "18px",
               marginBottom: "3.2rem",
-              width: "100%",
-              maxWidth: "100%", // Ensures iframe scales
             }}
           >
-            {!iFrameLoading ? (
-              <iframe
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  border: "1px solid black",
-                  borderRadius: "8px",
-                }}
-                allowFullScreen // Correct attribute
-                scrolling="no"
-                allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                src={
-                  movieToRender?.Type === "movie"
-                    ? `https://vidsrc.xyz/embed/movie/${id}`
-                    : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
-                }
-              ></iframe>
-            ) : (
+            {
               <div
                 style={{
-                  margin: "0 auto",
-                  marginTop: "30px",
-
-                  width: "80px",
-                  height: "80px",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap-reverse",
+                  gap: "2.5rem",
                 }}
               >
-                <Puff
-                  stroke="#ff0000"
-                  strokeOpacity={20.125}
-                  speed={0.75}
-                  width={"100%"}
-                  height={"100%"}
-                />
+                {!iFrameLoading ? (
+                  <iframe
+                    style={{
+                      // width: "100%",
+                      // height: "100%",
+                      width: "420px",
+                      height: "420px",
+                      border: "1px solid black",
+                      borderRadius: "8px",
+                    }}
+                    allowFullScreen // Correct attribute
+                    scrolling="no"
+                    allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    src={
+                      movieToRender?.Type === "movie"
+                        ? `https://vidsrc.xyz/embed/movie/${id}`
+                        : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                    }
+                  ></iframe>
+                ) : (
+                  <div
+                    style={{
+                      width: "420px",
+                      height: "420px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Puff
+                      stroke="#ff0000"
+                      strokeOpacity={20.125}
+                      speed={0.75}
+                      width="50px"
+                      height="50px"
+                    />
+                  </div>
+                )}
+                <div>
+                  <h1
+                    className="title"
+                    style={{
+                      fontWeight: "bolder",
+                      fontSize: "2rem" /* Adjusted font-size */,
+                    }}
+                  >
+                    {movieToRender?.Title ||
+                      movieToRender?.title ||
+                      movieToRender?.name}
+                  </h1>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "10px",
+                      marginBottom: "20px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src={
+                        movieToRender?.Poster
+                          ? movieToRender?.Poster?.includes("themoviedb")
+                            ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                            : movieToRender?.Poster ||
+                              "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                          : "https://image.tmdb.org/t/p/w500" +
+                            movieToRender?.poster_path
+                      }
+                      alt="Movie Cover"
+                      style={{
+                        width: "140px",
+                        height: "170px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: "1rem",
+                        maxWidth: "270px",
+                        textAlign: "left",
+                        // height: "130px",
+                        height: "40%",
+                        fontWeight: "500" /* Adjusted font-size */,
+                      }}
+                    >
+                      {movieToRender?.Plot ||
+                        movieToRender?.overview ||
+                        "No description available."}
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
+            }
           </div>
         )}
         {/* TV Shows Seasons and Episodes */}
@@ -317,7 +352,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       setIFrameLoading(true);
                       setTimeout(() => {
                         setIFrameLoading(false);
-                      }, 1000);
+                      }, 300);
                     }}
                   >
                     {season + 1}
@@ -392,139 +427,103 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         )}
         {/* Movie & TV Shows Details */}
         <div style={{ marginTop: "2.12462rem" }}>
-          <h1
-            className="title"
-            style={{
-              fontWeight: "bolder",
-              fontSize: "2rem" /* Adjusted font-size */,
-            }}
-          >
-            {movieToRender?.Title ||
-              movieToRender?.title ||
-              movieToRender?.name}
-          </h1>
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              gap: "10px",
-              marginBottom: "20px",
               alignItems: "center",
+              gap: "2rem",
+              flexWrap: "wrap",
             }}
           >
-            <img
-              src={
-                movieToRender?.Poster
-                  ? movieToRender?.Poster?.includes("themoviedb")
-                    ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-                    : movieToRender?.Poster ||
-                      "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-                  : "https://image.tmdb.org/t/p/w500" +
-                    movieToRender?.poster_path
-              }
-              alt="Movie Cover"
-              style={{
-                width: "140px",
-                height: "170px",
-                objectFit: "cover",
-              }}
-            />
-            <p
-              style={{
-                fontSize: "1rem",
-                maxWidth: "270px",
-                textAlign: "left",
-                // height: "130px",
-                height: "40%",
-                fontWeight: "500" /* Adjusted font-size */,
-              }}
-            >
-              {movieToRender?.Plot ||
-                movieToRender?.overview ||
-                "No description available."}
-            </p>
-          </div>
-          {createdBy && createdBy.length > 0 && (
+            {createdBy && createdBy.length > 0 && (
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.3rem" /* Adjusted font-size */,
+                }}
+              >
+                Created By{" "}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "0.6rem",
+                    fontWeight: 500,
+                    fontSize: "1rem",
+                    margin: "0.4rem 0",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {movieToRender?.createdBy.map((creator, id) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          // justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <img
+                          width={"60px"}
+                          src={
+                            "https://image.tmdb.org/t/w500" +
+                            creator.profile_path
+                          }
+                        />
+                        <span
+                          style={{
+                            margin: 0,
+                            fontSize: "0.86rem",
+                            width: "50px",
+                            textAlign: "center",
+                            fontWeight: "400",
+                          }}
+                        >
+                          {actor}
+                        </span>
+                      </div>
+                    );
+                  }) || "Not listed"}
+                </div>
+              </div>
+            )}
             <div
               style={{
                 fontWeight: "bold",
                 fontSize: "1.3rem" /* Adjusted font-size */,
-                margin: "0.7rem 0",
               }}
             >
-              Created By{" "}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "0.6rem",
-                  fontWeight: 500,
-                  fontSize: "1rem",
-                  margin: "0.4rem 0",
-                  flexWrap: "wrap",
-                }}
-              >
-                {movieToRender?.createdBy.map((creator, id) => {
-                  return (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        // justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <img
-                        width={"60px"}
-                        src={
-                          "https://image.tmdb.org/p/w500" + creator.profile_path
-                        }
-                      />
-                      <span
-                        style={{
-                          margin: 0,
-                          fontSize: "0.86rem",
-                          width: "50px",
-                          textAlign: "center",
-                          fontWeight: "400",
-                        }}
-                      >
-                        {actor}
-                      </span>
-                    </div>
-                  );
-                }) || "Not listed"}
-              </div>
+              Writer <br />
+              <span style={{ fontSize: "1rem", fontWeight: "400" }}>
+                {movieToRender?.Writer || "Unknown"}
+              </span>
             </div>
-          )}
-          <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
-            }}
-          >
-            Writer <br />
-            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-              {movieToRender?.Writer || "Unknown"}
-            </span>
+            <div
+              style={{
+                width: "3.3px",
+                height: "36px",
+                backgroundColor: "gray",
+              }}
+            ></div>
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.3rem" /* Adjusted font-size */,
+              }}
+            >
+              Director <br />
+              <span style={{ fontSize: "1rem", fontWeight: "400" }}>
+                {movieToRender?.Director || "Unknown"}
+              </span>
+            </div>
           </div>
           <div
             style={{
               fontWeight: "bold",
               fontSize: "1.3rem" /* Adjusted font-size */,
-              marginTop: "0.7rem",
-            }}
-          >
-            Director <br />
-            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-              {movieToRender?.Director || "Unknown"}
-            </span>
-          </div>
-          <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
-              margin: "0.7rem 0",
+              margin: "1.7rem 0",
             }}
           >
             Cast{" "}
@@ -539,7 +538,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 flexWrap: "wrap",
               }}
             >
-              {movieToRender?.Actors?.split(",").map((actor, id) => {
+              {credits.slice(0, 10).map((actor, id) => {
                 return (
                   <div
                     style={{
@@ -547,22 +546,45 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       flexDirection: "column",
                       // justifyContent: "center",
                       alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0.4rem",
+                      cursor: "pointer",
+                      borderRadius: "0.6rem",
+                      transition: "0.2s ease-in-out",
+                      backgroundColor: castHover == id ? "lightgray" : "white",
+                      transform: castHover == id ? "scale(1.04)" : "scale(1)",
+                    }}
+                    onMouseOver={() => {
+                      setCastHover(id);
+                    }}
+                    onMouseLeave={() => {
+                      setCastHover();
                     }}
                   >
                     <img
-                      width={"60px"}
-                      src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+                      width={"90px"}
+                      style={{ borderRadius: "0.6rem" }}
+                      src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
                     />
                     <span
                       style={{
-                        margin: 0,
                         fontSize: "0.86rem",
-                        width: "50px",
                         textAlign: "center",
-                        fontWeight: "400",
+                        fontWeight: "bold",
                       }}
                     >
-                      {actor}
+                      {actor.name}
+                    </span>
+                    <span
+                      style={{
+                        margin: 0,
+                        fontSize: "0.77rem",
+                        color: "gray",
+                        textAlign: "center",
+                        fontWeight: "normal",
+                      }}
+                    >
+                      {actor.character}
                     </span>
                   </div>
                 );
@@ -702,11 +724,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           </div>
 
           {/* Seasons */}
-          {movieToRender?.Type == "series" && (
+          {/* {movieToRender?.Type == "series" && (
             <div
               style={{
                 fontWeight: "bold",
-                fontSize: "1.3rem" /* Adjusted font-size */,
+                fontSize: "1.3rem" 
                 margin: "0.9rem 0",
               }}
             >
@@ -715,7 +737,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 {movieToRender?.totalSeasons || "Unknown"}
               </span>
             </div>
-          )}
+          )} */}
           {/* Genres */}
           <div
             style={{

@@ -42,7 +42,7 @@ function App() {
       const { data } = await axios.get(
         `https://api.tmdb.org/3/tv/top_rated?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&page=${page}`
       );
-      console.log(data);
+      console.log("tv shows: ", data);
       setTopRatedTvShowsLoading(false);
       setTopRatedTvShows(data.results);
     } catch (error) {

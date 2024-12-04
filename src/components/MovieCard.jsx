@@ -25,11 +25,16 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           left: 0,
           behavior: "auto", // For instant scrolling
         });
-        if (data.imdbID) navigate("/detail/" + data.imdbID);
-        else if (data.id) {
-          if (!data.first_air_date) navigate("/detail/" + data.id);
+        if (data?.first_air_date) {
+          console.log("id and Type is:", data?.id, data?.Type);
+          if (data?.imdbID) navigate("/detail/" + data.imdbID + "/tv");
           else navigate("/detail/" + data.id + "/tv");
+        } else if (data?.id) navigate("/detail/" + data.id);
+        else if (data?.imdbID) {
+          if (data?.Type == "movie") navigate("/detail/" + data.imdbID);
+          else navigate("/detail/" + data.imdbID + "/tv");
         }
+
         getMovieDetail(data);
         let movies = JSON.parse(localStorage.getItem("movies")) || [];
         if (movies.find((movie) => movie.imdbID === data.imdbID)) return;

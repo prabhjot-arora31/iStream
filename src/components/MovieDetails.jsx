@@ -12,15 +12,33 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [iFrameLoading, setIFrameLoading] = useState(false);
+  const [currentSeason, setCurrentSeason] = useState(1);
+  const [currentEpisode, setCurrentEpisode] = useState(1);
+  const [mappingImdbIdToTmdbId, setMappingImdbIdToTmdbId] = useState();
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
   const [hoveredDiv, setHoveredDiv] = useState(0);
   const navigate = useNavigate();
   const [rbHover, setRbHover] = useState(false);
-
+  const [totalEpisodes, setTotalEpisodes] = useState([]);
   const [rMovies, setRMovies] = useState(
     JSON.parse(localStorage.getItem("rMovies")) || []
   );
+  useEffect(() => {
+    (async () => {
+      if (tv?.length > 0) {
+        setTotalEpisodes([]);
+        const { data } = await axios.get(
+          `https://api.tmdb.org/3/tv/${mappingImdbIdToTmdbId}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+        );
+        console.log("for episode: ", data);
+        setTotalEpisodes(data.episodes);
+      }
+    })();
+    return () => {};
+  }, [currentSeason]);
+
   const [recommendationError, setRecommendationError] = useState("");
   async function recommendedMovieCall(movieToRender) {
     if (!movieToRender) return;
@@ -70,7 +88,13 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         var tmdbUrl;
         if (tv?.length > 0) {
           tmdbUrl = `https://api.tmdb.org/3/tv/${id}/external_ids?api_key=fafef439971c0bedf1c12e7a5be971c2`;
+          const { data } = await axios.get(
+            `https://api.tmdb.org/3/tv/${id}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+          );
+          console.log("for episode: ", data);
+          setTotalEpisodes(data.episodes);
         } else {
+          console.log("tv length is:", tv?.length);
           tmdbUrl = `https://api.tmdb.org/3/movie/${id}?api_key=fafef439971c0bedf1c12e7a5be971c2`;
         }
         const { data: tmdbData } = await axios.get(tmdbUrl);
@@ -81,6 +105,20 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         console.log("real data:", tmdbData);
         console.log("created by: " + tmdbData.created_by);
         setIdToUse(imdbId); // Update `idToUse`
+      } else {
+        if (tv?.length > 0) {
+          // tmdbUrl = `https://api.tmdb.org/3/tv/${id}/external_ids?api_key=fafef439971c0bedf1c12e7a5be971c2`;
+          const data1 = await axios.get(
+            `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
+          );
+          console.log("hihaa 😂:", data1);
+          setMappingImdbIdToTmdbId(data1.data.tv_results[0].id);
+          const { data } = await axios.get(
+            `https://api.tmdb.org/3/tv/${data1.data.tv_results[0].id}/season/1?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+          );
+          console.log("for episode: ", data);
+          setTotalEpisodes(data.episodes);
+        }
       }
 
       // Fetch movie details from OMDB
@@ -193,30 +231,166 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               margin: "0 auto",
               position: "relative",
               top: "18px",
+              marginBottom: "3.2rem",
               width: "100%",
               maxWidth: "100%", // Ensures iframe scales
             }}
           >
-            <iframe
-              style={{
-                width: "100%",
-                height: "100%",
-                border: "1px solid black",
-                borderRadius: "8px",
-              }}
-              allowFullScreen // Correct attribute
-              scrolling="no"
-              allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              src={
-                movieToRender?.Type === "movie"
-                  ? `https://vidsrc.xyz/embed/movie/${id}`
-                  : `https://vidsrc.xyz/embed/tv/${id}/1/1`
-              }
-            ></iframe>
+            {!iFrameLoading ? (
+              <iframe
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "1px solid black",
+                  borderRadius: "8px",
+                }}
+                allowFullScreen // Correct attribute
+                scrolling="no"
+                allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                src={
+                  movieToRender?.Type === "movie"
+                    ? `https://vidsrc.xyz/embed/movie/${id}`
+                    : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                }
+              ></iframe>
+            ) : (
+              <div
+                style={{
+                  margin: "0 auto",
+                  marginTop: "30px",
+
+                  width: "80px",
+                  height: "80px",
+                }}
+              >
+                <Puff
+                  stroke="#ff0000"
+                  strokeOpacity={20.125}
+                  speed={0.75}
+                  width={"100%"}
+                  height={"100%"}
+                />
+              </div>
+            )}
           </div>
         )}
+        {/* TV Shows Seasons and Episodes */}
+        {Array.from(
+          { length: movieToRender?.totalSeasons },
+          (_, index) => index
+        ) &&
+          Array.from(
+            { length: movieToRender?.totalSeasons },
+            (_, index) => index
+          ).length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "7px",
+              }}
+            >
+              <p style={{ fontWeight: "bold" }}>Seasons: </p>
 
-        {/* Movie Details */}
+              {Array.from(
+                { length: movieToRender?.totalSeasons },
+                (_, index) => index
+              ).map((season, i) => {
+                return (
+                  <button
+                    style={{
+                      backgroundColor:
+                        currentSeason == i + 1 ? "purple" : "white",
+                      border:
+                        currentSeason != i + 1
+                          ? "2px solid purple"
+                          : "2px solid purple",
+                      padding: "0.7rem",
+                      borderRadius: "0.34rem",
+                      cursor: "pointer",
+                      color: currentSeason == i + 1 ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      setCurrentSeason(season + 1);
+                      setIFrameLoading(true);
+                      setTimeout(() => {
+                        setIFrameLoading(false);
+                      }, 1000);
+                    }}
+                  >
+                    {season + 1}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        {totalEpisodes &&
+        movieToRender?.totalSeasons?.length > 0 &&
+        totalEpisodes.length > 0 ? (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "7px",
+            }}
+          >
+            <p style={{ fontWeight: "bold" }}>Episodes: </p>
+            {totalEpisodes.map((episode, id) => {
+              return (
+                <button
+                  style={{
+                    backgroundColor:
+                      currentEpisode == episode.episode_number
+                        ? "purple"
+                        : "white",
+                    border: "2px solid purple",
+                    padding: "0.7rem",
+                    borderRadius: "0.34rem",
+                    cursor: "pointer",
+                    color:
+                      currentEpisode == episode.episode_number
+                        ? "white"
+                        : "black",
+                  }}
+                  onClick={() => {
+                    setCurrentEpisode(episode.episode_number);
+                    setIFrameLoading(true);
+                    setTimeout(() => {
+                      setIFrameLoading(false);
+                    }, 1000);
+                  }}
+                >
+                  {episode.episode_number}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div
+            style={{
+              margin: "0 auto",
+              marginTop: "30px",
+
+              width: "80px",
+              height: movieToRender?.totalSeasons?.length > 0 ? "80px" : 0,
+            }}
+          >
+            {movieToRender?.totalSeasons?.length > 0 && (
+              <Puff
+                stroke="#ff0000"
+                strokeOpacity={20.125}
+                speed={0.75}
+                width={"100%"}
+                height={"100%"}
+              />
+            )}
+          </div>
+        )}
+        {/* Movie & TV Shows Details */}
         <div style={{ marginTop: "2.12462rem" }}>
           <h1
             className="title"

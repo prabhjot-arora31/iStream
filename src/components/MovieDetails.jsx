@@ -3,7 +3,7 @@ import "./MovieDetails.css";
 import axios from "axios";
 import { Puff } from "react-loading-icons";
 import MovieCard from "./MovieCard";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const { id, tv } = useParams(); // Get movie ID from route params
@@ -14,13 +14,16 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [castHover, setCastHover] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
+  const [tmdbId, setTmdbId] = useState("");
   const [credits, setCredits] = useState([]);
+  const [crew, setCrew] = useState([]);
   const [currentSeason, setCurrentSeason] = useState(1);
   const [currentEpisode, setCurrentEpisode] = useState(1);
   const [mappingImdbIdToTmdbId, setMappingImdbIdToTmdbId] = useState();
   const [recommendedMovies, setRecommendedMovies] = useState([]);
-  const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(false);
+  const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(true);
   const [hoveredDiv, setHoveredDiv] = useState(0);
+  const location = useLocation();
   const navigate = useNavigate();
   const [rbHover, setRbHover] = useState(false);
   const [totalEpisodes, setTotalEpisodes] = useState([]);
@@ -32,118 +35,186 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       if (tv?.length > 0) {
         setTotalEpisodes([]);
         const { data } = await axios.get(
-          `https://api.tmdb.org/3/tv/${mappingImdbIdToTmdbId}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+          `https://api.tmdb.org/3/tv/${id}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
         );
         console.log("for episode: ", data);
-        setTotalEpisodes(data.episodes);
+        setTotalEpisodes(data.episodes.length);
       }
     })();
     return () => {};
   }, [currentSeason]);
 
   const [recommendationError, setRecommendationError] = useState("");
-  async function recommendedMovieCall(movieToRender) {
-    if (!movieToRender) return;
-
-    const corsProxy = "https://cors-anywhere.herokuapp.com/";
-    const tastediveURL = "https://tastedive.com/api/similar";
-    const type = movieToRender?.Type === "movie" ? "movie" : "show";
-    const query = `${corsProxy}${tastediveURL}?q=${movieToRender?.Title}&type=${type}&limit=5&k=1040827-iStreamW-E8459B8B`;
-
+  async function recommendedMovieCall() {
+    //alert("called occur");
     try {
-      const { data } = await axios.post(
-        `https://i-stream-proxy-recommendation-server.vercel.app/similar/${movieToRender?.Title.replace(
-          /:/g,
-          " "
-        )}/${type}`,
-        {
-          secret: "nb&%*4#GtyuiEWQA09%@!",
+      if (id?.startsWith("tt")) {
+        //alert("I am in tt");
+        if (tv?.length > 0) {
+          const data1 = await axios.get(
+            `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
+          );
+          console.log("hihaa 😂:", data1);
+          setIdToUse(data1?.data?.tv_results[0]?.id);
+          console.log("setting id:", idToUse);
+          if (data1?.data?.tv_results[0]?.id) {
+            setRecommendedMovieLoading(true);
+            setRMovies([]);
+            //console.log("mapping:", idToUse);
+            const { data } = await axios.get(
+              `https://api.tmdb.org/3/tv/${data1?.data?.tv_results[0]?.id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+            );
+            console.log("data is: ", data);
+            setRMovies(data.results);
+            setRecommendedMovieLoading(false);
+          }
+        } else {
+          const data1 = await axios.get(
+            `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
+          );
+          console.log("hihaa 😂:", data1);
+          console.log("id is:", data1?.data?.movie_results[0]?.id);
+          setIdToUse(data1?.data?.movie_results[0]?.id);
+          console.log("setting id:", idToUse);
+          if (data1?.data?.movie_results[0]?.id) {
+            setRecommendedMovieLoading(true);
+            setRMovies([]);
+            //console.log("mapping:", idToUse);
+            const { data } = await axios.get(
+              `https://api.tmdb.org/3/movie/${data1?.data?.movie_results[0]?.id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+            );
+            console.log("data is: ", data);
+            setRMovies(data.results);
+            setRecommendedMovieLoading(false);
+          }
         }
-      );
-      console.log("Recommendations:", data);
-      setRecommendedMovieLoading(false);
-      setRMovies(data?.similar?.results || []);
-      if (data?.similar?.results.length == 0)
-        setRecommendationError("No recommendations");
+      } else {
+        //alert("I am here");
+        if (tv?.length > 0) {
+          // alert("hmm");
+          setRecommendedMovieLoading(true);
+          setRMovies([]);
+          //console.log("mapping:", idToUse);
+          // alert(id);
+          const { data } = await axios.get(
+            `https://api.tmdb.org/3/tv/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+          );
+          console.log("data is: ", data);
+          setRMovies(data.results);
+          setRecommendedMovieLoading(false);
+        } else {
+          setRecommendedMovieLoading(true);
+          setRMovies([]);
+          //console.log("mapping:", idToUse);
+          const { data } = await axios.get(
+            `https://api.tmdb.org/3/movie/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+          );
+          console.log("data is: ", data);
+          setRMovies(data.results);
+          setRecommendedMovieLoading(false);
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+    try {
     } catch (error) {
-      console.error("Error fetching recommendations:", error);
+      //console.error("Error fetching recommendations:", error);
       setRecommendationError("No Result!!");
       setRecommendedMovieLoading(false);
       setRMovies([]);
     }
   }
+  useEffect(() => {
+    recommendedMovieCall();
+    console.log("in effect: ", idToUse);
+    return () => {};
+  }, [location.pathname]);
   const [createdBy, setCreatedBy] = useState([]);
   const [productionCompanies, setProductionCompanies] = useState([]);
   const [vote, setVote] = useState("");
   // Fetch Movie Details by ID
   const fetchById = async () => {
     try {
-      const apiKey = "2d70fb93";
+      const apiKey = "2d70fb93"; // OMDB API Key (not required now for TMDB fetch)
+      const tmdbKey = "8cf43ad9c085135b9479ad5cf6bbcbda"; // TMDB API Key
       setIsLoading(true);
-      let url;
       let imdbId = idToUse;
+      let tmdbData = null;
 
-      // Determine if we need to fetch IMDb ID from TMDB
-      if (!idToUse?.startsWith("tt")) {
-        // TMDB ID search
-        console.log("Fetching IMDb ID from TMDB...");
-        var tmdbUrl;
-        if (tv?.length > 0) {
-          tmdbUrl = `https://api.tmdb.org/3/tv/${id}/external_ids?api_key=fafef439971c0bedf1c12e7a5be971c2`;
-          const { data } = await axios.get(
-            `https://api.tmdb.org/3/tv/${id}/season/${currentSeason}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
-          );
+      // Helper function to convert IMDb ID to TMDB ID
+      const fetchTmdbIdFromImdb = async (imdbId, isTv) => {
+        const url = `https://api.tmdb.org/3/find/${imdbId}?api_key=${tmdbKey}&language=en-US&external_source=imdb_id`;
+        const { data } = await axios.get(url);
 
-          console.log("for episode: ", data);
-          setTotalEpisodes(data.episodes);
+        if (isTv) {
+          return data.tv_results[0]?.id;
         } else {
-          console.log("tv length is:", tv?.length);
-          tmdbUrl = `https://api.tmdb.org/3/movie/${id}?api_key=fafef439971c0bedf1c12e7a5be971c2`;
+          return data.movie_results[0]?.id;
         }
-        const { data: tmdbData } = await axios.get(tmdbUrl);
-        console.log("ACTUAL TMDB DATA:", tmdbData);
-        imdbId = tmdbData.imdb_id; // Extract IMDb ID
-        setCreatedBy(tmdbData.created_by);
-        setProductionCompanies(tmdbData.production_companies);
-        setVote(tmdbData.vote_average);
-        console.log("real data:", tmdbData);
-        console.log("created by: " + tmdbData.created_by);
-        setIdToUse(imdbId); // Update `idToUse`
-      } else {
+      };
+
+      // Fetch data for movies or TV shows using IMDb ID
+      // alert("idtouse:", id);
+      if (id && id?.startsWith("tt")) {
+        // If the ID starts with "tt", fetch TMDB ID for the movie or TV show
+        const tmdbId = await fetchTmdbIdFromImdb(imdbId, tv?.length > 0);
+        setTmdbId(tmdbId);
+        if (!tmdbId) {
+          console.error("TMDB ID not found for IMDb ID:", imdbId);
+          return;
+        }
+
+        // Now fetch movie or TV show details from TMDB using the TMDB ID
+        const tmdbUrl =
+          tv?.length > 0
+            ? `https://api.tmdb.org/3/tv/${tmdbId}?api_key=${tmdbKey}&language=en-US`
+            : `https://api.tmdb.org/3/movie/${tmdbId}?api_key=${tmdbKey}&language=en-US`;
+
+        const { data } = await axios.get(tmdbUrl);
+        tmdbData = data;
+
+        // Update the state with TMDB data
+        setMovieToRender(data);
+        setCreatedBy(data.created_by);
+        setProductionCompanies(data.production_companies);
+        setVote(data.vote_average);
+
+        // For TV shows, fetch season details
         if (tv?.length > 0) {
-          // tmdbUrl = `https://api.tmdb.org/3/tv/${id}/external_ids?api_key=fafef439971c0bedf1c12e7a5be971c2`;
-          const data1 = await axios.get(
-            `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
+          const { data: seasonData } = await axios.get(
+            `https://api.tmdb.org/3/tv/${tmdbId}/season/${currentSeason}?api_key=${tmdbKey}&language=en-US`
           );
-          console.log("hihaa 😂:", data1);
-          setMappingImdbIdToTmdbId(data1?.data?.tv_results[0]?.id);
-          const { data } = await axios.get(
-            `https://api.tmdb.org/3/tv/${data1?.data?.tv_results[0]?.id}/season/1?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US`
+          setTotalEpisodes(seasonData.episodes);
+        }
+      } else {
+        // If it's not an IMDb ID, just proceed with the regular fetching
+        const tmdbUrl =
+          tv?.length > 0
+            ? `https://api.tmdb.org/3/tv/${id}?api_key=${tmdbKey}&language=en-US`
+            : `https://api.tmdb.org/3/movie/${id}?api_key=${tmdbKey}&language=en-US`;
+
+        const { data } = await axios.get(tmdbUrl);
+        tmdbData = data;
+        console.log("data hmm is:", data);
+        // Update the state with TMDB data
+        setMovieToRender(data);
+        setCreatedBy(data.created_by);
+        setProductionCompanies(data.production_companies);
+        setVote(data.vote_average);
+
+        // For TV shows, fetch season details
+        if (tv?.length > 0) {
+          const { data: seasonData } = await axios.get(
+            `https://api.tmdb.org/3/tv/${idToUse}/season/${currentSeason}?api_key=${tmdbKey}&language=en-US`
           );
-          console.log("for episode: ", data);
-          setTotalEpisodes(data.episodes);
+          console.log("total episodes:", seasonData.episodes.length);
+          setTotalEpisodes(seasonData.episodes.length);
         }
       }
-
-      // Fetch movie details from OMDB
-      url = `https://www.omdbapi.com/?i=${imdbId}&apikey=${apiKey}`;
-      console.log("Fetching movie details from OMDB...");
-      const { data } = await axios.get(url);
-      const creditData = await axios.get(
-        `https://api.tmdb.org/3/movie/${id}/credits?api_key=fafef439971c0bedf1c12e7a5be971c2`
-      );
-      setCredits(creditData?.data?.cast);
-      console.log("credits are:", creditData);
-      // Update state with fetched movie data
-      setMovieToRender(data);
-      let movies = JSON.parse(localStorage.getItem("movies")) || [];
-      if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
-      movies.push(data);
-      localStorage.setItem("movies", JSON.stringify(movies));
-      console.log("Movie data fetched successfully:", data);
     } catch (error) {
-      console.error("Error fetching movie details:", error);
-      setMovieToRender(MovieDetail); // Fallback movie details
+      console.error("Error fetching movie details:", error.message);
+      setMovieToRender(MovieDetail); // Fallback data
     } finally {
       setIsLoading(false);
     }
@@ -151,9 +222,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
 
   useEffect(() => {
     fetchById();
-    // Only trigger `fetchById` on the initial render or when `id` changes
-    // Do not depend on `idToUse` here to avoid infinite loop
-  }, [id]);
+    // Only run on `id` or `tv` changes to avoid unnecessary re-renders
+  }, [id, tv, location.pathname]);
 
   if (isLoading) {
     return (
@@ -214,24 +284,26 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 }}
               >
                 {!iFrameLoading ? (
-                  <iframe
-                    style={{
-                      // width: "100%",
-                      // height: "100%",
-                      width: "420px",
-                      height: "420px",
-                      border: "1px solid black",
-                      borderRadius: "8px",
-                    }}
-                    allowFullScreen // Correct attribute
-                    scrolling="no"
-                    allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    src={
-                      movieToRender?.Type === "movie"
-                        ? `https://vidsrc.xyz/embed/movie/${id}`
-                        : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
-                    }
-                  ></iframe>
+                  <>
+                    <iframe
+                      style={{
+                        // width: "100%",
+                        // height: "100%",
+                        width: "420px",
+                        height: "420px",
+                        border: "1px solid black",
+                        borderRadius: "8px",
+                      }}
+                      allowFullScreen // Correct attribute
+                      scrolling="no"
+                      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      src={
+                        movieToRender?.Type === "movie"
+                          ? `https://vidsrc.xyz/embed/movie/${id}`
+                          : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                      }
+                    ></iframe>
+                  </>
                 ) : (
                   <div
                     style={{
@@ -311,11 +383,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         )}
         {/* TV Shows Seasons and Episodes */}
         {Array.from(
-          { length: movieToRender?.totalSeasons },
+          { length: movieToRender?.number_of_seasons },
           (_, index) => index
         ) &&
           Array.from(
-            { length: movieToRender?.totalSeasons },
+            { length: movieToRender?.number_of_seasons },
             (_, index) => index
           ).length > 0 && (
             <div
@@ -330,7 +402,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               <p style={{ fontWeight: "bold" }}>Seasons: </p>
 
               {Array.from(
-                { length: movieToRender?.totalSeasons },
+                { length: movieToRender?.number_of_seasons },
                 (_, index) => index
               ).map((season, i) => {
                 return (
@@ -362,59 +434,57 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             </div>
           )}
         {totalEpisodes &&
-        movieToRender?.totalSeasons?.length > 0 &&
-        totalEpisodes.length > 0 ? (
+        movieToRender?.number_of_seasons > 0 &&
+        totalEpisodes > 0 ? (
           <div
             style={{
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
+              margin: "0 auto",
+              width: "100%",
               alignItems: "center",
               gap: "7px",
             }}
           >
             <p style={{ fontWeight: "bold" }}>Episodes: </p>
-            {totalEpisodes.map((episode, id) => {
-              return (
-                <button
-                  style={{
-                    backgroundColor:
-                      currentEpisode == episode.episode_number
-                        ? "purple"
-                        : "white",
-                    border: "2px solid purple",
-                    padding: "0.7rem",
-                    borderRadius: "0.34rem",
-                    cursor: "pointer",
-                    color:
-                      currentEpisode == episode.episode_number
-                        ? "white"
-                        : "black",
-                  }}
-                  onClick={() => {
-                    setCurrentEpisode(episode.episode_number);
-                    setIFrameLoading(true);
-                    setTimeout(() => {
-                      setIFrameLoading(false);
-                    }, 1000);
-                  }}
-                >
-                  {episode.episode_number}
-                </button>
-              );
-            })}
+            {Array.from({ length: totalEpisodes }, (_, index) => index).map(
+              (episode, id) => {
+                return (
+                  <button
+                    style={{
+                      backgroundColor:
+                        currentEpisode == id + 1 ? "purple" : "white",
+                      border: "2px solid purple",
+                      padding: "0.7rem",
+                      borderRadius: "0.34rem",
+                      cursor: "pointer",
+                      color: currentEpisode == id + 1 ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      setCurrentEpisode(id + 1);
+                      setIFrameLoading(true);
+                      setTimeout(() => {
+                        setIFrameLoading(false);
+                      }, 1000);
+                    }}
+                  >
+                    {id + 1}
+                  </button>
+                );
+              }
+            )}
           </div>
         ) : (
           <div
             style={{
               margin: "0 auto",
-              marginTop: "30px",
 
-              width: "80px",
-              height: movieToRender?.totalSeasons?.length > 0 ? "80px" : 0,
+              width: "50px",
+              height: movieToRender?.number_of_seasons > 0 ? "80px" : 0,
             }}
           >
-            {movieToRender?.totalSeasons?.length > 0 && (
+            {movieToRender?.number_of_seasons > 0 && (
               <Puff
                 stroke="#ff0000"
                 strokeOpacity={20.125}
@@ -455,7 +525,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                     flexWrap: "wrap",
                   }}
                 >
-                  {movieToRender?.createdBy.map((creator, id) => {
+                  {movieToRender?.createdBy?.map((creator, id) => {
                     return (
                       <div
                         style={{
@@ -489,108 +559,120 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 </div>
               </div>
             )}
-            <div
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.3rem" /* Adjusted font-size */,
-              }}
-            >
-              Writer <br />
-              <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-                {movieToRender?.Writer || "Unknown"}
-              </span>
-            </div>
-            <div
+
+            {/* <div
               style={{
                 width: "3.3px",
                 height: "36px",
                 backgroundColor: "gray",
               }}
-            ></div>
+            ></div> */}
+          </div>
+          {credits.length > 0 && (
             <div
               style={{
                 fontWeight: "bold",
                 fontSize: "1.3rem" /* Adjusted font-size */,
+                margin: "1.7rem 0",
+                marginTop: 0,
               }}
             >
-              Director <br />
-              <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-                {movieToRender?.Director || "Unknown"}
-              </span>
+              Top Cast{" "}
+              <div
+                className="casts"
+                style={{
+                  display: "flex",
+                  gap: "0.6rem",
+                  fontWeight: 500,
+                  fontSize: "1rem",
+                  margin: "0.4rem 0",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  marginTop: "0.84rem",
+                  overflow: "auto",
+                }}
+              >
+                {credits.slice(0, 5).map((actor, id) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        // justifyContent: "center",
+                        alignItems: "center",
+                        justifyContent: "start",
+                        padding: "0.4rem",
+                        cursor: "pointer",
+                        borderRadius: "0.6rem",
+                        transition: "0.2s ease-in-out",
+                        backgroundColor:
+                          castHover == id ? "lightgray" : "white",
+                        transform: castHover == id ? "scale(1.04)" : "scale(1)",
+                      }}
+                      onMouseOver={() => {
+                        setCastHover(id);
+                      }}
+                      onMouseLeave={() => {
+                        setCastHover();
+                      }}
+                    >
+                      <img
+                        width={actor.profile_path ? "90px" : "100px"}
+                        // height={"150px"}
+                        height={!actor.profile_path && "110px"}
+                        style={{ borderRadius: "0.6rem" }}
+                        src={
+                          actor.profile_path
+                            ? `https://image.tmdb.org/t/p/w500${actor.profile_path}`
+                            : "https://imgs.search.brave.com/sE8MdXvDoqofUi5xFiPekWzRwNvt10-6tUkLkDA7KWA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA5LzE3LzEyLzIz/LzM2MF9GXzkxNzEy/MjM2N19rU3BkcFJK/NUhjbW4wczRXTWRK/YlNacGw3TlJ6d3Vw/VS5qcGc"
+                        }
+                      />
+                      <span
+                        style={{
+                          fontSize: "0.86rem",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          marginTop: "0.23rem",
+                        }}
+                      >
+                        {actor.name}
+                      </span>
+                      <span
+                        style={{
+                          margin: 0,
+                          fontSize: "0.77rem",
+                          color: "gray",
+                          textAlign: "center",
+                          fontWeight: "normal",
+                        }}
+                      >
+                        {actor.character}
+                      </span>
+                    </div>
+                  );
+                }) || "Not listed"}
+              </div>
             </div>
-          </div>
-          <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
-              margin: "1.7rem 0",
-            }}
-          >
-            Cast{" "}
-            <div
+          )}
+          <div>
+            <button
               style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "0.6rem",
-                fontWeight: 500,
-                fontSize: "1rem",
-                margin: "0.4rem 0",
-                flexWrap: "wrap",
+                backgroundColor: "lightblue",
+                cursor: "pointer",
+                border: "none",
+                borderRadius: "10px",
+                padding: "0.9rem",
+              }}
+              onClick={() => {
+                tv?.length > 0 && id.startsWith("tt")
+                  ? navigate(`/cast-and-crew/${tmdbId}/tv`)
+                  : tv?.length > 0 && !id.startsWith("tt")
+                  ? navigate(`/cast-and-crew/${id}/tv`)
+                  : navigate(`/cast-and-crew/${id}`);
               }}
             >
-              {credits.slice(0, 10).map((actor, id) => {
-                return (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      // justifyContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "0.4rem",
-                      cursor: "pointer",
-                      borderRadius: "0.6rem",
-                      transition: "0.2s ease-in-out",
-                      backgroundColor: castHover == id ? "lightgray" : "white",
-                      transform: castHover == id ? "scale(1.04)" : "scale(1)",
-                    }}
-                    onMouseOver={() => {
-                      setCastHover(id);
-                    }}
-                    onMouseLeave={() => {
-                      setCastHover();
-                    }}
-                  >
-                    <img
-                      width={"90px"}
-                      style={{ borderRadius: "0.6rem" }}
-                      src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
-                    />
-                    <span
-                      style={{
-                        fontSize: "0.86rem",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        marginTop:'0.23rem'
-                      }}
-                    >
-                      {actor.name}
-                    </span>
-                    <span
-                      style={{
-                        margin: 0,
-                        fontSize: "0.77rem",
-                        color: "gray",
-                        textAlign: "center",
-                        fontWeight: "normal",
-                      }}
-                    >
-                      {actor.character}
-                    </span>
-                  </div>
-                );
-              }) || "Not listed"}
-            </div>
+              Meet the Whole Team
+            </button>
           </div>
           <div
             style={{
@@ -599,8 +681,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               margin: "1.89rem 0",
             }}
           >
-            {movieToRender?.Released} | {movieToRender?.Runtime} |{" "}
-            {movieToRender?.Country}
+            {movieToRender?.Released || movieToRender?.release_date} |{" "}
+            {movieToRender?.Runtime || movieToRender?.runtime} min
           </div>
           {/* Language */}
           <div
@@ -612,14 +694,21 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           >
             Language <br />
             <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-              {movieToRender?.Language || "Unknown"}
+              {movieToRender?.spoken_languages?.map((lang, id) => {
+                return (
+                  <>
+                    {id != 0 && ", "}
+                    {lang.english_name}
+                  </>
+                );
+              }) || "Unknown"}
             </span>
           </div>
           {/* Awards */}
-          <div
+          {/* <div
             style={{
               fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
+              fontSize: "1.3rem" ,
               margin: "0.7rem 0",
             }}
           >
@@ -627,7 +716,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             <span style={{ fontSize: "1rem", fontWeight: "400" }}>
               {movieToRender?.Awards || "Unknown"}
             </span>
-          </div>
+          </div> */}
           {/* Production Companies */}
           {productionCompanies && productionCompanies.length > 0 && (
             <div
@@ -719,17 +808,19 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               </span>
               &nbsp; /10{" "}
             </div>
-            <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
-              ({movieToRender?.imdbVotes})
-            </span>
+            {movieToRender?.imdbVotes && (
+              <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
+                ({movieToRender?.imdbVotes})
+              </span>
+            )}
           </div>
 
           {/* Seasons */}
-          {/* {movieToRender?.Type == "series" && (
+          {/* {tv?.length > 0 && (
             <div
               style={{
                 fontWeight: "bold",
-                fontSize: "1.3rem" 
+                fontSize: "1.3rem",
                 margin: "0.9rem 0",
               }}
             >
@@ -749,18 +840,18 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               justifyContent: "center",
             }}
           >
-            {movieToRender?.Genre?.split(",").map((genre, idx) => (
+            {movieToRender?.genres?.map((genre, idx) => (
               <button
                 key={idx}
                 style={{
                   padding: "0.4rem",
                   backgroundColor: "red",
                   color: "white",
-                  border:'none',
+                  border: "none",
                   fontSize: "0.9rem", // Smaller font size for mobile
                 }}
               >
-                {genre}
+                {genre.name}
               </button>
             ))}
           </div>
@@ -785,7 +876,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             </div>
           )}
           <div style={{ marginTop: "20px" }}>
-            {!recommendedMovieLoading &&
+            {/* {!recommendedMovieLoading &&
               !rMovies?.length > 0 &&
               !recommendationError && (
                 <button
@@ -812,54 +903,42 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 >
                   Show Recommendations
                 </button>
-              )}
+              )} */}
             {recommendationError && (
-              <h3 style={{ margin: 0, marginBottom: "0.4rem" }}>
+              <h3 style={{ margin: 0, marginBottom: "1.4rem" }}>
                 No Recommendations!!
               </h3>
             )}
             {rMovies?.length > 0 && (
               <div style={{ marginTop: "2.6rem" }}>
-                <h3 style={{ margin: 0, marginBottom: "0.4rem" }}>
-                  Recommendations!!
+                <h3
+                  style={{
+                    margin: 0,
+                    marginBottom: "1.4rem",
+                    fontSize: "24.2px",
+                  }}
+                >
+                  You may also like....
                 </h3>
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    gap: "5px",
+                    gap: "0.7rem",
                     marginTop: "0.5rem",
                     flexWrap: "wrap",
                   }}
                 >
                   {rMovies.map((ele, id) => {
                     return (
-                      <button
-                        style={{
-                          cursor: "pointer",
-                          backgroundColor: "orange",
-                          padding: "0.45rem",
-                          borderRadius: "10px",
-                          border: "none",
-                        }}
-                        onClick={() => {
-                          navigate("/recommended/" + ele.name);
-                          let movies =
-                            JSON.parse(localStorage.getItem("movies")) || [];
-                          if (
-                            movies.find((movie) => movie.imdbID === data.imdbID)
-                          )
-                            return;
-                          movies.push(data);
-                          localStorage.setItem(
-                            "movies",
-                            JSON.stringify(movies)
-                          );
-                        }}
-                      >
-                        {ele.name}
-                      </button>
+                      <MovieCard
+                        data={ele}
+                        key={id}
+                        id={id}
+                        setHoveredDiv={setHoveredDiv}
+                        hoveredDiv={hoveredDiv}
+                      />
                     );
                   })}
                 </div>

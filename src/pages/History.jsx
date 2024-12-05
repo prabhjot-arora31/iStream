@@ -142,6 +142,19 @@ const History = ({ getMovieDetail }) => {
             style={{
               display: "flex",
               justifyContent: "center",
+              gap: "0.2rem",
+              margin: 0,
+              alignItems: "center",
+              marginBottom: "1.6rem",
+            }}
+          >
+            <h4 style={{ margin: 0 }}>Total: </h4>
+            <p style={{ margin: 0 }}>{history.length}</p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
               alignItems: "center",
               gap: "0.7rem",
               flexWrap: "wrap",

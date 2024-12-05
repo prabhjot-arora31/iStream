@@ -9,9 +9,9 @@ const Header = () => {
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>
-        <span style={{ color: "purple" }}>iS</span>
-        <span style={{ color: "darkblue" }}>tre</span>
-        <span style={{ color: "darkgoldenrod" }}>am</span>
+        <span style={{ color: "black", fontWeight: "bolder" }}>iS</span>
+        <span style={{ color: "black", fontWeight: "bolder" }}>tre</span>
+        <span style={{ color: "black", fontWeight: "bolder" }}>am</span>
       </h1>
       <div
         style={{

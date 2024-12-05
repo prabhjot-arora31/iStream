@@ -27,6 +27,7 @@ import Genres from "./pages/Genres";
 import MoviesByGenres from "./pages/MoviesByGenres";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 import RecommendedMovies from "./pages/RecommendedMovies";
+import CastAndCrew from "./pages/CastAndCrew";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -42,7 +43,7 @@ function App() {
       const { data } = await axios.get(
         `https://api.tmdb.org/3/tv/top_rated?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&page=${page}`
       );
-      console.log("tv shows: ", data);
+      //console.log("tv shows: ", data);
       setTopRatedTvShowsLoading(false);
       setTopRatedTvShows(data.results);
     } catch (error) {
@@ -55,11 +56,11 @@ function App() {
       const { data } =
         await axios.get(`https://api.tmdb.org/3/movie/top_rated?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&page=${page}
 `);
-      console.log("top rated:", data);
+      //console.log("top rated:", data);
       setTopRatedMovieLoading(false);
       setTopRatedMovies(data.results);
     } catch (error) {
-      console.log(error.message);
+      //console.log(error.message);
     }
   };
   const searching = async (searches) => {
@@ -74,10 +75,10 @@ function App() {
     //     return response.json(); // Parse the response as JSON
     //   })
     //   .then((data) => {
-    //     console.log("from fetch:", data); // Log the parsed data
+    //     //console.log("from fetch:", data); // Log the parsed data
     //   })
     //   .catch((err) => {
-    //     console.error("Error:", err); // Log any errors that occur
+    //     //console.error("Error:", err); // Log any errors that occur
     //   });
 
     try {
@@ -86,10 +87,10 @@ function App() {
         // `http://localhost:9005/searching/${searches}`,
         `https://api.tmdb.org/3/search/movie?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&query=${searches}`
       );
-      console.log("search result:", data);
+      //console.log("search result:", data);
       setSearchResults(data.results);
     } catch (e) {
-      console.log("Error:", e.message);
+      //console.log("Error:", e.message);
       setSearchResults([]);
     }
   };
@@ -115,11 +116,11 @@ function App() {
       const { data } = await axios.get(
         `https://api.tmdb.org/3/movie/popular?api_key=fafef439971c0bedf1c12e7a5be971c2&language=en-US&page=${page}`
       );
-      console.log(data.results);
+      //console.log(data.results);
       setMovies(data.results);
       setIsLoading(false);
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       setIsLoading(false);
     }
   };
@@ -134,15 +135,15 @@ function App() {
   
   `
         );
-        // console.log("by name: " + data.data.result.data);
-        console.log("all:", data);
+        // //console.log("by name: " + data.data.result.data);
+        //console.log("all:", data);
         setMovies(data.data.Search);
         setTypeText("All");
         if (data.data.Search.length <= 0) {
           seterror("No results found");
         }
         setIsLoading(false);
-        console.log("movie is:", movies);
+        //console.log("movie is:", movies);
         // if (data.data.result.data.length > 0) {
         //   setCurrentPage(data.data.result.page);
         //   setTotalPages(data.data.result.pages);
@@ -170,14 +171,14 @@ function App() {
     setIsLoading(true);
     try {
       const randomNumber = Math.floor(Math.random() * 1100) + 1;
-      //console.log(randomNumber);
+      ////console.log(randomNumber);
       const data = await axios.get(
         // `https://streamitfree-api-personal.carrotappdevelopment.com/api/v1/streamitfree/all/${randomNumber}`
         `
         https://www.omdbapi.com/?t=fast+and+furios&apikey=2d70fb93
         `
       );
-      // console.log(data.data.result.data);
+      // //console.log(data.data.result.data);
       setMovies(data.data);
       setIsLoading(false);
     } catch (err) {
@@ -999,6 +1000,7 @@ function App() {
           path="/genres/:genre"
           element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
         />
+        <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
       </Routes>
     </>
   );

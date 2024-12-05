@@ -35,7 +35,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           else navigate("/detail/" + data.imdbID + "/tv");
         }
 
-        getMovieDetail(data);
+        // getMovieDetail(data);
         let movies = JSON.parse(localStorage.getItem("movies")) || [];
         if (movies.find((movie) => movie.imdbID === data.imdbID)) return;
         movies.push(data);

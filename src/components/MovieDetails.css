@@ -3,3 +3,6 @@
     font-size: 24px;
   }
 }
+.casts::-webkit-scrollbar {
+  display: none;
+}

@@ -28,6 +28,7 @@ import MoviesByGenres from "./pages/MoviesByGenres";
 import Puff from "react-loading-icons/dist/esm/components/puff";
 import RecommendedMovies from "./pages/RecommendedMovies";
 import CastAndCrew from "./pages/CastAndCrew";
+import ActorInfo from "./pages/ActorInfo";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -1001,6 +1002,7 @@ function App() {
           element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
         />
         <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
+        <Route path="/actor-info/:id/:name" element={<ActorInfo />} />
       </Routes>
     </>
   );

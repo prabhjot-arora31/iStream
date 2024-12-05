@@ -1,13 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Puff from "react-loading-icons/dist/esm/components/puff";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CastAndCrew = () => {
   const { id, tv } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [credits, setCredits] = useState([]);
   const [hover, setHover] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     const callAPI = async () => {
       const { data } = await axios.get(
@@ -72,6 +73,11 @@ const CastAndCrew = () => {
                 transition: "0.2s ease-in-out",
                 transform: hover == crew.id && "scale(1.043)",
                 backgroundColor: hover == crew.id ? "lightgray" : "white",
+              }}
+              onClick={() => {
+                if (crew.known_for_department == "Acting") {
+                  navigate("/actor-info/" + crew.id + "/" + crew.name);
+                }
               }}
               onMouseOver={() => {
                 setHover(crew.id);

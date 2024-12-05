@@ -285,7 +285,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               >
                 {!iFrameLoading ? (
                   <>
-                    {/* <iframe
+                    <iframe
                       style={{
                         // width: "100%",
                         // height: "100%",
@@ -302,7 +302,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                           ? `https://vidsrc.xyz/embed/movie/${id}`
                           : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
                       }
-                    ></iframe> */}
+                    ></iframe>
                   </>
                 ) : (
                   <div

@@ -11,7 +11,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
-  const [castHover, setCastHover] = useState(0);
+  const [castHover, setCastHover] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
   const [credits, setCredits] = useState([]);

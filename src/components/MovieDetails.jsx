@@ -571,6 +571,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                         fontSize: "0.86rem",
                         textAlign: "center",
                         fontWeight: "bold",
+                        marginTop:'0.23rem'
                       }}
                     >
                       {actor.name}
@@ -749,17 +750,18 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             }}
           >
             {movieToRender?.Genre?.split(",").map((genre, idx) => (
-              <div
+              <button
                 key={idx}
                 style={{
                   padding: "0.4rem",
                   backgroundColor: "red",
                   color: "white",
+                  border:'none',
                   fontSize: "0.9rem", // Smaller font size for mobile
                 }}
               >
                 {genre}
-              </div>
+              </button>
             ))}
           </div>
           {/* Recommendations */}

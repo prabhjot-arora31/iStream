@@ -285,7 +285,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               >
                 {!iFrameLoading ? (
                   <>
-                    <iframe
+                    {/* <iframe
                       style={{
                         // width: "100%",
                         // height: "100%",
@@ -302,7 +302,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                           ? `https://vidsrc.xyz/embed/movie/${id}`
                           : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
                       }
-                    ></iframe>
+                    ></iframe> */}
                   </>
                 ) : (
                   <div
@@ -855,97 +855,70 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               </button>
             ))}
           </div>
-          {/* Recommendations */}
-          {recommendedMovieLoading && (
-            <div
-              style={{
-                margin: "0 auto",
-                marginTop: "30px",
+        </div>
+      </div>
+      {/* Recommendations */}
+      {recommendedMovieLoading && (
+        <div
+          style={{
+            margin: "0 auto",
+            marginTop: "30px",
 
-                width: "80px",
-                height: "80px",
+            width: "80px",
+            height: "80px",
+          }}
+        >
+          <Puff
+            stroke="#ff0000"
+            strokeOpacity={20.125}
+            speed={0.75}
+            width={"100%"}
+            height={"100%"}
+          />
+        </div>
+      )}
+      <div style={{ marginTop: "20px" }}>
+        {recommendationError && (
+          <h3 style={{ margin: 0, marginBottom: "1.4rem" }}>
+            No Recommendations!!
+          </h3>
+        )}
+        {rMovies?.length > 0 && (
+          <div style={{ marginTop: "2.6rem" }}>
+            <h3
+              style={{
+                margin: 0,
+                marginBottom: "1.4rem",
+                textAlign: "center",
+                fontSize: "24.2px",
               }}
             >
-              <Puff
-                stroke="#ff0000"
-                strokeOpacity={20.125}
-                speed={0.75}
-                width={"100%"}
-                height={"100%"}
-              />
+              You may also like....
+            </h3>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "0.7rem",
+                flexWrap: "wrap",
+              }}
+            >
+              {rMovies.map((ele, id) => {
+                return (
+                  <MovieCard
+                    id={id}
+                    key={id}
+                    data={ele}
+                    setHoveredDiv={setHoveredDiv}
+                    hoveredDiv={hoveredDiv}
+                    getMovieDetail={getMovieDetail}
+                  />
+                );
+              })}
             </div>
-          )}
-          <div style={{ marginTop: "20px" }}>
-            {/* {!recommendedMovieLoading &&
-              !rMovies?.length > 0 &&
-              !recommendationError && (
-                <button
-                  onClick={() => {
-                    setRecommendedMovieLoading(true);
-                    recommendedMovieCall(movieToRender);
-                  }}
-                  onMouseOver={() => {
-                    setRbHover(true);
-                  }}
-                  onMouseOut={() => {
-                    setRbHover(false);
-                  }}
-                  style={{
-                    padding: "0.7rem",
-                    borderRadius: "7px",
-                    border: rbHover ? "1px solid purple" : "1px solid purple",
-                    background: rbHover
-                      ? "linear-gradient(to right , blue , purple)"
-                      : "white",
-                    color: rbHover ? "white" : "purple",
-                    cursor: "pointer",
-                  }}
-                >
-                  Show Recommendations
-                </button>
-              )} */}
-            {recommendationError && (
-              <h3 style={{ margin: 0, marginBottom: "1.4rem" }}>
-                No Recommendations!!
-              </h3>
-            )}
-            {rMovies?.length > 0 && (
-              <div style={{ marginTop: "2.6rem" }}>
-                <h3
-                  style={{
-                    margin: 0,
-                    marginBottom: "1.4rem",
-                    fontSize: "24.2px",
-                  }}
-                >
-                  You may also like....
-                </h3>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.7rem",
-                    marginTop: "0.5rem",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {rMovies.map((ele, id) => {
-                    return (
-                      <MovieCard
-                        data={ele}
-                        key={id}
-                        id={id}
-                        setHoveredDiv={setHoveredDiv}
-                        hoveredDiv={hoveredDiv}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </div>
 
       {/* Recommended Movies */}

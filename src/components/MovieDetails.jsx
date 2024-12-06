@@ -298,9 +298,10 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       scrolling="no"
                       allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       src={
-                        tv?.length == 0
-                          ? `https://vidsrc.xyz/embed/movie/${id}`
-                          : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                        tv?.length > 0
+                          ?
+                           `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                        :  `https://vidsrc.xyz/embed/movie/${id}`
                       }
                     ></iframe>
                   </>

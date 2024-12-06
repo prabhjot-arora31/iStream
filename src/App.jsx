@@ -552,7 +552,7 @@ function App() {
                                     }}
                                   >
                                     {ele?.vote_average
-                                      .toString()
+                                      ?.toString()
                                       .substring(0, 3)}
                                   </p>
                                 </div>

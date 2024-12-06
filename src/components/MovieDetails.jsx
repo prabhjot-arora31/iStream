@@ -22,7 +22,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [mappingImdbIdToTmdbId, setMappingImdbIdToTmdbId] = useState();
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(true);
-  const [hoveredDiv, setHoveredDiv] = useState(0);
+  const [hoveredDiv, setHoveredDiv] = useState();
   const location = useLocation();
   const navigate = useNavigate();
   const [rbHover, setRbHover] = useState(false);

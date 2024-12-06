@@ -418,8 +418,8 @@ function App() {
                             <div
                               key={id}
                               onMouseOver={() => {
-                                if(ele?.title)
-                                setSuggestedBtnHover(ele?.title);
+                                if (ele?.title)
+                                  setSuggestedBtnHover(ele?.title);
                                 else setSuggestedBtnHover(ele?.name);
                               }}
                               onClick={() => {
@@ -445,13 +445,13 @@ function App() {
                                 justifyContent: "start",
                                 marginTop: "10px",
                                 alignItems: "center",
-                                backgroundColor:
-                                 ele?.title ?  suggestedBtnHover == ele?.title
+                                backgroundColor: ele?.title
+                                  ? suggestedBtnHover == ele?.title
                                     ? "black"
-                                    : " white" :
-                                  suggestedBtnHover == ele?.name
-                                    ? "black"
-                                    : " white",
+                                    : " white"
+                                  : suggestedBtnHover == ele?.name
+                                  ? "black"
+                                  : " white",
                               }}
                             >
                               <div>
@@ -464,14 +464,13 @@ function App() {
                                   style={{
                                     width: "60px",
                                     height: "90px",
-                                    border:
-                                     ele?.title ?  suggestedBtnHover == ele?.title
+                                    border: ele?.title
+                                      ? suggestedBtnHover == ele?.title
                                         ? "1px solid white"
                                         : "1px solid black"
-                                      :  suggestedBtnHover == ele?.name
-                                    ? "black"
-                                    : " white"
-                                    ,
+                                      : suggestedBtnHover == ele?.name
+                                      ? "black"
+                                      : " white",
                                     maxHeight: "230px",
                                     borderRadius: "10px",
                                     objectFit: "cover",
@@ -488,12 +487,11 @@ function App() {
                               >
                                 <h5
                                   style={{
-                                    color:
-                                      ele?.title ? 
-                                      suggestedBtnHover == ele?.title
+                                    color: ele?.title
+                                      ? suggestedBtnHover == ele?.title
                                       : suggestedBtnHover == ele?.name
-                                        ? "salmon"
-                                        : "black",
+                                      ? "salmon"
+                                      : "black",
                                     margin: 0,
                                     marginBottom: "6px",
                                     cursor: "pointer",
@@ -506,13 +504,13 @@ function App() {
                                     //     : "",
                                   }}
                                 >
-                                  {els?.title ? ele?.title?.length > 70
-                                    ? ele?.title?.substring(0, 70) + "..."
-                                    : ele?.title
-                                  : ele?.name?.length > 70
+                                  {ele?.title
+                                    ? ele?.title?.length > 70
+                                      ? ele?.title?.substring(0, 70) + "..."
+                                      : ele?.title
+                                    : ele?.name?.length > 70
                                     ? ele?.name?.substring(0, 70) + "..."
-                                    : ele?.name
-                                  }
+                                    : ele?.name}
                                 </h5>
                                 <div
                                   style={{
@@ -527,15 +525,16 @@ function App() {
                                     style={{
                                       margin: 0,
                                       fontSize: "13.5px",
-                                      color:
-                                       ele?.title ? 
-                                        suggestedBtnHover == ele?.title
+                                      color: ele?.title
+                                        ? suggestedBtnHover == ele?.title
                                         : suggestedBtnHover == ele?.name
-                                          ? "white"
-                                          : "black",
+                                        ? "white"
+                                        : "black",
                                     }}
                                   >
-                                    {ele?.release_date?.substring(0, 4)}
+                                    {ele?.release_date
+                                      ? ele?.release_date?.substring(0, 4)
+                                      : ele?.first_air_date?.substring(0, 4)}
                                     <span
                                       style={{
                                         marginLeft: "1.2rem",

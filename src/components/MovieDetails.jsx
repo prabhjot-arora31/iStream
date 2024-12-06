@@ -298,7 +298,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       scrolling="no"
                       allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       src={
-                        movieToRender?.Type === "movie"
+                        tv?.length == 0?
                           ? `https://vidsrc.xyz/embed/movie/${id}`
                           : `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
                       }

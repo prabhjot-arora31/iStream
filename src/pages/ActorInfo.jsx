@@ -12,7 +12,7 @@ const ActorInfo = () => {
   useEffect(() => {
     const fetchIt = async () => {
       const { data } = await axios.get(
-        `https://api.tmdb.org/3/person/${id}/movie_credits?api_key=ae4bd1b6fce2a5648671bfc171d15ba4`
+        `https://api.tmdb.org/3/person/${id}/combined_credits?api_key=ae4bd1b6fce2a5648671bfc171d15ba4`
       );
       console.log("hmm , data is:", data);
       setLoading(false);

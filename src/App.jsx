@@ -89,7 +89,7 @@ function App() {
         `https://api.tmdb.org/3/search/movie?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&query=${searches}`
       );
       //console.log("search result:", data);
-      setSearchResults(data.results);
+      setSearchResults(data?.results);
     } catch (e) {
       //console.log("Error:", e.message);
       setSearchResults([]);

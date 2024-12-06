@@ -86,7 +86,7 @@ function App() {
       const { data } = await axios.get(
         // `https://istream-proxy-search-suggestions.vercel.app/searching/${searches}`,
         // `http://localhost:9005/searching/${searches}`,
-        `https://api.tmdb.org/3/search/movie?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&query=${searches}`
+        `https://api.tmdb.org/3/search/multi?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&query=${searches}`
       );
       //console.log("search result:", data);
       setSearchResults(data?.results);

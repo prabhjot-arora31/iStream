@@ -418,7 +418,9 @@ function App() {
                             <div
                               key={id}
                               onMouseOver={() => {
+                                if(ele?.title)
                                 setSuggestedBtnHover(ele?.title);
+                                else setSuggestedBtnHover(ele?.name);
                               }}
                               onClick={() => {
                                 // setSearch(ele?.title);
@@ -444,7 +446,10 @@ function App() {
                                 marginTop: "10px",
                                 alignItems: "center",
                                 backgroundColor:
-                                  suggestedBtnHover == ele?.title
+                                 ele?.title ?  suggestedBtnHover == ele?.title
+                                    ? "black"
+                                    : " white" :
+                                  suggestedBtnHover == ele?.name
                                     ? "black"
                                     : " white",
                               }}
@@ -460,9 +465,13 @@ function App() {
                                     width: "60px",
                                     height: "90px",
                                     border:
-                                      suggestedBtnHover == ele?.title
+                                     ele?.title ?  suggestedBtnHover == ele?.title
                                         ? "1px solid white"
-                                        : "1px solid black",
+                                        : "1px solid black"
+                                      :  suggestedBtnHover == ele?.name
+                                    ? "black"
+                                    : " white"
+                                    ,
                                     maxHeight: "230px",
                                     borderRadius: "10px",
                                     objectFit: "cover",
@@ -480,7 +489,7 @@ function App() {
                                 <h5
                                   style={{
                                     color:
-                                      suggestedBtnHover == ele?.title
+                                      suggestedBtnHover == ele?.title || ele?.name
                                         ? "salmon"
                                         : "black",
                                     margin: 0,
@@ -495,9 +504,13 @@ function App() {
                                     //     : "",
                                   }}
                                 >
-                                  {ele?.title.length > 70
-                                    ? ele?.title.substring(0, 70) + "..."
-                                    : ele?.title}
+                                  {els?.title ? ele?.title?.length > 70
+                                    ? ele?.title?.substring(0, 70) + "..."
+                                    : ele?.title
+                                  : ele?.name?.length > 70
+                                    ? ele?.name?.substring(0, 70) + "..."
+                                    : ele?.name
+                                  }
                                 </h5>
                                 <div
                                   style={{

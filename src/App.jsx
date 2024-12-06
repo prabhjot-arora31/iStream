@@ -489,7 +489,9 @@ function App() {
                                 <h5
                                   style={{
                                     color:
-                                      suggestedBtnHover == ele?.title || ele?.name
+                                      ele?.title ? 
+                                      suggestedBtnHover == ele?.title
+                                      : suggestedBtnHover == ele?.name
                                         ? "salmon"
                                         : "black",
                                     margin: 0,
@@ -526,7 +528,9 @@ function App() {
                                       margin: 0,
                                       fontSize: "13.5px",
                                       color:
+                                       ele?.title ? 
                                         suggestedBtnHover == ele?.title
+                                        : suggestedBtnHover == ele?.name
                                           ? "white"
                                           : "black",
                                     }}

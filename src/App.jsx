@@ -574,6 +574,24 @@ function App() {
                                       ?.toString()
                                       .substring(0, 3)}
                                   </p>
+                                  <p style={{margin:0,fontSize:'13.5px'}},
+                                 color:
+                                      ele?.title ?   suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black"
+                                        : suggestedBtnHover == ele?.name
+                                          ? "white"
+                                          : "black",
+                                  padding:'0.3rem',
+                                  border: 
+                                  ele?.title ?   suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black"
+                                        : suggestedBtnHover == ele?.name
+                                          ? "white"
+                                          : "black",
+                                  borderRadius:'0.2371rem'
+                                  > {ele?.media_type}</p>
                                 </div>
                               </div>
                             </div>

@@ -23,7 +23,7 @@ const CastAndCrew = () => {
     };
     callAPI();
     return () => {};
-  }, [id, tv]);
+  }, []);
 
   if (isLoading) {
     return (
@@ -61,7 +61,6 @@ const CastAndCrew = () => {
         {credits?.cast?.map((crew, id) => {
           return (
             <div
-              key={id}
               style={{
                 border: "2px solid black",
                 padding: "0.4rem",
@@ -74,7 +73,7 @@ const CastAndCrew = () => {
                 height: "255px",
                 borderRadius: "7px",
                 transition: "0.2s ease-in-out",
-                transform: hover === crew.id ? "scale(1.043)" : "none",
+                transform: hover === crew.id ? "scale(1.043)" : "scale(1)",
                 backgroundColor: hover === crew.id ? "lightgray" : "white",
               }}
               onClick={() => {
@@ -99,22 +98,26 @@ const CastAndCrew = () => {
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
                 width={"120px"}
-                alt={crew?.name || "Unknown"}
               />
               <h4 style={{ margin: 0 }}>
                 {crew?.name?.length > 14
                   ? crew?.name?.substring(0, 14) + "..."
                   : crew?.name}
               </h4>
-              <p style={{ margin: 0 }}>
-                <span style={{ fontWeight: "bold", color: "gray", fontSize: "13px" }}>
-                  {crew?.character}
-                </span>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "13.5px",
+                  color: crew.character ? "gray" : "black",
+                }}
+              >
+                <span style={{ fontWeight: "bold" }}>{crew?.character}</span>
               </p>
             </div>
           );
         })}
       </div>
+
       <h2 style={{ textAlign: "center" }}>Crew</h2>
       <div
         style={{
@@ -128,7 +131,6 @@ const CastAndCrew = () => {
         {credits?.crew?.map((crew, id) => {
           return (
             <div
-              key={id}
               style={{
                 border: "2px solid black",
                 padding: "0.4rem",
@@ -137,7 +139,7 @@ const CastAndCrew = () => {
                 alignItems: "center",
                 flexDirection: "column",
                 backgroundColor: hover === id ? "lightgray" : "white",
-                transform: hover === id ? "scale(1.043)" : "none",
+                transform: hover === id ? "scale(1.043)" : "scale(1)",
                 cursor: "pointer",
                 gap: "0.3rem",
                 height: "255px",
@@ -161,23 +163,20 @@ const CastAndCrew = () => {
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
                 width={"120px"}
-                alt={crew?.name || "Unknown"}
               />
               <h4 style={{ margin: 0 }}>
                 {crew?.name?.length > 14
                   ? crew?.name?.substring(0, 14) + "..."
                   : crew?.name}
               </h4>
-              <p style={{ margin: 0 }}>
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    color: "gray",
-                    fontSize: "13px",
-                  }}
-                >
-                  {crew?.department}
-                </span>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "13.5px",
+                  color: "gray",
+                }}
+              >
+                <span style={{ fontWeight: "bold" }}>{crew?.department}</span>
               </p>
             </div>
           );
@@ -188,4 +187,3 @@ const CastAndCrew = () => {
 };
 
 export default CastAndCrew;
-                

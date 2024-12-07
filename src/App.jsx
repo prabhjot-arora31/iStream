@@ -341,7 +341,7 @@ function App() {
                     onChange={(e) => {
                       setIsInputClicked(true);
                       setSearch(e.target.value);
-                      searching(Search);
+                      searching(e.target.value.trim());
                     }}
                     placeholder="Enter any movie/series name.."
                   />

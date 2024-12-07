@@ -580,11 +580,11 @@ function App() {
                       <div
                         style={{
                           margin: "0 auto",
-                          marginTop: "30px",
+                          
                           width: "80px",
                           height: "80px",
-                          position: "absolute",
-                          top: "5rem",
+                          
+                          
                         }}
                       >
                         <Puff

@@ -9,6 +9,7 @@ const CastAndCrew = () => {
   const [credits, setCredits] = useState([]);
   const [hover, setHover] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     const callAPI = async () => {
       const { data } = await axios.get(
@@ -22,14 +23,14 @@ const CastAndCrew = () => {
     };
     callAPI();
     return () => {};
-  }, []);
+  }, [id, tv]);
+
   if (isLoading) {
     return (
       <div
         style={{
           margin: "0 auto",
           marginTop: "30px",
-
           width: "80px",
           height: "80px",
         }}
@@ -44,6 +45,7 @@ const CastAndCrew = () => {
       </div>
     );
   }
+
   return (
     <>
       <h2 style={{ textAlign: "center" }}>Cast</h2>
@@ -59,6 +61,7 @@ const CastAndCrew = () => {
         {credits?.cast?.map((crew, id) => {
           return (
             <div
+              key={id}
               style={{
                 border: "2px solid black",
                 padding: "0.4rem",
@@ -71,11 +74,11 @@ const CastAndCrew = () => {
                 height: "255px",
                 borderRadius: "7px",
                 transition: "0.2s ease-in-out",
-                transform: hover == crew.id && "scale(1.043)",
-                backgroundColor: hover == crew.id ? "lightgray" : "white",
+                transform: hover === crew.id ? "scale(1.043)" : "none",
+                backgroundColor: hover === crew.id ? "lightgray" : "white",
               }}
               onClick={() => {
-                if (crew.known_for_department == "Acting") {
+                if (crew.known_for_department === "Acting") {
                   navigate("/actor-info/" + crew.id + "/" + crew.name);
                 }
               }}
@@ -83,7 +86,7 @@ const CastAndCrew = () => {
                 setHover(crew.id);
               }}
               onMouseLeave={() => {
-                setHover();
+                setHover("");
               }}
             >
               <img
@@ -96,18 +99,23 @@ const CastAndCrew = () => {
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
                 width={"120px"}
+                alt={crew?.name || "Unknown"}
               />
-              <h4 style={{ margin: 0 }}>{crew?.name?.length > 14 ? crew?.name?.substring(0,14) + '...' : crew?.name}</h4>
+              <h4 style={{ margin: 0 }}>
+                {crew?.name?.length > 14
+                  ? crew?.name?.substring(0, 14) + "..."
+                  : crew?.name}
+              </h4>
               <p style={{ margin: 0 }}>
-                <span style={{ fontWeight: "bold", color:'gray', fontSize:'13px'}}> {crew?.character}</span>
-                
+                <span style={{ fontWeight: "bold", color: "gray", fontSize: "13px" }}>
+                  {crew?.character}
+                </span>
               </p>
-            
             </div>
           );
         })}
       </div>
-      <h2 style={{ textAlign: "center" }}>Crew </h2>
+      <h2 style={{ textAlign: "center" }}>Crew</h2>
       <div
         style={{
           display: "flex",
@@ -120,6 +128,7 @@ const CastAndCrew = () => {
         {credits?.crew?.map((crew, id) => {
           return (
             <div
+              key={id}
               style={{
                 border: "2px solid black",
                 padding: "0.4rem",
@@ -127,9 +136,8 @@ const CastAndCrew = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                backgroundColor: hover == id ? "lightgray" : "white",
-                transform: hover == id && "scale(1.043)",
-
+                backgroundColor: hover === id ? "lightgray" : "white",
+                transform: hover === id ? "scale(1.043)" : "none",
                 cursor: "pointer",
                 gap: "0.3rem",
                 height: "255px",
@@ -140,7 +148,7 @@ const CastAndCrew = () => {
                 setHover(id);
               }}
               onMouseLeave={() => {
-                setHover();
+                setHover("");
               }}
             >
               <img
@@ -153,13 +161,24 @@ const CastAndCrew = () => {
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
                 width={"120px"}
+                alt={crew?.name || "Unknown"}
               />
-              <h4 style={{ margin: 0 }}>{crew?.name?.length > 14 ? crew?.name?.substring(0,14) + '...' : crew?.name}</h4>
+              <h4 style={{ margin: 0 }}>
+                {crew?.name?.length > 14
+                  ? crew?.name?.substring(0, 14) + "..."
+                  : crew?.name}
+              </h4>
               <p style={{ margin: 0 }}>
-                <span style={{ fontWeight: "bold" , color:'gray', fontSize:'13px'}}> {crew?.department}</span>{" "}
-                
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "gray",
+                    fontSize: "13px",
+                  }}
+                >
+                  {crew?.department}
+                </span>
               </p>
-          
             </div>
           );
         })}
@@ -169,3 +188,4 @@ const CastAndCrew = () => {
 };
 
 export default CastAndCrew;
+                

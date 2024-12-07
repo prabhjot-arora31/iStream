@@ -526,7 +526,7 @@ function App() {
                                       margin: 0,
                                       fontSize: "13.5px",
                                       color: ele?.title
-                                        ? suggestedBtnHover == ele?.title ? 'salmon' : 'black'
+                                        ? suggestedBtnHover == ele?.title ? 'white' : 'black'
                                         : suggestedBtnHover == ele?.name
                                         ? "white"
                                         : "black",
@@ -562,7 +562,10 @@ function App() {
                                       margin: 0,
                                       fontSize: "13.5px",
                                       color:
-                                        suggestedBtnHover == ele?.title
+                                      ele?.title ?   suggestedBtnHover == ele?.title
+                                          ? "white"
+                                          : "black"
+                                        : suggestedBtnHover == ele?.name
                                           ? "white"
                                           : "black",
                                     }}

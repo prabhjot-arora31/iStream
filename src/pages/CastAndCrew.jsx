@@ -97,7 +97,7 @@ const CastAndCrew = () => {
                 }
                 width={"120px"}
               />
-              <h4 style={{ margin: 0 }}>{crew.name.lenght > 14 ? crew.name.substring(0,14) + '...' : crew.name}</h4>
+              <h4 style={{ margin: 0 }}>{crew.name.length > 14 ? crew.name.substring(0,14) + '...' : crew.name}</h4>
               <p style={{ margin: 0 }}>
                 <span style={{ fontWeight: "bold", color:'gray', fontSize:'13px'}}> </span>
                 <span>{crew.character}</span>

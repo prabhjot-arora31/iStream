@@ -430,7 +430,7 @@ function App() {
                                   behavior: "auto", // For instant scrolling
                                 });
                                 if (ele.imdbID){
-                                  if(!ele.profile_path)
+                                  if(ele.poster_path)
                                   navigate("/detail/" + ele.imdbID);
                                     else navigate('/actor-info'+ele?.imdbId+ele?.name)
                                                   }
@@ -466,7 +466,7 @@ function App() {
                                   width={"100%"}
                                   style={{
                                     width: "60px",
-                                    height: "90px",
+                                    height:ele?.poster_path ? "90px" : '60px',
                                     border: ele?.title
                                       ? suggestedBtnHover == ele?.title
                                         ? "1px solid white"
@@ -475,7 +475,7 @@ function App() {
                                       ? "black"
                                       : " white",
                                     maxHeight: "230px",
-                                    borderRadius: ele?.poster_path ? "10px" : '45px',
+                                    borderRadius: ele?.poster_path ? "10px" : '65px',
                                     objectFit: "cover",
                                     transition: ".13s ease-in-out",
                                   }}

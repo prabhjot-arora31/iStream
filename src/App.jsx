@@ -457,8 +457,8 @@ function App() {
                               <div>
                                 <img
                                   src={
-                                    "https://image.tmdb.org/t/p/w500" +
-                                    ele?.poster_path
+                                  ele?.poster_path ?   "https://image.tmdb.org/t/p/w500" +
+                                    ele?.poster_path : "https://image.tmdb.org/t/p/w500"+ele?.profile_path
                                   }
                                   width={"100%"}
                                   style={{
@@ -472,7 +472,7 @@ function App() {
                                       ? "black"
                                       : " white",
                                     maxHeight: "230px",
-                                    borderRadius: "10px",
+                                    borderRadius: ele?.poster_path ? "10px" : '50%',
                                     objectFit: "cover",
                                     transition: ".13s ease-in-out",
                                   }}

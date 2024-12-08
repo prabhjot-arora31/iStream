@@ -429,8 +429,11 @@ function App() {
                                   left: 0,
                                   behavior: "auto", // For instant scrolling
                                 });
-                                if (ele.imdbID)
+                                if (ele.imdbID){
+                                  if(!ele.profile_path)
                                   navigate("/detail/" + ele.imdbID);
+                                    else navigate('/actor-info'+ele?.imdbId+'ele?.name)
+                                                  }
                                 else if (ele.id) {
                                   if (!ele.first_air_date)
                                     navigate("/detail/" + ele.id);
@@ -472,7 +475,7 @@ function App() {
                                       ? "black"
                                       : " white",
                                     maxHeight: "230px",
-                                    borderRadius: ele?.poster_path ? "10px" : '50%',
+                                    borderRadius: ele?.poster_path ? "10px" : '45px',
                                     objectFit: "cover",
                                     transition: ".13s ease-in-out",
                                   }}

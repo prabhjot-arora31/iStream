@@ -432,7 +432,7 @@ function App() {
                                 if (ele.imdbID){
                                   if(!ele.profile_path)
                                   navigate("/detail/" + ele.imdbID);
-                                    else navigate('/actor-info'+ele?.imdbId+'ele?.name)
+                                    else navigate('/actor-info'+ele?.imdbId+ele?.name)
                                                   }
                                 else if (ele.id) {
                                   if (!ele.first_air_date)

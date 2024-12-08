@@ -343,7 +343,7 @@ function App() {
                       setSearch(e.target.value);
                       searching(e.target.value.trim());
                     }}
-                    placeholder="Enter any movie/series name.."
+                    placeholder="Search movies, series or person....."
                   />
                 </div>
                 <button

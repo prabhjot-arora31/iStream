@@ -16,7 +16,7 @@ const ActorInfo = () => {
       );
       console.log("hmm , data is:", data);
       setLoading(false);
-      setMovies(data.cast);
+      setMovies(data);
     };
     fetchIt();
     return () => {};
@@ -55,7 +55,29 @@ const ActorInfo = () => {
           flexWrap: "wrap",
         }}
       >
-        {movies.map((m, i) => {
+        {movies.cast.map((m, i) => {
+          return (
+            <MovieCard
+              data={m}
+              key={i}
+              id={i}
+              setHoveredDiv={setHoveredDiv}
+              hoveredDiv={hoveredDiv}
+            />
+          );
+        })}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          marginTop: "2rem",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "0.7rem",
+          flexWrap: "wrap",
+        }}
+      >
+        {movies.crew.map((m, i) => {
           return (
             <MovieCard
               data={m}

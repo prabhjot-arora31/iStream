@@ -452,6 +452,7 @@ function App() {
                                 gap: "7px",
                                 padding: "0.23rem",
                                 justifyContent: "start",
+                                border:'1px solid white',
                                 marginTop: "10px",
                                 alignItems: "center",
                                 backgroundColor: ele?.title
@@ -583,7 +584,7 @@ function App() {
                                       ?.toString()
                                       .substring(0, 3)}
                                   </p>
-                                  <p style={{margin:0,fontSize:'13.5px',
+                                  {ele?.media_type !='person' &&  <p style={{margin:0,fontSize:'13.5px',
                                  color:
                                       ele?.title ?   suggestedBtnHover == ele?.title
                                           ? "white"
@@ -601,7 +602,7 @@ function App() {
                                           : "black",
                                   borderRadius:'0.2371rem'
                                             }}
-                                  > {ele?.media_type}</p>
+                                  > {ele?.media_type}</p>}
                                 </div>
                               </div>
                             </div>

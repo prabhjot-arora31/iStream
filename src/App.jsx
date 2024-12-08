@@ -479,8 +479,8 @@ function App() {
                                         ? "1px solid white"
                                         : "1px solid black"
                                       : suggestedBtnHover == ele?.name
-                                      ? "black"
-                                      : " white",
+                                      ? "1px solid white"
+                                      : " 1px solid black",
                                     maxHeight: "230px",
                                     borderRadius: ele?.poster_path ? "10px" : '65px',
                                     objectFit: "cover",

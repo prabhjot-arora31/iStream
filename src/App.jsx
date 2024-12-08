@@ -431,13 +431,19 @@ function App() {
                                 });
                                 if (ele.imdbID){
                                   if(ele.poster_path)
-                                  navigate("/detail/" + ele.imdbID);
-                                    else navigate('/actor-info'+ele?.imdbId+ele?.name)
+                                  navigate("/detail/" + ele.imdbID)
+                                    else navigate('/actor-info'+ele?.imdbId+'/'+ele?.name)
                                                   }
                                 else if (ele.id) {
                                   if (!ele.first_air_date)
+                                    if(ele?.poster_path)
                                     navigate("/detail/" + ele.id);
-                                  else navigate("/detail/" + ele.id + "/tv");
+                                      else navigate('/actor-info'+ele?.id+'/'+ele?.name)
+                                  else {
+                                    if(ele?.poster_path)
+                                    navigate("/detail/" + ele.id + "/tv");
+                                    else navigate('/actor-info'+ele?.id+'/'+ele?.name)
+                                  }
                                 }
                               }}
                               style={{

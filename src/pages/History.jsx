@@ -108,9 +108,9 @@ const History = ({ getMovieDetail }) => {
               value={searchTerm}
               onChange={(e) => {
                 setsearchTerm(e.target.value);
-                if (e.target.value.trim().length == 0) {
-                  setHistory(JSON.parse(localStorage.getItem("movies")) || []);
-                }
+              //  if (e.target.value.trim().length == 0) {
+                //  setHistory(JSON.parse(localStorage.getItem("movies")) || []);
+              //  }
               }}
               style={{
                 padding: "0.5rem",

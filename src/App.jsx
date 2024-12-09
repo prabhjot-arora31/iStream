@@ -438,11 +438,16 @@ function App() {
                                   if (!ele.first_air_date)
                                     if(ele?.poster_path)
                                     navigate("/detail/" + ele.id);
-                                      else navigate('/actor-info/'+ele?.id+'/'+ele?.name)
+                                      else {
+                                        localStorage.setItem('actor-photo',ele?.profile_path)
+                                        navigate('/actor-info/'+ele?.id+'/'+ele?.name) }
                                   else {
                                     if(ele?.poster_path)
                                     navigate("/detail/" + ele.id + "/tv");
-                                    else navigate('/actor-info/'+ele?.id+'/'+ele?.name)
+                                    else {
+                                      localStorage.setItem('actor-photo',ele?.profile_path)
+              
+                                      navigate('/actor-info/'+ele?.id+'/'+ele?.name) }
                                   }
                                 }
                               }}

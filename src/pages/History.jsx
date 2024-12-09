@@ -192,7 +192,7 @@ const History = ({ getMovieDetail }) => {
                     />
                     <button
                       onClick={() => {
-                        deleteInidividualMovie(ele.imdbID);
+                        deleteInidividualMovie(ele.id);
                       }}
                       style={{
                         backgroundColor: "red",

@@ -107,7 +107,7 @@ const History = ({ getMovieDetail }) => {
               placeholder="Search History..."
               value={searchTerm}
               onChange={(e) => {
-                setsearchTerm(e.target.value.trim());
+                setsearchTerm(e.target.value);
                 if (e.target.value.trim().length === 0) {
   setHistory([...history1]);
                 }

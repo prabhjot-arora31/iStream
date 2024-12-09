@@ -16,8 +16,8 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
       onMouseEnter={() => {
         setHoveredDiv(id);
       }}
-      onMouseOut={() => {
-        setHoveredDiv(-1);
+      onMouseLeave={() => {
+        setHoveredDiv();
       }}
       onClick={() => {
         window.scrollTo({
@@ -25,6 +25,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           left: 0,
           behavior: "auto", // For instant scrolling
         });
+        setHoveredDiv();
         if (data?.first_air_date) {
           console.log("id and Type is:", data?.id, data?.Type);
           if (data?.imdbID) navigate("/detail/" + data.imdbID + "/tv");

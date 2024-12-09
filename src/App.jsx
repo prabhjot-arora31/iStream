@@ -423,43 +423,47 @@ function App() {
                                 else setSuggestedBtnHover(ele?.name);
                               }}
                               onClick={() => {
-                                // setSearch(ele?.title);
-                                window.scrollTo({
-                                  top: 0,
-                                  left: 0,
-                                  behavior: "auto", // For instant scrolling
-                                });
-                                if(ele?.media_type != 'person')
-                                {
-                                  let movies = JSON.parse(localStorage.getItem("movies")) || [];
-        if (movies.find((movie) => movie.id !== ele?.id)) {
-        movies.push(data);
-                                  localStorage.setItem(movies)
-        }
- 
-                                }
-                                if (ele.imdbID){
-                                  if(ele.poster_path)
-                                  navigate("/detail/" + ele.imdbID)
-                                    else navigate('/actor-info/'+ele?.imdbId+'/'+ele?.name)
-                                                  }
-                                else if (ele.id) {
-                                  if (!ele.first_air_date)
-                                    if(ele?.poster_path)
-                                    navigate("/detail/" + ele.id);
-                                      else {
-                                        localStorage.setItem('actor-photo',ele?.profile_path)
-                                        navigate('/actor-info/'+ele?.id+'/'+ele?.name) }
-                                  else {
-                                    if(ele?.poster_path)
-                                    navigate("/detail/" + ele.id + "/tv");
-                                    else {
-                                      localStorage.setItem('actor-photo',ele?.profile_path)
-              
-                                      navigate('/actor-info/'+ele?.id+'/'+ele?.name) }
-                                  }
-                                }
-                              }}
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "auto", // Instant scrolling
+  });
+
+  if (ele?.media_type !== "person") {
+    let movies = JSON.parse(localStorage.getItem("movies")) || [];
+    // Check if the movie is already in the list
+    if (!movies.find((movie) => movie.id === ele?.id)) {
+      movies.push(ele); // Push the `ele` object
+      localStorage.setItem("movies", JSON.stringify(movies));
+    }
+  }
+
+  if (ele?.imdbID) {
+    if (ele.poster_path) {
+      navigate("/detail/" + ele.imdbID);
+    } else {
+      localStorage.setItem("actor-photo", ele?.profile_path);
+      navigate("/actor-info/" + ele?.imdbID + "/" + ele?.name);
+    }
+  } else if (ele?.id) {
+    if (!ele.first_air_date) {
+      if (ele?.poster_path) {
+        navigate("/detail/" + ele.id);
+      } else {
+        localStorage.setItem("actor-photo", ele?.profile_path);
+        navigate("/actor-info/" + ele?.id + "/" + ele?.name);
+      }
+    } else {
+      if (ele?.poster_path) {
+        navigate("/detail/" + ele.id + "/tv");
+      } else {
+        localStorage.setItem("actor-photo", ele?.profile_path);
+        navigate("/actor-info/" + ele?.id + "/" + ele?.name);
+      }
+    }
+  }
+}}
+
                               style={{
                                 cursor: "pointer",
                                 display: "flex",

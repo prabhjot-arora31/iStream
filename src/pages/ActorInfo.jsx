@@ -45,7 +45,7 @@ const ActorInfo = () => {
   }
   return (
     <div>
-      <h2 style={{ textAlign: "center" }}>Filmography of {name}</h2>
+      <h2 style={{ textAlign: "center" , fontWeight:'900'}}>Filmography of {name}</h2>
       {actorProfile && <div style={{ display:'flex', justifyContent:'center'}}><img style={{margin:'10px auto', width:'160px', height:'160px',objectFit: "cover", borderRadius:'50%'}} 
         src={`https://image.tmdb.org/t/p/w500${actorProfile}`}
         /> </div>}

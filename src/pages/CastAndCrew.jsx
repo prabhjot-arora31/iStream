@@ -78,6 +78,7 @@ const CastAndCrew = () => {
               }}
               onClick={() => {
                 if (crew.known_for_department === "Acting") {
+                  localStorage.setItem('actor-photo',crew.profile_path)
                   navigate("/actor-info/" + crew.id + "/" + crew.name);
                 }
               }}

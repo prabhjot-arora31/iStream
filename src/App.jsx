@@ -432,9 +432,10 @@ function App() {
                                 if(ele?.media_type != 'person')
                                 {
                                   let movies = JSON.parse(localStorage.getItem("movies")) || [];
-        if (movies.find((movie) => movie.id === ele?.id)) return;
+        if (movies.find((movie) => movie.id !== ele?.id)) {
         movies.push(data);
                                   localStorage.setItem(movies)
+        }
  
                                 }
                                 if (ele.imdbID){

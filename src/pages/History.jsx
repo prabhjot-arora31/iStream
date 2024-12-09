@@ -25,7 +25,7 @@ const History = ({ getMovieDetail }) => {
 
   const deleteInidividualMovie = (id) => {
     // history.find((ele) => ele.Id === id)
-    const filteredItems = history.filter((item) => item.imdbID !== id);
+    const filteredItems = history.filter((item) => item.id !== id);
     localStorage.setItem("movies", JSON.stringify(filteredItems));
     setHistory(filteredItems);
   };

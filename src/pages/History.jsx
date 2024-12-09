@@ -107,7 +107,10 @@ const History = ({ getMovieDetail }) => {
               placeholder="Search History..."
               value={searchTerm}
               onChange={(e) => {
-                setsearchTerm(e.target.value);
+                setsearchTerm(e.target.value.trim());
+                if (e.target.value.trim().length === 0) {
+  setHistory([...history1]);
+                }
               //  if (e.target.value.trim().length == 0) {
                 //  setHistory(JSON.parse(localStorage.getItem("movies")) || []);
               //  }
@@ -118,25 +121,35 @@ const History = ({ getMovieDetail }) => {
                 border: "2px solid black",
               }}
             />
-            <button
-              style={{
-                backgroundColor: "lightsalmon",
-                border: "none",
-                cursor: "pointer",
-                marginLeft: "3px",
-                borderRadius: "4px",
-              }}
-              onClick={() => {
-                if (searchTerm.length > 0) {
-                  const searchResult = history1.filter((searchTerm1) =>
-                    searchTerm1.Title.toLowerCase().includes(searchTerm)
-                  );
-                  if (searchResult.length > 0) setHistory(searchResult);
-                }
-              }}
-            >
-              Search
-            </button>
+            
+              <button
+  style={{
+    backgroundColor: "lightsalmon",
+    border: "none",
+    cursor: "pointer",
+    marginLeft: "3px",
+    borderRadius: "4px",
+  }}
+  onClick={() => {
+    if (searchTerm.length > 0) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const searchResult = history1.filter((searchTerm1) => {
+        return (
+          searchTerm1.name?.toLowerCase().includes(lowerCaseSearchTerm) ||
+          searchTerm1.title?.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+      });
+      if (searchResult.length > 0) {
+        setHistory(searchResult);
+      } else {
+        setHistory([]); // Clear results if no matches are found
+      }
+    }
+  }}
+>
+  Search
+</button>
+      
           </div>
           <div
             style={{
@@ -161,7 +174,7 @@ const History = ({ getMovieDetail }) => {
             }}
           >
             {history.length > 0 ? (
-              history.reverse().map((ele, id) => {
+              [...history].reverse().map((ele, id) => {
                 return (
                   <div
                     style={{

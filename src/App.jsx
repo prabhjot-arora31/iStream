@@ -429,6 +429,14 @@ function App() {
                                   left: 0,
                                   behavior: "auto", // For instant scrolling
                                 });
+                                if(ele?.media_type != 'person')
+                                {
+                                  let movies = JSON.parse(localStorage.getItem("movies")) || [];
+        if (movies.find((movie) => movie.id === ele?.id)) return;
+        movies.push(data);
+                                  localStorage.setItem(movies)
+ 
+                                }
                                 if (ele.imdbID){
                                   if(ele.poster_path)
                                   navigate("/detail/" + ele.imdbID)

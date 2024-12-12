@@ -7,11 +7,17 @@ const Header = () => {
     localStorage.getItem("headerTab") || 1
   );
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>
-        <span style={{ color: "black", fontWeight: "bolder" }}>iS</span>
-        <span style={{ color: "black", fontWeight: "bolder" }}>tre</span>
-        <span style={{ color: "black", fontWeight: "bolder" }}>am</span>
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        paddingTop: "1.2rem",
+      }}
+    >
+      <h1 style={{ textAlign: "center", margin: 0, marginBottom: "0.5rem" }}>
+        <span style={{ color: "white", fontWeight: "bolder" }}>iS</span>
+        <span style={{ color: "white", fontWeight: "bolder" }}>tre</span>
+        <span style={{ color: "white", fontWeight: "bolder" }}>am</span>
       </h1>
       <div
         style={{
@@ -25,7 +31,7 @@ const Header = () => {
           to={"/"}
           style={{
             textDecoration: "none",
-            color: headerTab == 1 && location.pathname == "/" ? "red" : "black",
+            color: headerTab == 1 && location.pathname == "/" ? "red" : "white",
             padding: "0.3rem",
           }}
           onClick={() => {
@@ -47,7 +53,7 @@ const Header = () => {
             color: `${
               headerTab == 2 && location.pathname == "/history"
                 ? "red"
-                : "black"
+                : "white"
             }`,
             padding: "0.3rem",
           }}

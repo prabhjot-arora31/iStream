@@ -1,3 +1,10 @@
 .movie-suggestions::-webkit-scrollbar {
   display: none;
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Allows the background to stretch */
+  box-sizing: border-box;
+}

@@ -14,6 +14,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [castHover, setCastHover] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
+  const [meetTeamHover, setMeetTeamHover] = useState(false);
   const [tmdbId, setTmdbId] = useState("");
   const [credits, setCredits] = useState([]);
   const [crew, setCrew] = useState([]);
@@ -260,7 +261,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           position: "relative",
           zIndex: 1,
           padding: "1rem",
-          color: "black",
+          color: "white",
           // Added for responsiveness
           textAlign: "center", // Better alignment on smaller screens
         }}
@@ -291,7 +292,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                         // height: "100%",
                         width: "420px",
                         height: "420px",
-                        border: "1px solid black",
+                        border: "1px solid white",
                         borderRadius: "8px",
                       }}
                       allowFullScreen // Correct attribute
@@ -299,9 +300,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       src={
                         tv?.length > 0
-                          ?
-                           `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
-                        :  `https://vidsrc.xyz/embed/movie/${id}`
+                          ? `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                          : `https://vidsrc.xyz/embed/movie/${id}`
                       }
                     ></iframe>
                   </>
@@ -341,6 +341,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       display: "flex",
                       justifyContent: "center",
                       gap: "10px",
+                      flexDirection: "column",
                       marginBottom: "20px",
                       alignItems: "center",
                     }}
@@ -348,24 +349,25 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                     <img
                       src={
                         movieToRender?.Poster
-                          ? movieToRender?.Poster?.includes("themoviedb")
+                          ? movieToRender?.backdrop_path?.includes("themoviedb")
                             ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-                            : movieToRender?.Poster ||
+                            : movieToRender?.backdrop_path ||
                               "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
-                          : "https://image.tmdb.org/t/p/w500" +
-                            movieToRender?.poster_path
+                          : "https://image.tmdb.org/t/p/w1280" +
+                            movieToRender?.backdrop_path
                       }
                       alt="Movie Cover"
                       style={{
-                        width: "140px",
-                        height: "170px",
                         objectFit: "cover",
+                        width: "100%",
+                        maxWidth: "350px",
+                        height: "auto",
                       }}
                     />
                     <p
                       style={{
                         fontSize: "1rem",
-                        maxWidth: "270px",
+                        maxWidth: "500px",
                         textAlign: "left",
                         // height: "130px",
                         height: "40%",
@@ -410,15 +412,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                   <button
                     style={{
                       backgroundColor:
-                        currentSeason == i + 1 ? "purple" : "white",
-                      border:
-                        currentSeason != i + 1
-                          ? "2px solid purple"
-                          : "2px solid purple",
+                        currentSeason == i + 1 ? "white" : "black",
+                      border: "2px solid white",
                       padding: "0.7rem",
                       borderRadius: "0.34rem",
                       cursor: "pointer",
-                      color: currentSeason == i + 1 ? "white" : "black",
+                      color: currentSeason == i + 1 ? "black" : "white",
                     }}
                     onClick={() => {
                       setCurrentSeason(season + 1);
@@ -455,12 +454,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                   <button
                     style={{
                       backgroundColor:
-                        currentEpisode == id + 1 ? "purple" : "white",
-                      border: "2px solid purple",
+                        currentEpisode == id + 1 ? "white" : "black",
+                      border: "2px solid white",
                       padding: "0.7rem",
                       borderRadius: "0.34rem",
                       cursor: "pointer",
-                      color: currentEpisode == id + 1 ? "white" : "black",
+                      color: currentEpisode == id + 1 ? "black" : "white",
                     }}
                     onClick={() => {
                       setCurrentEpisode(id + 1);
@@ -507,60 +506,6 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               flexWrap: "wrap",
             }}
           >
-            {createdBy && createdBy.length > 0 && (
-              <div
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "1.3rem" /* Adjusted font-size */,
-                }}
-              >
-                Created By{" "}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "0.6rem",
-                    fontWeight: 500,
-                    fontSize: "1rem",
-                    margin: "0.4rem 0",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {movieToRender?.createdBy?.map((creator, id) => {
-                    return (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          // justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img
-                          width={"60px"}
-                          src={
-                            "https://image.tmdb.org/t/w500" +
-                            creator.profile_path
-                          }
-                        />
-                        <span
-                          style={{
-                            margin: 0,
-                            fontSize: "0.86rem",
-                            width: "50px",
-                            textAlign: "center",
-                            fontWeight: "400",
-                          }}
-                        >
-                          {actor}
-                        </span>
-                      </div>
-                    );
-                  }) || "Not listed"}
-                </div>
-              </div>
-            )}
-
             {/* <div
               style={{
                 width: "3.3px",
@@ -569,292 +514,235 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               }}
             ></div> */}
           </div>
-          {credits.length > 0 && (
-            <div
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.3rem" /* Adjusted font-size */,
-                margin: "1.7rem 0",
-                marginTop: 0,
-              }}
-            >
-              Top Cast{" "}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "50px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <div>
+                <button
+                  onMouseOver={() => {
+                    setMeetTeamHover(true);
+                  }}
+                  onMouseLeave={() => {
+                    setMeetTeamHover(false);
+                  }}
+                  style={{
+                    backgroundColor: !meetTeamHover ? "black" : "white",
+                    cursor: "pointer",
+                    border: "none",
+                    borderRadius: "10px",
+                    padding: "0.9rem",
+                    border: "1px solid white",
+                    color: !meetTeamHover ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    tv?.length > 0 && id.startsWith("tt")
+                      ? navigate(`/cast-and-crew/${tmdbId}/tv`)
+                      : tv?.length > 0 && !id.startsWith("tt")
+                      ? navigate(`/cast-and-crew/${id}/tv`)
+                      : navigate(`/cast-and-crew/${id}`);
+                  }}
+                >
+                  Meet the Whole Team
+                </button>
+              </div>
               <div
-                className="casts"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.3rem" /* Adjusted font-size */,
+                  margin: "1.89rem 0",
+                }}
+              >
+                {movieToRender?.Released || movieToRender?.release_date}{" "}
+                {movieToRender?.Runtime && " |"} {movieToRender?.Runtime}
+              </div>
+              {/* Language */}
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.3rem" /* Adjusted font-size */,
+                  marginTop: "0.7rem",
+                }}
+              >
+                Language <br />
+                <span style={{ fontSize: "1rem", fontWeight: "400" }}>
+                  {movieToRender?.spoken_languages?.map((lang, id) => {
+                    return (
+                      <>
+                        {id != 0 && ", "}
+                        {lang.english_name}
+                      </>
+                    );
+                  }) || "Unknown"}
+                </span>
+              </div>
+              {productionCompanies && productionCompanies.length > 0 && (
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "1.3rem" /* Adjusted font-size */,
+                    margin: "0.7rem 0",
+                  }}
+                >
+                  Production Companies <br />
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      justifyContent: "center",
+                      maxWidth: "550px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {productionCompanies.map((productionCompany, id) => {
+                      return (
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            fontWeight: "400",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "lightgray",
+                            padding: "0.6rem",
+                            gap: "0.2rem",
+                            display: "flex",
+                            marginTop: "0.8rem",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <img
+                            src={
+                              "https://image.tmdb.org/t/p/w500" +
+                              productionCompany.logo_path
+                            }
+                            width={"60px"}
+                          />
+                          <h4
+                            style={{
+                              fontSize: "1rem",
+                              fontWeight: "400",
+                              margin: 0,
+                              color: "black",
+                            }}
+                          >
+                            {productionCompany.name}
+                          </h4>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {/* Rating */}
+              <div
                 style={{
                   display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "0.8rem",
+                  alignItems: "center",
+                  margin: "0.6rem 0",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
+                    viewBox="0 0 24 24"
+                    fill="orange"
+                    role="presentation"
+                  >
+                    <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                  </svg>
+                  <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    {vote?.toString().substring(0, 3) ||
+                      movieToRender?.imdbRating}
+                  </span>
+                  &nbsp; /10{" "}
+                </div>
+                {movieToRender?.imdbVotes && (
+                  <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
+                    ({movieToRender?.imdbVotes})
+                  </span>
+                )}
+              </div>
+              {/* Genres */}
+              <div
+                style={{
+                  marginTop: "0.57rem",
+                  display: "flex",
+                  flexWrap: "wrap",
                   gap: "0.6rem",
-                  fontWeight: 500,
-                  fontSize: "1rem",
-                  margin: "0.4rem 0",
-                  flexWrap: "wrap",
                   justifyContent: "center",
-                  marginTop: "0.84rem",
-                  overflow: "auto",
                 }}
               >
-                {credits.slice(0, 5).map((actor, id) => {
-                  return (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        // justifyContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        padding: "0.4rem",
-                        cursor: "pointer",
-                        borderRadius: "0.6rem",
-                        transition: "0.2s ease-in-out",
-                        backgroundColor:
-                          castHover == id ? "lightgray" : "white",
-                        transform: castHover == id ? "scale(1.04)" : "scale(1)",
-                      }}
-                      onMouseOver={() => {
-                        setCastHover(id);
-                      }}
-                      onMouseLeave={() => {
-                        setCastHover();
-                      }}
-                    >
-                      <img
-                        width={actor.profile_path ? "90px" : "100px"}
-                        // height={"150px"}
-                        height={!actor.profile_path && "110px"}
-                        style={{ borderRadius: "0.6rem" }}
-                        src={
-                          actor.profile_path
-                            ? `https://image.tmdb.org/t/p/w500${actor.profile_path}`
-                            : "https://imgs.search.brave.com/sE8MdXvDoqofUi5xFiPekWzRwNvt10-6tUkLkDA7KWA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA5LzE3LzEyLzIz/LzM2MF9GXzkxNzEy/MjM2N19rU3BkcFJK/NUhjbW4wczRXTWRK/YlNacGw3TlJ6d3Vw/VS5qcGc"
-                        }
-                      />
-                      <span
-                        style={{
-                          fontSize: "0.86rem",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          marginTop: "0.23rem",
-                        }}
-                      >
-                        {actor.name}
-                      </span>
-                      <span
-                        style={{
-                          margin: 0,
-                          fontSize: "0.77rem",
-                          color: "gray",
-                          textAlign: "center",
-                          fontWeight: "normal",
-                        }}
-                      >
-                        {actor.character}
-                      </span>
-                    </div>
-                  );
-                }) || "Not listed"}
+                {movieToRender?.genres?.map((genre, idx) => (
+                  <button
+                    key={idx}
+                    style={{
+                      padding: "0.4rem",
+                      backgroundColor: "red",
+                      color: "white",
+                      border: "none",
+                      fontSize: "0.9rem", // Smaller font size for mobile
+                    }}
+                  >
+                    {genre.name}
+                  </button>
+                ))}
               </div>
             </div>
-          )}
-          <div>
-            <button
-              style={{
-                backgroundColor: "lightblue",
-                cursor: "pointer",
-                border: "none",
-                borderRadius: "10px",
-                padding: "0.9rem",
-              }}
-              onClick={() => {
-                tv?.length > 0 && id.startsWith("tt")
-                  ? navigate(`/cast-and-crew/${tmdbId}/tv`)
-                  : tv?.length > 0 && !id.startsWith("tt")
-                  ? navigate(`/cast-and-crew/${id}/tv`)
-                  : navigate(`/cast-and-crew/${id}`);
-              }}
-            >
-              Meet the Whole Team
-            </button>
-          </div>
-          <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
-              margin: "1.89rem 0",
-            }}
-          >
-            {movieToRender?.Released || movieToRender?.release_date} |{" "}
-            {movieToRender?.Runtime || movieToRender?.runtime} min
-          </div>
-          {/* Language */}
-          <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" /* Adjusted font-size */,
-              marginTop: "0.7rem",
-            }}
-          >
-            Language <br />
-            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-              {movieToRender?.spoken_languages?.map((lang, id) => {
-                return (
-                  <>
-                    {id != 0 && ", "}
-                    {lang.english_name}
-                  </>
-                );
-              }) || "Unknown"}
-            </span>
-          </div>
-          {/* Awards */}
-          {/* <div
-            style={{
-              fontWeight: "bold",
-              fontSize: "1.3rem" ,
-              margin: "0.7rem 0",
-            }}
-          >
-            Awards <br />
-            <span style={{ fontSize: "1rem", fontWeight: "400" }}>
-              {movieToRender?.Awards || "Unknown"}
-            </span>
-          </div> */}
-          {/* Production Companies */}
-          {productionCompanies && productionCompanies.length > 0 && (
             <div
               style={{
-                fontWeight: "bold",
-                fontSize: "1.3rem" /* Adjusted font-size */,
-                margin: "0.7rem 0",
+                padding: "0.8rem",
+                border: "1px solid red",
+                borderRadius: "20px",
+                margin: "10px",
+                alignSelf: "self-start",
               }}
             >
-              Production Companies <br />
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  justifyContent: "center",
-
-                  flexWrap: "wrap",
-                }}
-              >
-                {productionCompanies.map((productionCompany, id) => {
-                  return (
-                    <span
-                      style={{
-                        fontSize: "1rem",
-                        fontWeight: "400",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "lightgray",
-                        padding: "0.6rem",
-                        gap: "0.2rem",
-                        display: "flex",
-                        marginTop: "0.8rem",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <img
-                        src={
-                          "https://image.tmdb.org/t/p/w500" +
-                          productionCompany.logo_path
-                        }
-                        width={"60px"}
-                      />
-                      <h4
-                        style={{
-                          fontSize: "1rem",
-                          fontWeight: "400",
-                          margin: 0,
-                        }}
-                      >
-                        {productionCompany.name}
-                      </h4>
-                    </span>
-                  );
-                })}
+              <h2>Watch Next !!!</h2>
+              <div>
+                <img
+                  src={`https://image.tmdb.org/t/p/w1280${rMovies[0].backdrop_path}`}
+                  width={"300px"}
+                />
               </div>
-            </div>
-          )}
-          {/* Rating */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "0.8rem",
-              alignItems: "center",
-              margin: "0.6rem 0",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
-                viewBox="0 0 24 24"
-                fill="orange"
-                role="presentation"
-              >
-                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-              </svg>
-              <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                {vote?.toString().substring(0, 3) || movieToRender?.imdbRating}
-              </span>
-              &nbsp; /10{" "}
-            </div>
-            {movieToRender?.imdbVotes && (
-              <span style={{ fontSize: "16.4px", fontWeight: "500" }}>
-                ({movieToRender?.imdbVotes})
-              </span>
-            )}
-          </div>
-
-          {/* Seasons */}
-          {/* {tv?.length > 0 && (
-            <div
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.3rem",
-                margin: "0.9rem 0",
-              }}
-            >
-              Total Seasons <br />
-              <span style={{ fontSize: "1rem", fontWeight: "500" }}>
-                {movieToRender?.totalSeasons || "Unknown"}
-              </span>
-            </div>
-          )} */}
-          {/* Genres */}
-          <div
-            style={{
-              marginTop: "0.57rem",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.6rem",
-              justifyContent: "center",
-            }}
-          >
-            {movieToRender?.genres?.map((genre, idx) => (
+              <h3>{rMovies[0]?.title || rMovies[0]?.name}</h3>
+              <h4>
+                {rMovies[0]?.release_date?.substring(0, 4) ||
+                  rMovies[0]?.first_air_date?.substring(0, 4)}
+              </h4>
               <button
-                key={idx}
+                onClick={() => {
+                  navigate("/detail/" + rMovies[0].id);
+                }}
                 style={{
-                  padding: "0.4rem",
+                  borderRadius: "10px",
+                  padding: "0.5rem 0.9rem",
                   backgroundColor: "red",
                   color: "white",
                   border: "none",
-                  fontSize: "0.9rem", // Smaller font size for mobile
+                  cursor: "pointer",
+                  fontWeight: "bold",
                 }}
               >
-                {genre.name}
+                WATCH
               </button>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -891,6 +779,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 margin: 0,
                 marginBottom: "1.4rem",
                 textAlign: "center",
+                color: "white",
                 fontSize: "24.2px",
               }}
             >
@@ -906,16 +795,17 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               }}
             >
               {rMovies.map((ele, id) => {
-                return (
-                  <MovieCard
-                    id={id}
-                    key={id}
-                    data={ele}
-                    setHoveredDiv={setHoveredDiv}
-                    hoveredDiv={hoveredDiv}
-                    getMovieDetail={getMovieDetail}
-                  />
-                );
+                if (id != 0)
+                  return (
+                    <MovieCard
+                      id={id}
+                      key={id}
+                      data={ele}
+                      setHoveredDiv={setHoveredDiv}
+                      hoveredDiv={hoveredDiv}
+                      getMovieDetail={getMovieDetail}
+                    />
+                  );
               })}
             </div>
           </div>

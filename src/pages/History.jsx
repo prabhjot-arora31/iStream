@@ -32,7 +32,15 @@ const History = ({ getMovieDetail }) => {
 
   return (
     <div>
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          maxWidth: "550px",
+          margin: "0 auto",
+        }}
+      >
         <h3
           onClick={() => {
             setTab(1);
@@ -75,7 +83,9 @@ const History = ({ getMovieDetail }) => {
               justifyContent: "center",
             }}
           >
-            <h3 style={{ textAlign: "center" }}>Watch History</h3>
+            <h3 style={{ textAlign: "center", color: "white" }}>
+              Watch History
+            </h3>
             {history.length > 0 && (
               <button
                 onClick={() => {
@@ -109,47 +119,54 @@ const History = ({ getMovieDetail }) => {
               onChange={(e) => {
                 setsearchTerm(e.target.value);
                 if (e.target.value.trim().length === 0) {
-  setHistory([...history1]);
+                  setHistory([...history1]);
                 }
-              //  if (e.target.value.trim().length == 0) {
+                //  if (e.target.value.trim().length == 0) {
                 //  setHistory(JSON.parse(localStorage.getItem("movies")) || []);
-              //  }
+                //  }
               }}
               style={{
+                outline: "none",
                 padding: "0.5rem",
                 borderRadius: "0.3rem",
-                border: "2px solid black",
+                backgroundColor: "black",
+                border: "2px solid white",
+                color: "white",
               }}
             />
-            
-              <button
-  style={{
-    backgroundColor: "lightsalmon",
-    border: "none",
-    cursor: "pointer",
-    marginLeft: "3px",
-    borderRadius: "4px",
-  }}
-  onClick={() => {
-    if (searchTerm.length > 0) {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      const searchResult = history1.filter((searchTerm1) => {
-        return (
-          searchTerm1.name?.toLowerCase().includes(lowerCaseSearchTerm) ||
-          searchTerm1.title?.toLowerCase().includes(lowerCaseSearchTerm)
-        );
-      });
-      if (searchResult.length > 0) {
-        setHistory(searchResult);
-      } else {
-        setHistory([]); // Clear results if no matches are found
-      }
-    }
-  }}
->
-  Search
-</button>
-      
+
+            <button
+              style={{
+                backgroundColor: "black",
+                border: "1px solid white",
+                cursor: "pointer",
+                color: "white",
+                marginLeft: "3px",
+                borderRadius: "4px",
+              }}
+              onClick={() => {
+                if (searchTerm.length > 0) {
+                  const lowerCaseSearchTerm = searchTerm.toLowerCase();
+                  const searchResult = history1.filter((searchTerm1) => {
+                    return (
+                      searchTerm1.name
+                        ?.toLowerCase()
+                        .includes(lowerCaseSearchTerm) ||
+                      searchTerm1.title
+                        ?.toLowerCase()
+                        .includes(lowerCaseSearchTerm)
+                    );
+                  });
+                  if (searchResult.length > 0) {
+                    setHistory(searchResult);
+                  } else {
+                    setHistory([]); // Clear results if no matches are found
+                  }
+                }
+              }}
+            >
+              Search
+            </button>
           </div>
           <div
             style={{
@@ -161,8 +178,8 @@ const History = ({ getMovieDetail }) => {
               marginBottom: "1.6rem",
             }}
           >
-            <h4 style={{ margin: 0 }}>Total: </h4>
-            <p style={{ margin: 0 }}>{history.length}</p>
+            <h4 style={{ margin: 0, color: "white" }}>Total: </h4>
+            <p style={{ margin: 0, color: "white" }}>{history.length}</p>
           </div>
           <div
             style={{
@@ -226,7 +243,9 @@ const History = ({ getMovieDetail }) => {
                 gap: "0.4rem",
               }}
             >
-              <h3 style={{ textAlign: "center" }}>Search History</h3>
+              <h3 style={{ textAlign: "center", color: "white" }}>
+                Search History
+              </h3>
               {JSON.parse(localStorage.getItem("searches"))?.length > 0 && (
                 <button
                   onClick={() => {

@@ -116,6 +116,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
             top: "0",
             left: 0,
             opacity: 1,
+            color: "white",
             textAlign: "center",
             margin: "0 auto",
             padding: "0.12rem",
@@ -129,7 +130,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           </span>
         </h4>
       </div>
-      <h3 style={{ marginTop: "5px", textAlign: "center" }}>
+      <h3 style={{ marginTop: "5px", textAlign: "center", color: "white" }}>
         {/* {data.Title.length > 15
           ? data.Title.substring(0, 15) + "..."
           : data.Title} */}

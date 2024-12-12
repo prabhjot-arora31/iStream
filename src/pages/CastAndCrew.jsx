@@ -48,7 +48,7 @@ const CastAndCrew = () => {
 
   return (
     <>
-      <h2 style={{ textAlign: "center" }}>Cast</h2>
+      <h2 style={{ textAlign: "center", color: "white" }}>Cast</h2>
       <div
         style={{
           display: "flex",
@@ -70,15 +70,16 @@ const CastAndCrew = () => {
                 flexDirection: "column",
                 cursor: "pointer",
                 gap: "0.3rem",
-                height: "255px",
+                height: "200px",
+                width: "200px",
                 borderRadius: "7px",
                 transition: "0.2s ease-in-out",
                 transform: hover === crew.id ? "scale(1.043)" : "scale(1)",
-                backgroundColor: hover === crew.id ? "lightgray" : "white",
+                backgroundColor: hover === crew.id ? "white" : "black",
               }}
               onClick={() => {
                 if (crew.known_for_department === "Acting") {
-                  localStorage.setItem('actor-photo',crew.profile_path)
+                  localStorage.setItem("actor-photo", crew.profile_path);
                   navigate("/actor-info/" + crew.id + "/" + crew.name);
                 }
               }}
@@ -91,16 +92,23 @@ const CastAndCrew = () => {
             >
               <img
                 style={{
-                  borderRadius: "7px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
                 }}
                 src={
                   crew.profile_path
                     ? `https://image.tmdb.org/t/p/w200${crew.profile_path}`
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
-                width={"120px"}
+                width={"140px"}
+                height={"140px"}
               />
-              <h4 style={{ margin: 0 }}>
+              <h4
+                style={{
+                  margin: 0,
+                  color: hover === crew.id ? "black" : "white",
+                }}
+              >
                 {crew?.name?.length > 14
                   ? crew?.name?.substring(0, 14) + "..."
                   : crew?.name}
@@ -119,7 +127,7 @@ const CastAndCrew = () => {
         })}
       </div>
 
-      <h2 style={{ textAlign: "center" }}>Crew</h2>
+      <h2 style={{ textAlign: "center", color: "white" }}>Crew</h2>
       <div
         style={{
           display: "flex",
@@ -139,13 +147,14 @@ const CastAndCrew = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                backgroundColor: hover === id ? "lightgray" : "white",
+                backgroundColor: hover === id ? "white" : "black",
                 transform: hover === id ? "scale(1.043)" : "scale(1)",
                 cursor: "pointer",
                 gap: "0.3rem",
-                height: "255px",
                 borderRadius: "7px",
                 transition: ".2s ease-in-out",
+                height: "200px",
+                width: "200px",
               }}
               onMouseOver={() => {
                 setHover(id);
@@ -156,16 +165,23 @@ const CastAndCrew = () => {
             >
               <img
                 style={{
-                  borderRadius: "7px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
                 }}
                 src={
                   crew.profile_path
                     ? `https://image.tmdb.org/t/p/w200${crew.profile_path}`
                     : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
                 }
-                width={"120px"}
+                width={"140px"}
+                height={"140px"}
               />
-              <h4 style={{ margin: 0 }}>
+              <h4
+                style={{
+                  margin: 0,
+                  color: hover === id ? "black" : "white",
+                }}
+              >
                 {crew?.name?.length > 14
                   ? crew?.name?.substring(0, 14) + "..."
                   : crew?.name}

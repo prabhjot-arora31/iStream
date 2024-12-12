@@ -29,6 +29,7 @@ import Puff from "react-loading-icons/dist/esm/components/puff";
 import RecommendedMovies from "./pages/RecommendedMovies";
 import CastAndCrew from "./pages/CastAndCrew";
 import ActorInfo from "./pages/ActorInfo";
+import Footer from "./components/Footer";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -187,9 +188,9 @@ function App() {
     }
   };
   useEffect(() => {
-    document.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-    });
+    // document.addEventListener("contextmenu", (e) => {
+    //   e.preventDefault();
+    // });
     fetchByDifAPI();
     topRated();
     topRatedTv();
@@ -290,379 +291,322 @@ function App() {
         padding: 0,
         boxSizing: "border-box",
         minHeight: "100vh",
-        paddingBottom: "20px",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Header />
-
-      <Routes>
-        <Route path="/recommended/:movie" element={<RecommendedMovies />} />
-        <Route
-          path="/"
-          exact
-          element={
-            <div
-              onClick={(e) => {
-                if (e.target === e.currentTarget) setIsInputClicked(false);
-              }}
-              style={{
-                display: "flex",
-                gap: "0.7rem",
-                marginTop: "2rem",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                position: "relative",
-                minHeight: "100%",
-              }}
-            >
+      <div style={{ flex: 1 }}>
+        <Routes>
+          <Route path="/recommended/:movie" element={<RecommendedMovies />} />
+          <Route
+            path="/"
+            exact
+            element={
               <div
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) setIsInputClicked(false);
+                }}
                 style={{
-                  // margin: "10px auto",
-                  // width: "100%",
                   display: "flex",
+                  gap: "0.7rem",
+                  marginTop: "2rem",
+                  flexWrap: "wrap",
                   justifyContent: "center",
-                  gap: 7,
-                  marginBottom: "20px",
-                  position: "absolute",
-                  zIndex: "10",
+                  position: "relative",
+                  minHeight: "100%",
                 }}
               >
                 <div
                   style={{
+                    // margin: "10px auto",
+                    // width: "100%",
                     display: "flex",
-                    flexDirection: "column",
                     justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "white",
+                    gap: 7,
+                    marginBottom: "20px",
+                    position: "absolute",
+                    zIndex: "10",
                   }}
                 >
-                  <input
-                    onClick={(e) => {
-                      setIsInputClicked(true);
-                      setSelectedMovies(getRandomMovies());
-                      e.stopPropagation();
-                    }}
-                    type="text"
-                    style={{
-                      padding: "0.5rem",
-                      border: "none",
-                      borderRadius: "15px",
-                      fontSize: "15px",
-                      outline: "none",
-                      width: "230px",
-                    }}
-                    value={Search}
-                    onChange={(e) => {
-                      setIsInputClicked(true);
-                      setSearch(e.target.value);
-                      searching(e.target.value.trim());
-                    }}
-                    placeholder="Search movies, series or person....."
-                  />
-                </div>
-                <button
-                  onMouseOver={() => {
-                    setSearchBtnHover(true);
-                  }}
-                  onMouseOut={() => {
-                    setSearchBtnHover(false);
-                  }}
-                  style={{
-                    backgroundColor: searchBtnHover ? "white" : "black",
-                    // background: searchBtnHover
-                    //   ? "linear-gradient(to right , red, orange)"
-                    //   : "linear-gradient(to right , orange, red)",
-                    color: searchBtnHover ? "black" : "white",
-                    alignSelf: "flex-start",
-                    borderRadius: "5px",
-                    padding: "0.5rem",
-                    paddingLeft: "0.8rem",
-                    paddingRight: "0.8rem",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    border: "1px solid white",
-                  }}
-                  onClick={() => {
-                    setTopRatedTvShows([]);
-                    const searches =
-                      JSON.parse(localStorage.getItem("searches")) || [];
-                    if (!searches.find((ele, id) => ele === Search)) {
-                      searches.push(Search);
-                      localStorage.setItem(
-                        "searches",
-                        JSON.stringify(searches)
-                      );
-                    }
-                    setTypeText("All");
-                    fetchByName();
-                  }}
-                >
-                  Search
-                </button>
-              </div>
-              <div style={{ zIndex: 10, position: "relative", top: "40px" }}>
-                {isInputClicked && searchResults?.length > 0 && (
                   <div
-                    className="movie-suggestions"
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      marginTop: "0.24rem",
-                      marginLeft: "0.18rem",
-                      boxShadow: "0 0 5px black",
-                      padding: "0.432rem",
-                      // padding: "0.23rem",
-                      maxHeight: "620px",
+                      justifyContent: "center",
+                      alignItems: "center",
                       backgroundColor: "white",
-                      overflowY: "auto",
-                      width: "300px",
-                      borderRadius: "10px",
                     }}
                   >
-                    {searchResults?.length > 0 ? (
-                      searchResults
-                        .filter(
-                          (value, index, self) =>
-                            // Filter by unique 'title' (no duplicates)
-                            index ===
-                            self.findIndex((t) => t.title === value.title)
-                        )
-                        .map((ele, id) => {
-                          return (
-                            <div
-                              key={id}
-                              onMouseOver={() => {
-                                if (ele?.title)
-                                  setSuggestedBtnHover(ele?.title);
-                                else setSuggestedBtnHover(ele?.name);
-                              }}
-                              onClick={() => {
-                                window.scrollTo({
-                                  top: 0,
-                                  left: 0,
-                                  behavior: "auto", // Instant scrolling
-                                });
-
-                                if (ele?.media_type !== "person") {
-                                  let movies =
-                                    JSON.parse(
-                                      localStorage.getItem("movies")
-                                    ) || [];
-                                  // Check if the movie is already in the list
-                                  if (
-                                    !movies.find(
-                                      (movie) => movie.id === ele?.id
-                                    )
-                                  ) {
-                                    movies.push(ele); // Push the `ele` object
-                                    localStorage.setItem(
-                                      "movies",
-                                      JSON.stringify(movies)
-                                    );
-                                  }
-                                }
-
-                                if (ele?.imdbID) {
-                                  if (ele.poster_path) {
-                                    navigate("/detail/" + ele.imdbID);
-                                  } else {
-                                    localStorage.setItem(
-                                      "actor-photo",
-                                      ele?.profile_path
-                                    );
-                                    navigate(
-                                      "/actor-info/" +
-                                        ele?.imdbID +
-                                        "/" +
-                                        ele?.name
-                                    );
-                                  }
-                                } else if (ele?.id) {
-                                  if (!ele.first_air_date) {
-                                    if (ele?.poster_path) {
-                                      navigate("/detail/" + ele.id);
-                                    } else {
-                                      localStorage.setItem(
-                                        "actor-photo",
-                                        ele?.profile_path
-                                      );
-                                      navigate(
-                                        "/actor-info/" +
-                                          ele?.id +
-                                          "/" +
-                                          ele?.name
-                                      );
-                                    }
-                                  } else {
-                                    if (ele?.poster_path) {
-                                      navigate("/detail/" + ele.id + "/tv");
-                                    } else {
-                                      localStorage.setItem(
-                                        "actor-photo",
-                                        ele?.profile_path
-                                      );
-                                      navigate(
-                                        "/actor-info/" +
-                                          ele?.id +
-                                          "/" +
-                                          ele?.name
-                                      );
-                                    }
-                                  }
-                                }
-                              }}
-                              style={{
-                                cursor: "pointer",
-                                display: "flex",
-                                gap: "7px",
-                                padding: "0.23rem",
-                                justifyContent: "start",
-                                border: "1px solid white",
-                                marginTop: "10px",
-                                alignItems: "center",
-                                backgroundColor: ele?.title
-                                  ? suggestedBtnHover == ele?.title
-                                    ? "black"
-                                    : " white"
-                                  : suggestedBtnHover == ele?.name
-                                  ? "black"
-                                  : " white",
-                              }}
-                            >
-                              <div>
-                                <img
-                                  src={
-                                    ele?.poster_path
-                                      ? "https://image.tmdb.org/t/p/w500" +
-                                        ele?.poster_path
-                                      : "https://image.tmdb.org/t/p/w500" +
-                                        ele?.profile_path
-                                  }
-                                  width={"100%"}
-                                  style={{
-                                    width: "60px",
-                                    height: ele?.poster_path ? "90px" : "60px",
-                                    border: ele?.title
-                                      ? suggestedBtnHover == ele?.title
-                                        ? "1px solid white"
-                                        : "1px solid black"
-                                      : suggestedBtnHover == ele?.name
-                                      ? "1px solid white"
-                                      : " 1px solid black",
-                                    maxHeight: "230px",
-                                    borderRadius: ele?.poster_path
-                                      ? "10px"
-                                      : "65px",
-                                    objectFit: "cover",
-                                    transition: ".13s ease-in-out",
-                                  }}
-                                />
-                              </div>
+                    <input
+                      onClick={(e) => {
+                        setIsInputClicked(true);
+                        setSelectedMovies(getRandomMovies());
+                        e.stopPropagation();
+                      }}
+                      type="text"
+                      style={{
+                        padding: "0.5rem",
+                        border: "none",
+                        borderRadius: "15px",
+                        fontSize: "15px",
+                        outline: "none",
+                        width: "230px",
+                      }}
+                      value={Search}
+                      onChange={(e) => {
+                        setIsInputClicked(true);
+                        setSearch(e.target.value);
+                        searching(e.target.value.trim());
+                      }}
+                      placeholder="Search movies, series or person....."
+                    />
+                  </div>
+                  <button
+                    onMouseOver={() => {
+                      setSearchBtnHover(true);
+                    }}
+                    onMouseOut={() => {
+                      setSearchBtnHover(false);
+                    }}
+                    style={{
+                      backgroundColor: searchBtnHover ? "white" : "black",
+                      // background: searchBtnHover
+                      //   ? "linear-gradient(to right , red, orange)"
+                      //   : "linear-gradient(to right , orange, red)",
+                      color: searchBtnHover ? "black" : "white",
+                      alignSelf: "flex-start",
+                      borderRadius: "5px",
+                      padding: "0.5rem",
+                      paddingLeft: "0.8rem",
+                      paddingRight: "0.8rem",
+                      cursor: "pointer",
+                      fontSize: "15px",
+                      border: "1px solid white",
+                    }}
+                    onClick={() => {
+                      setTopRatedTvShows([]);
+                      const searches =
+                        JSON.parse(localStorage.getItem("searches")) || [];
+                      if (!searches.find((ele, id) => ele === Search)) {
+                        searches.push(Search);
+                        localStorage.setItem(
+                          "searches",
+                          JSON.stringify(searches)
+                        );
+                      }
+                      setTypeText("All");
+                      fetchByName();
+                    }}
+                  >
+                    Search
+                  </button>
+                </div>
+                <div style={{ zIndex: 10, position: "relative", top: "40px" }}>
+                  {isInputClicked && searchResults?.length > 0 && (
+                    <div
+                      className="movie-suggestions"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginTop: "0.24rem",
+                        marginLeft: "0.18rem",
+                        boxShadow: "0 0 5px black",
+                        padding: "0.432rem",
+                        // padding: "0.23rem",
+                        maxHeight: "620px",
+                        backgroundColor: "white",
+                        overflowY: "auto",
+                        width: "300px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      {searchResults?.length > 0 ? (
+                        searchResults
+                          .filter(
+                            (value, index, self) =>
+                              // Filter by unique 'title' (no duplicates)
+                              index ===
+                              self.findIndex((t) => t.title === value.title)
+                          )
+                          .map((ele, id) => {
+                            return (
                               <div
+                                key={id}
+                                onMouseOver={() => {
+                                  if (ele?.title)
+                                    setSuggestedBtnHover(ele?.title);
+                                  else setSuggestedBtnHover(ele?.name);
+                                }}
+                                onClick={() => {
+                                  window.scrollTo({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: "auto", // Instant scrolling
+                                  });
+
+                                  if (ele?.media_type !== "person") {
+                                    let movies =
+                                      JSON.parse(
+                                        localStorage.getItem("movies")
+                                      ) || [];
+                                    // Check if the movie is already in the list
+                                    if (
+                                      !movies.find(
+                                        (movie) => movie.id === ele?.id
+                                      )
+                                    ) {
+                                      movies.push(ele); // Push the `ele` object
+                                      localStorage.setItem(
+                                        "movies",
+                                        JSON.stringify(movies)
+                                      );
+                                    }
+                                  }
+
+                                  if (ele?.imdbID) {
+                                    if (ele.poster_path) {
+                                      navigate("/detail/" + ele.imdbID);
+                                    } else {
+                                      localStorage.setItem(
+                                        "actor-photo",
+                                        ele?.profile_path
+                                      );
+                                      navigate(
+                                        "/actor-info/" +
+                                          ele?.imdbID +
+                                          "/" +
+                                          ele?.name
+                                      );
+                                    }
+                                  } else if (ele?.id) {
+                                    if (!ele.first_air_date) {
+                                      if (ele?.poster_path) {
+                                        navigate("/detail/" + ele.id);
+                                      } else {
+                                        localStorage.setItem(
+                                          "actor-photo",
+                                          ele?.profile_path
+                                        );
+                                        navigate(
+                                          "/actor-info/" +
+                                            ele?.id +
+                                            "/" +
+                                            ele?.name
+                                        );
+                                      }
+                                    } else {
+                                      if (ele?.poster_path) {
+                                        navigate("/detail/" + ele.id + "/tv");
+                                      } else {
+                                        localStorage.setItem(
+                                          "actor-photo",
+                                          ele?.profile_path
+                                        );
+                                        navigate(
+                                          "/actor-info/" +
+                                            ele?.id +
+                                            "/" +
+                                            ele?.name
+                                        );
+                                      }
+                                    }
+                                  }
+                                }}
                                 style={{
+                                  cursor: "pointer",
                                   display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "left",
+                                  gap: "7px",
+                                  padding: "0.23rem",
+                                  justifyContent: "start",
+                                  border: "1px solid white",
+                                  marginTop: "10px",
+                                  alignItems: "center",
+                                  backgroundColor: ele?.title
+                                    ? suggestedBtnHover == ele?.title
+                                      ? "black"
+                                      : " white"
+                                    : suggestedBtnHover == ele?.name
+                                    ? "black"
+                                    : " white",
                                 }}
                               >
-                                <h5
-                                  style={{
-                                    color: ele?.title
-                                      ? suggestedBtnHover == ele?.title
-                                        ? "salmon"
-                                        : "black"
-                                      : suggestedBtnHover == ele?.name
-                                      ? "salmon"
-                                      : "black",
-                                    margin: 0,
-                                    marginBottom: "6px",
-                                    cursor: "pointer",
-                                    fontSize: "15.8px",
-                                    fontWeight: "bold",
-                                    border: "none",
-                                    // backgroundColor:
-                                    //   suggestedBtnHover == ele?.title
-                                    //     ? "lightsalmon"
-                                    //     : "",
-                                  }}
-                                >
-                                  {ele?.title
-                                    ? ele?.title?.length > 70
-                                      ? ele?.title?.substring(0, 70) + "..."
-                                      : ele?.title
-                                    : ele?.name?.length > 70
-                                    ? ele?.name?.substring(0, 70) + "..."
-                                    : ele?.name}
-                                </h5>
+                                <div>
+                                  <img
+                                    src={
+                                      ele?.poster_path
+                                        ? "https://image.tmdb.org/t/p/w500" +
+                                          ele?.poster_path
+                                        : "https://image.tmdb.org/t/p/w500" +
+                                          ele?.profile_path
+                                    }
+                                    width={"100%"}
+                                    style={{
+                                      width: "60px",
+                                      height: ele?.poster_path
+                                        ? "90px"
+                                        : "60px",
+                                      border: ele?.title
+                                        ? suggestedBtnHover == ele?.title
+                                          ? "1px solid white"
+                                          : "1px solid black"
+                                        : suggestedBtnHover == ele?.name
+                                        ? "1px solid white"
+                                        : " 1px solid black",
+                                      maxHeight: "230px",
+                                      borderRadius: ele?.poster_path
+                                        ? "10px"
+                                        : "65px",
+                                      objectFit: "cover",
+                                      transition: ".13s ease-in-out",
+                                    }}
+                                  />
+                                </div>
                                 <div
                                   style={{
                                     display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "start",
-                                    gap: "0.5rem",
-                                    margin: 0,
+                                    flexDirection: "column",
+                                    alignItems: "left",
                                   }}
                                 >
-                                  <p
+                                  <h5
                                     style={{
-                                      margin: 0,
-                                      fontSize: "13.5px",
                                       color: ele?.title
                                         ? suggestedBtnHover == ele?.title
-                                          ? "white"
+                                          ? "salmon"
                                           : "black"
                                         : suggestedBtnHover == ele?.name
-                                        ? "white"
+                                        ? "salmon"
                                         : "black",
-                                    }}
-                                  >
-                                    {ele?.release_date
-                                      ? ele?.release_date?.substring(0, 4)
-                                      : ele?.first_air_date?.substring(0, 4)}
-                                    {ele?.poster_path && (
-                                      <span
-                                        style={{
-                                          marginLeft: "1.2rem",
-                                          fontWeight: "bold",
-                                          marginRight: "0.4rem",
-                                        }}
-                                      >
-                                        |{" "}
-                                      </span>
-                                    )}
-                                  </p>{" "}
-                                  {ele?.poster_path && (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="23"
-                                      height="23"
-                                      style={{ margin: 0 }}
-                                      class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
-                                      viewBox="0 0 24 24"
-                                      fill="orange"
-                                      role="presentation"
-                                    >
-                                      <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                                    </svg>
-                                  )}
-                                  <p
-                                    style={{
                                       margin: 0,
-                                      fontSize: "13.5px",
-                                      color: ele?.title
-                                        ? suggestedBtnHover == ele?.title
-                                          ? "white"
-                                          : "black"
-                                        : suggestedBtnHover == ele?.name
-                                        ? "white"
-                                        : "black",
+                                      marginBottom: "6px",
+                                      cursor: "pointer",
+                                      fontSize: "15.8px",
+                                      fontWeight: "bold",
+                                      border: "none",
+                                      // backgroundColor:
+                                      //   suggestedBtnHover == ele?.title
+                                      //     ? "lightsalmon"
+                                      //     : "",
                                     }}
                                   >
-                                    {ele?.vote_average
-                                      ?.toString()
-                                      .substring(0, 3)}
-                                  </p>
-                                  {ele?.media_type != "person" && (
+                                    {ele?.title
+                                      ? ele?.title?.length > 70
+                                        ? ele?.title?.substring(0, 70) + "..."
+                                        : ele?.title
+                                      : ele?.name?.length > 70
+                                      ? ele?.name?.substring(0, 70) + "..."
+                                      : ele?.name}
+                                  </h5>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "start",
+                                      gap: "0.5rem",
+                                      margin: 0,
+                                    }}
+                                  >
                                     <p
                                       style={{
                                         margin: 0,
@@ -674,262 +618,24 @@ function App() {
                                           : suggestedBtnHover == ele?.name
                                           ? "white"
                                           : "black",
-                                        padding: "0.3rem",
-                                        border: ele?.title
-                                          ? suggestedBtnHover == ele?.title
-                                            ? "white"
-                                            : "black"
-                                          : suggestedBtnHover == ele?.name
-                                          ? "white"
-                                          : "black",
-                                        borderRadius: "0.2371rem",
                                       }}
                                     >
-                                      {" "}
-                                      {ele?.media_type}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })
-                    ) : (
-                      <div
-                        style={{
-                          margin: "0 auto",
-
-                          width: "80px",
-                          height: "80px",
-                        }}
-                      >
-                        <Puff
-                          stroke="#ff0000"
-                          strokeOpacity={20.125}
-                          speed={0.75}
-                          width={"100%"}
-                          height={"100%"}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              {isLoading === "" ? (
-                <div></div>
-              ) : isLoading === true ? (
-                <div
-                  style={{
-                    margin: "0 auto",
-                    marginTop: "30px",
-                    width: "80px",
-                    height: "80px",
-                    position: "absolute",
-                    top: "5rem",
-                  }}
-                >
-                  <Puff
-                    stroke="#ff0000"
-                    strokeOpacity={20.125}
-                    speed={0.75}
-                    width={"100%"}
-                    height={"100%"}
-                  />
-                </div>
-              ) : (
-                <>
-                  {" "}
-                  {movies?.length > 0 ? (
-                    <>
-                      {/* Banner */}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                          position: "absolute",
-                          top: "5rem",
-                          gap: "0.7rem",
-                        }}
-                      >
-                        <div>
-                          {currentPage !== 0 && (
-                            <p style={{ textAlign: "center" }}>
-                              Current Page: {currentPage}
-                            </p>
-                          )}
-                          {movies?.length > 0 && !movies[0].poster_path && (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                gap: "0.5rem",
-                                marginBottom: "1.6rem",
-                              }}
-                            >
-                              <button
-                                onClick={() => {
-                                  setIsLoading(true);
-                                  setTypeText("All");
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  borderRadius: "0.3rem",
-                                  fontSize: "15px",
-
-                                  backgroundColor:
-                                    typeText == "All" ? "purple" : "white",
-                                  color: typeText != "All" ? "purple" : "white",
-                                  border:
-                                    typeText != "All"
-                                      ? "1px solid purple"
-                                      : "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                All
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setIsLoading(true);
-                                  setTypeText("Movie");
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  borderRadius: "0.3rem",
-                                  fontSize: "15px",
-
-                                  backgroundColor:
-                                    typeText == "Movie" ? "purple" : "white",
-                                  color:
-                                    typeText != "Movie" ? "purple" : "white",
-                                  border:
-                                    typeText != "Movie"
-                                      ? "1px solid purple"
-                                      : "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                Movie
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setTypeText("Series");
-                                  setIsLoading(true);
-                                  (async () => {
-                                    const { data } = await axios.get(
-                                      `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
-                                    );
-                                    setMovies(data.Search);
-                                    setIsLoading(false);
-                                  })();
-                                }}
-                                style={{
-                                  padding: "0.38rem",
-                                  cursor: "pointer",
-                                  fontSize: "15px",
-                                  borderRadius: "0.3rem",
-                                  backgroundColor:
-                                    typeText == "Series" ? "purple" : "white",
-                                  color:
-                                    typeText != "Series" ? "purple" : "white",
-                                  border:
-                                    typeText != "Series"
-                                      ? "1px solid purple"
-                                      : "none",
-                                }}
-                              >
-                                Web Series
-                              </button>
-                            </div>
-                          )}
-                          {movies?.length > 0 &&
-                            !movies[0].poster_path &&
-                            typeText && (
-                              <h3 style={{ textAlign: "center" }}>
-                                {typeText}
-                              </h3>
-                            )}
-                          {movies[0].poster_path && (
-                            <>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  position: "relative",
-                                  top: "30px",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    margin: "0 auto",
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    gap: "0.6rem",
-                                    backgroundColor: "black",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      maxWidth: "800px",
-                                      display: "flex",
-                                      flexWrap: "wrap",
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <img
-                                      src="https://image.tmdb.org/t/p/w1280/VuukZLgaCrho2Ar8Scl9HtV3yD.jpg"
-                                      style={{
-                                        objectFit: "cover",
-                                        width: "100%",
-                                        maxWidth: "760px",
-                                        height: "auto",
-                                      }}
-                                    />
-                                  </div>
-                                  <div
-                                    style={{
-                                      color: "white",
-                                      backgroundColor: "black",
-                                      padding: "0.6rem",
-                                    }}
-                                  >
-                                    <h1 style={{ margin: 0 }}>Venom</h1>
-                                    <p style={{ margin: 0, maxWidth: "450px" }}>
-                                      Investigative journalist Eddie Brock
-                                      attempts a comeback following a scandal,
-                                      but accidentally becomes the host of
-                                      Venom, a violent, super powerful alien
-                                      symbiote. Soon, he must rely on his
-                                      newfound powers to protect the world from
-                                      a shadowy organization looking for a
-                                      symbiote of their own.
-                                    </p>
-                                    <p
-                                      style={{
-                                        margin: 0,
-                                        display: "flex",
-                                        marginTop: "0.6rem",
-                                        justifyContent: "left",
-                                        alignItems: "center",
-                                      }}
-                                    >
+                                      {ele?.release_date
+                                        ? ele?.release_date?.substring(0, 4)
+                                        : ele?.first_air_date?.substring(0, 4)}
+                                      {ele?.poster_path && (
+                                        <span
+                                          style={{
+                                            marginLeft: "1.2rem",
+                                            fontWeight: "bold",
+                                            marginRight: "0.4rem",
+                                          }}
+                                        >
+                                          |{" "}
+                                        </span>
+                                      )}
+                                    </p>{" "}
+                                    {ele?.poster_path && (
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="23"
@@ -942,9 +648,314 @@ function App() {
                                       >
                                         <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
                                       </svg>
-                                      6.6
+                                    )}
+                                    <p
+                                      style={{
+                                        margin: 0,
+                                        fontSize: "13.5px",
+                                        color: ele?.title
+                                          ? suggestedBtnHover == ele?.title
+                                            ? "white"
+                                            : "black"
+                                          : suggestedBtnHover == ele?.name
+                                          ? "white"
+                                          : "black",
+                                      }}
+                                    >
+                                      {ele?.vote_average
+                                        ?.toString()
+                                        .substring(0, 3)}
                                     </p>
-                                    <p>
+                                    {ele?.media_type != "person" && (
+                                      <p
+                                        style={{
+                                          margin: 0,
+                                          fontSize: "13.5px",
+                                          color: ele?.title
+                                            ? suggestedBtnHover == ele?.title
+                                              ? "white"
+                                              : "black"
+                                            : suggestedBtnHover == ele?.name
+                                            ? "white"
+                                            : "black",
+                                          padding: "0.3rem",
+                                          border: ele?.title
+                                            ? suggestedBtnHover == ele?.title
+                                              ? "white"
+                                              : "black"
+                                            : suggestedBtnHover == ele?.name
+                                            ? "white"
+                                            : "black",
+                                          borderRadius: "0.2371rem",
+                                        }}
+                                      >
+                                        {" "}
+                                        {ele?.media_type}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                      ) : (
+                        <div
+                          style={{
+                            margin: "0 auto",
+
+                            width: "80px",
+                            height: "80px",
+                          }}
+                        >
+                          <Puff
+                            stroke="#ff0000"
+                            strokeOpacity={20.125}
+                            speed={0.75}
+                            width={"100%"}
+                            height={"100%"}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                {isLoading === "" ? (
+                  <div></div>
+                ) : isLoading === true ? (
+                  <div
+                    style={{
+                      margin: "0 auto",
+                      marginTop: "30px",
+                      width: "80px",
+                      height: "80px",
+                      position: "absolute",
+                      top: "5rem",
+                    }}
+                  >
+                    <Puff
+                      stroke="#ff0000"
+                      strokeOpacity={20.125}
+                      speed={0.75}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {" "}
+                    {movies?.length > 0 ? (
+                      <>
+                        {/* Banner */}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            position: "absolute",
+                            top: "5rem",
+                            gap: "0.7rem",
+                          }}
+                        >
+                          <div>
+                            {currentPage !== 0 && (
+                              <p style={{ textAlign: "center" }}>
+                                Current Page: {currentPage}
+                              </p>
+                            )}
+                            {movies?.length > 0 && !movies[0].poster_path && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  gap: "0.5rem",
+                                  marginBottom: "1.6rem",
+                                }}
+                              >
+                                <button
+                                  onClick={() => {
+                                    setIsLoading(true);
+                                    setTypeText("All");
+                                    (async () => {
+                                      const { data } = await axios.get(
+                                        `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                      );
+                                      setMovies(data.Search);
+                                      setIsLoading(false);
+                                    })();
+                                  }}
+                                  style={{
+                                    padding: "0.38rem",
+                                    borderRadius: "0.3rem",
+                                    fontSize: "15px",
+
+                                    backgroundColor:
+                                      typeText == "All" ? "purple" : "white",
+                                    color:
+                                      typeText != "All" ? "purple" : "white",
+                                    border:
+                                      typeText != "All"
+                                        ? "1px solid purple"
+                                        : "none",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  All
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setIsLoading(true);
+                                    setTypeText("Movie");
+                                    (async () => {
+                                      const { data } = await axios.get(
+                                        `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                      );
+                                      setMovies(data.Search);
+                                      setIsLoading(false);
+                                    })();
+                                  }}
+                                  style={{
+                                    padding: "0.38rem",
+                                    borderRadius: "0.3rem",
+                                    fontSize: "15px",
+
+                                    backgroundColor:
+                                      typeText == "Movie" ? "purple" : "white",
+                                    color:
+                                      typeText != "Movie" ? "purple" : "white",
+                                    border:
+                                      typeText != "Movie"
+                                        ? "1px solid purple"
+                                        : "none",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Movie
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setTypeText("Series");
+                                    setIsLoading(true);
+                                    (async () => {
+                                      const { data } = await axios.get(
+                                        `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                      );
+                                      setMovies(data.Search);
+                                      setIsLoading(false);
+                                    })();
+                                  }}
+                                  style={{
+                                    padding: "0.38rem",
+                                    cursor: "pointer",
+                                    fontSize: "15px",
+                                    borderRadius: "0.3rem",
+                                    backgroundColor:
+                                      typeText == "Series" ? "purple" : "white",
+                                    color:
+                                      typeText != "Series" ? "purple" : "white",
+                                    border:
+                                      typeText != "Series"
+                                        ? "1px solid purple"
+                                        : "none",
+                                  }}
+                                >
+                                  Web Series
+                                </button>
+                              </div>
+                            )}
+                            {movies?.length > 0 &&
+                              !movies[0].poster_path &&
+                              typeText && (
+                                <h3 style={{ textAlign: "center" }}>
+                                  {typeText}
+                                </h3>
+                              )}
+                            {movies[0].poster_path && (
+                              <>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    position: "relative",
+                                    top: "30px",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      margin: "0 auto",
+                                      display: "flex",
+                                      flexWrap: "wrap",
+                                      gap: "0.6rem",
+                                      backgroundColor: "black",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        maxWidth: "800px",
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        justifyContent: "center",
+                                      }}
+                                    >
+                                      <img
+                                        src={`https://image.tmdb.org/t/p/w1280${movies[0]?.backdrop_path}`}
+                                        style={{
+                                          objectFit: "cover",
+                                          width: "100%",
+                                          maxWidth: "760px",
+                                          height: "auto",
+                                        }}
+                                      />
+                                    </div>
+                                    <div
+                                      style={{
+                                        color: "white",
+                                        backgroundColor: "black",
+                                        padding: "0.6rem",
+                                      }}
+                                    >
+                                      <h1 style={{ margin: 0 }}>
+                                        {movies[0]?.title}
+                                      </h1>
+                                      {/* <p style={{ margin: 0, maxWidth: "450px" }}>
+                                      Investigative journalist Eddie Brock
+                                      attempts a comeback following a scandal,
+                                      but accidentally becomes the host of
+                                      Venom, a violent, super powerful alien
+                                      symbiote. Soon, he must rely on his
+                                      newfound powers to protect the world from
+                                      a shadowy organization looking for a
+                                      symbiote of their own.
+                                    </p> */}
+                                      {movies[0]?.vote_average > 0 && (
+                                        <p
+                                          style={{
+                                            margin: 0,
+                                            display: "flex",
+                                            marginTop: "0.6rem",
+                                            justifyContent: "left",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="23"
+                                            height="23"
+                                            style={{ margin: 0 }}
+                                            class="ipc-icon ipc-icon--star sc-d541859f-4 LNYqq"
+                                            viewBox="0 0 24 24"
+                                            fill="orange"
+                                            role="presentation"
+                                          >
+                                            <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                                          </svg>
+                                          {movies[0]?.vote_average
+                                            .toString()
+                                            .substring(0, 3)}
+                                        </p>
+                                      )}
+                                      {/* <p>
                                       <button
                                         style={{
                                           color: "white",
@@ -966,123 +977,39 @@ function App() {
                                       >
                                         Action
                                       </button>
-                                    </p>
-                                    <p>
-                                      <button
-                                        onClick={() => {
-                                          navigate("/detail/335983");
-                                        }}
-                                        style={{
-                                          borderRadius: "10px",
-                                          padding: "0.5rem 0.9rem",
-                                          backgroundColor: "red",
-                                          color: "white",
-                                          border: "none",
-                                          cursor: "pointer",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                                        WATCH
-                                      </button>
-                                    </p>
+                                    </p> */}
+                                      <p>
+                                        <button
+                                          onClick={() => {
+                                            navigate(
+                                              `/detail/${movies[0]?.id}`
+                                            );
+                                          }}
+                                          style={{
+                                            borderRadius: "10px",
+                                            padding: "0.5rem 0.9rem",
+                                            backgroundColor: "red",
+                                            color: "white",
+                                            border: "none",
+                                            cursor: "pointer",
+                                            fontWeight: "bold",
+                                          }}
+                                        >
+                                          WATCH
+                                        </button>
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                style={{
-                                  margin: 0,
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  gap: "0.54rem",
-                                  paddingTop: "7rem",
-                                  backgroundColor: "black",
-                                }}
-                              >
-                                <h2
+                                <div
                                   style={{
                                     margin: 0,
-                                    textAlign: "left",
-
-                                    fontSize: "27px",
-                                    color: "white",
-                                  }}
-                                >
-                                  Popular Movies
-                                </h2>
-                                <div
-                                  style={{
-                                    height: "35px",
-
-                                    margin: 0,
-                                    width: "4.5px",
-                                    backgroundColor: "red",
-                                  }}
-                                ></div>
-                              </div>
-                            </>
-                          )}
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              paddingTop: "1.8rem",
-                              backgroundColor: "black",
-                              gap: "0.7rem",
-                              opacity:
-                                isInputClicked && searchResults?.length > 0
-                                  ? "0.4"
-                                  : 1,
-                              flexWrap: "wrap",
-                            }}
-                          >
-                            {movies?.length > 0 &&
-                              movies.map((ele, id) => {
-                                return (
-                                  <MovieCard
-                                    id={id}
-                                    key={id}
-                                    data={ele}
-                                    setHoveredDiv={setHoveredDiv}
-                                    hoveredDiv={hoveredDiv}
-                                    getMovieDetail={getMovieDetail}
-                                  />
-                                );
-                              })}
-                          </div>
-                          {movies[0].poster_path && (
-                            <div
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                backgroundColor: "black",
-                                justifyContent: "center",
-                                // marginBottom: "20px",
-                                alignItems: "center",
-                                gap: "0.54rem",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  width: "100%",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    width: "100%",
-                                    height: "2px",
-                                    backgroundColor: "lightgray",
-                                  }}
-                                ></div>
-                                <div
-                                  style={{
                                     display: "flex",
                                     justifyContent: "center",
-                                    marginTop: "1.5rem",
-                                    gap: "0.56rem",
+                                    alignItems: "center",
+                                    gap: "0.54rem",
+                                    paddingTop: "7rem",
+                                    backgroundColor: "black",
                                   }}
                                 >
                                   <h2
@@ -1094,68 +1021,51 @@ function App() {
                                       color: "white",
                                     }}
                                   >
-                                    Top Rated Movies
+                                    Popular Movies
                                   </h2>
                                   <div
                                     style={{
                                       height: "35px",
+
                                       margin: 0,
                                       width: "4.5px",
                                       backgroundColor: "red",
                                     }}
                                   ></div>
                                 </div>
-                              </div>
-                            </div>
-                          )}
-                          {movies[0].poster_path && (
+                              </>
+                            )}
                             <div
                               style={{
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                gap: "0.7rem",
-                                backgroundColor: "black",
-                                flexWrap: "wrap",
                                 paddingTop: "1.8rem",
+                                backgroundColor: "black",
+                                gap: "0.7rem",
+                                opacity:
+                                  isInputClicked && searchResults?.length > 0
+                                    ? "0.4"
+                                    : 1,
+                                flexWrap: "wrap",
                               }}
                             >
-                              {topRatedMovieLoading && movies[0].poster_path ? (
-                                <div
-                                  style={{
-                                    margin: "0 auto",
-                                    marginTop: "30px",
-                                    width: "80px",
-                                    height: "80px",
-                                  }}
-                                >
-                                  <Puff
-                                    stroke="#ff0000"
-                                    strokeOpacity={20.125}
-                                    speed={0.75}
-                                    width={"100%"}
-                                    height={"100%"}
-                                  />
-                                </div>
-                              ) : (
-                                topRatedMovies?.length > 0 &&
-                                topRatedMovies.map((ele, id) => {
-                                  return (
-                                    <MovieCard
-                                      id={id}
-                                      key={id}
-                                      data={ele}
-                                      setHoveredDiv={setHoveredDiv}
-                                      hoveredDiv={hoveredDiv}
-                                      getMovieDetail={getMovieDetail}
-                                    />
-                                  );
-                                })
-                              )}
+                              {movies?.length > 0 &&
+                                movies.map((ele, id) => {
+                                  if (id != 0)
+                                    return (
+                                      <MovieCard
+                                        id={id}
+                                        key={id}
+                                        data={ele}
+                                        setHoveredDiv={setHoveredDiv}
+                                        hoveredDiv={hoveredDiv}
+                                        getMovieDetail={getMovieDetail}
+                                      />
+                                    );
+                                })}
                             </div>
-                          )}
-                          {movies[0].poster_path &&
-                            topRatedTvShows?.length > 0 && (
+                            {movies[0].poster_path && (
                               <div
                                 style={{
                                   margin: 0,
@@ -1198,7 +1108,7 @@ function App() {
                                         color: "white",
                                       }}
                                     >
-                                      Top Rated TV Shows
+                                      Top Rated Movies
                                     </h2>
                                     <div
                                       style={{
@@ -1212,199 +1122,307 @@ function App() {
                                 </div>
                               </div>
                             )}
-                          {topRatedTvShowsLoading ? (
-                            <div
-                              style={{
-                                margin: "0 auto",
-                                marginTop: "30px",
-                                width: "80px",
-                                height: "80px",
-                              }}
-                            >
-                              <Puff
-                                stroke="#ff0000"
-                                strokeOpacity={20.125}
-                                speed={0.75}
-                                width={"100%"}
-                                height={"100%"}
-                              />
-                            </div>
-                          ) : (
-                            topRatedTvShows?.length > 0 && (
+                            {movies[0].poster_path && (
                               <div
                                 style={{
                                   display: "flex",
                                   justifyContent: "center",
                                   alignItems: "center",
                                   gap: "0.7rem",
-                                  paddingTop: "1.8rem",
                                   backgroundColor: "black",
                                   flexWrap: "wrap",
+                                  paddingTop: "1.8rem",
                                 }}
                               >
-                                {topRatedTvShows.map((ele, id) => {
-                                  return (
-                                    <MovieCard
-                                      id={id}
-                                      key={id}
-                                      data={ele}
-                                      setHoveredDiv={setHoveredDiv}
-                                      hoveredDiv={hoveredDiv}
-                                      getMovieDetail={getMovieDetail}
+                                {topRatedMovieLoading &&
+                                movies[0].poster_path ? (
+                                  <div
+                                    style={{
+                                      margin: "0 auto",
+                                      marginTop: "30px",
+                                      width: "80px",
+                                      height: "80px",
+                                    }}
+                                  >
+                                    <Puff
+                                      stroke="#ff0000"
+                                      strokeOpacity={20.125}
+                                      speed={0.75}
+                                      width={"100%"}
+                                      height={"100%"}
                                     />
-                                  );
-                                })}
+                                  </div>
+                                ) : (
+                                  topRatedMovies?.length > 0 &&
+                                  topRatedMovies.map((ele, id) => {
+                                    return (
+                                      <MovieCard
+                                        id={id}
+                                        key={id}
+                                        data={ele}
+                                        setHoveredDiv={setHoveredDiv}
+                                        hoveredDiv={hoveredDiv}
+                                        getMovieDetail={getMovieDetail}
+                                      />
+                                    );
+                                  })
+                                )}
                               </div>
-                            )
-                          )}
+                            )}
+                            {movies[0].poster_path &&
+                              topRatedTvShows?.length > 0 && (
+                                <div
+                                  style={{
+                                    margin: 0,
+                                    display: "flex",
+                                    backgroundColor: "black",
+                                    justifyContent: "center",
+                                    // marginBottom: "20px",
+                                    alignItems: "center",
+                                    gap: "0.54rem",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      width: "100%",
+                                      flexDirection: "column",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        height: "2px",
+                                        backgroundColor: "lightgray",
+                                      }}
+                                    ></div>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        marginTop: "1.5rem",
+                                        gap: "0.56rem",
+                                      }}
+                                    >
+                                      <h2
+                                        style={{
+                                          margin: 0,
+                                          textAlign: "left",
+
+                                          fontSize: "27px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        Top Rated TV Shows
+                                      </h2>
+                                      <div
+                                        style={{
+                                          height: "35px",
+                                          margin: 0,
+                                          width: "4.5px",
+                                          backgroundColor: "red",
+                                        }}
+                                      ></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            {topRatedTvShowsLoading ? (
+                              <div
+                                style={{
+                                  margin: "0 auto",
+                                  marginTop: "30px",
+                                  width: "80px",
+                                  height: "80px",
+                                }}
+                              >
+                                <Puff
+                                  stroke="#ff0000"
+                                  strokeOpacity={20.125}
+                                  speed={0.75}
+                                  width={"100%"}
+                                  height={"100%"}
+                                />
+                              </div>
+                            ) : (
+                              topRatedTvShows?.length > 0 && (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "0.7rem",
+                                    paddingTop: "1.8rem",
+                                    backgroundColor: "black",
+                                    flexWrap: "wrap",
+                                  }}
+                                >
+                                  {topRatedTvShows.map((ele, id) => {
+                                    return (
+                                      <MovieCard
+                                        id={id}
+                                        key={id}
+                                        data={ele}
+                                        setHoveredDiv={setHoveredDiv}
+                                        hoveredDiv={hoveredDiv}
+                                        getMovieDetail={getMovieDetail}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "0.5rem",
+                            marginBottom: "1.6rem",
+                            position: "relative",
+                            top: "5rem",
+                            // position: "absolute",
+                            // left: "45%",
+                            // top: "5rem",
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              setIsLoading(true);
+                              setTypeText("All");
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              borderRadius: "0.3rem",
+                              backgroundColor: `${
+                                typeText === "All" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "All" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "All" ? "purple" : "white"
+                              }`,
+                              cursor: "pointer",
+                            }}
+                          >
+                            All
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsLoading(true);
+                              setTypeText("Movie");
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              borderRadius: "0.3rem",
+                              backgroundColor: `${
+                                typeText === "Movie" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "Movie" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "Movie" ? "purple" : "white"
+                              }`,
+
+                              cursor: "pointer",
+                            }}
+                          >
+                            Movie
+                          </button>
+                          <button
+                            onClick={() => {
+                              setTypeText("Series");
+                              setIsLoading(true);
+                              (async () => {
+                                const { data } = await axios.get(
+                                  `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
+                                );
+                                setMovies(data.Search);
+                                setIsLoading(false);
+                              })();
+                            }}
+                            style={{
+                              padding: "0.38rem",
+                              cursor: "pointer",
+
+                              borderRadius: "0.3rem",
+                              backgroundColor: `${
+                                typeText === "Series" ? "purple" : "white"
+                              }`,
+                              border: `${
+                                typeText !== "Series" ? "2px solid purple" : ""
+                              }`,
+                              color: `${
+                                typeText !== "Series" ? "purple" : "white"
+                              }`,
+                            }}
+                          >
+                            Web Series
+                          </button>
+                        </div>
+                        <div
+                          style={{
+                            textAlign: "center",
+                            position: "relative",
+                            top: "6.4rem",
+                          }}
+                        >
+                          No results found!!!
                         </div>
                       </div>
-                    </>
-                  ) : (
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          gap: "0.5rem",
-                          marginBottom: "1.6rem",
-                          position: "relative",
-                          top: "5rem",
-                          // position: "absolute",
-                          // left: "45%",
-                          // top: "5rem",
-                        }}
-                      >
-                        <button
-                          onClick={() => {
-                            setIsLoading(true);
-                            setTypeText("All");
-                            (async () => {
-                              const { data } = await axios.get(
-                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93`
-                              );
-                              setMovies(data.Search);
-                              setIsLoading(false);
-                            })();
-                          }}
-                          style={{
-                            padding: "0.38rem",
-                            borderRadius: "0.3rem",
-                            backgroundColor: `${
-                              typeText === "All" ? "purple" : "white"
-                            }`,
-                            border: `${
-                              typeText !== "All" ? "2px solid purple" : ""
-                            }`,
-                            color: `${typeText !== "All" ? "purple" : "white"}`,
-                            cursor: "pointer",
-                          }}
-                        >
-                          All
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsLoading(true);
-                            setTypeText("Movie");
-                            (async () => {
-                              const { data } = await axios.get(
-                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=movie`
-                              );
-                              setMovies(data.Search);
-                              setIsLoading(false);
-                            })();
-                          }}
-                          style={{
-                            padding: "0.38rem",
-                            borderRadius: "0.3rem",
-                            backgroundColor: `${
-                              typeText === "Movie" ? "purple" : "white"
-                            }`,
-                            border: `${
-                              typeText !== "Movie" ? "2px solid purple" : ""
-                            }`,
-                            color: `${
-                              typeText !== "Movie" ? "purple" : "white"
-                            }`,
-
-                            cursor: "pointer",
-                          }}
-                        >
-                          Movie
-                        </button>
-                        <button
-                          onClick={() => {
-                            setTypeText("Series");
-                            setIsLoading(true);
-                            (async () => {
-                              const { data } = await axios.get(
-                                `https://www.omdbapi.com/?s=${Search}&apikey=2d70fb93&type=series`
-                              );
-                              setMovies(data.Search);
-                              setIsLoading(false);
-                            })();
-                          }}
-                          style={{
-                            padding: "0.38rem",
-                            cursor: "pointer",
-
-                            borderRadius: "0.3rem",
-                            backgroundColor: `${
-                              typeText === "Series" ? "purple" : "white"
-                            }`,
-                            border: `${
-                              typeText !== "Series" ? "2px solid purple" : ""
-                            }`,
-                            color: `${
-                              typeText !== "Series" ? "purple" : "white"
-                            }`,
-                          }}
-                        >
-                          Web Series
-                        </button>
-                      </div>
-                      <div
-                        style={{
-                          textAlign: "center",
-                          position: "relative",
-                          top: "6.4rem",
-                        }}
-                      >
-                        No results found!!!
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          }
-        />
-        <Route
-          path="/detail/:id/:tv?"
-          element={
-            <MovieDetails
-              MovieDetail={MovieDetail}
-              getMovieDetail={getMovieDetail}
-            />
-          }
-        />
-        <Route path="/country" element={<Country />} />
-        <Route
-          path="/country/:countryName"
-          element={<MoviesByCountry getMovieDetail={getMovieDetail} />}
-        />
-        <Route
-          path="/history"
-          element={<History getMovieDetail={getMovieDetail} />}
-        />
-        <Route path="/genre" element={<Genres />} />
-        <Route
-          path="/genres/:genre"
-          element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
-        />
-        <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
-        <Route path="/actor-info/:id/:name" element={<ActorInfo />} />
-      </Routes>
+                    )}
+                  </>
+                )}
+              </div>
+            }
+          />
+          <Route
+            path="/detail/:id/:tv?"
+            element={
+              <MovieDetails
+                MovieDetail={MovieDetail}
+                getMovieDetail={getMovieDetail}
+              />
+            }
+          />
+          <Route path="/country" element={<Country />} />
+          <Route
+            path="/country/:countryName"
+            element={<MoviesByCountry getMovieDetail={getMovieDetail} />}
+          />
+          <Route
+            path="/history"
+            element={<History getMovieDetail={getMovieDetail} />}
+          />
+          <Route path="/genre" element={<Genres />} />
+          <Route
+            path="/genres/:genre"
+            element={<MoviesByGenres getMovieDetail={getMovieDetail} />}
+          />
+          <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
+          <Route path="/actor-info/:id/:name" element={<ActorInfo />} />
+        </Routes>
+      </div>
     </div>
   );
 }

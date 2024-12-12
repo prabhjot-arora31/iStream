@@ -11,6 +11,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
+  const [watchBtnHover, setWatchBtnHover] = useState(false);
   const [castHover, setCastHover] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
@@ -360,7 +361,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       style={{
                         objectFit: "cover",
                         width: "100%",
-                        maxWidth: "350px",
+                        maxWidth: "500px",
                         height: "auto",
                       }}
                     />
@@ -730,12 +731,18 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 onClick={() => {
                   navigate("/detail/" + rMovies[0].id);
                 }}
+                onMouseOver={() => {
+                  setWatchBtnHover(true);
+                }}
+                onMouseLeave={() => {
+                  setWatchBtnHover(false);
+                }}
                 style={{
                   borderRadius: "10px",
                   padding: "0.5rem 0.9rem",
-                  backgroundColor: "red",
-                  color: "white",
-                  border: "none",
+                  backgroundColor: watchBtnHover ? "black" : "white",
+                  color: watchBtnHover ? "red" : "black",
+                  border: !watchBtnHover ? "none" : "1px solid red",
                   cursor: "pointer",
                   fontWeight: "bold",
                 }}

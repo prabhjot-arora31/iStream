@@ -730,6 +730,11 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               <button
                 onClick={() => {
                   navigate("/detail/" + rMovies[0].id);
+                  window.scroll({
+                    top: 0, // Y position
+                    left: 0, // X position
+                    behavior: "instant", // Scroll behavior ('auto', 'smooth', or 'instant')
+                  });
                 }}
                 onMouseOver={() => {
                   setWatchBtnHover(true);

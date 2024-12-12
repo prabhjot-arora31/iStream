@@ -51,6 +51,36 @@ const ActorInfo = () => {
       <h2 style={{ textAlign: "center", fontWeight: "900", color: "white" }}>
         Filmography of {name}
       </h2>
+      <button
+        onClick={() => {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight, // Scroll to the bottom
+            left: document.documentElement.scrollWidth, // Scroll to the right
+            behavior: "smooth",
+          });
+        }}
+        style={{
+          color: "white",
+          position: "fixed",
+          right: "25px",
+          bottom: "25px",
+          zIndex: 20,
+          backgroundColor: "red",
+          border: "none",
+          padding: "0.3rem 0.5rem",
+          cursor: "pointer",
+        }}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M10 15L3 7H17L10 15Z" fill="black" />
+        </svg>
+      </button>
       {actorProfile && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img

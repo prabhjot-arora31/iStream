@@ -22,6 +22,7 @@ const ActorInfo = () => {
       setMovies(data);
     };
     fetchIt();
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     return () => {};
   }, []);
   if (loading) {

@@ -907,6 +907,7 @@ function App() {
                                     style={{
                                       color: "white",
                                       backgroundColor: "black",
+                                      padding: "0.6rem",
                                     }}
                                   >
                                     <h1 style={{ margin: 0 }}>Venom</h1>

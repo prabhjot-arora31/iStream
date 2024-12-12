@@ -65,13 +65,13 @@ const CastAndCrew = () => {
                 border: "2px solid black",
                 padding: "0.4rem",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "start",
                 alignItems: "center",
                 flexDirection: "column",
                 cursor: "pointer",
                 gap: "0.3rem",
                 height: "200px",
-                width: "200px",
+                width: "160px",
                 borderRadius: "7px",
                 transition: "0.2s ease-in-out",
                 transform: hover === crew.id ? "scale(1.043)" : "scale(1)",
@@ -154,7 +154,7 @@ const CastAndCrew = () => {
                 borderRadius: "7px",
                 transition: ".2s ease-in-out",
                 height: "200px",
-                width: "200px",
+                width: "160px",
               }}
               onMouseOver={() => {
                 setHover(id);

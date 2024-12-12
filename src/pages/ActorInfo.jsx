@@ -9,7 +9,9 @@ const ActorInfo = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hoveredDiv, setHoveredDiv] = useState("");
-  const [actorProfile, setActorProfile] = useState(localStorage.getItem('actor-photo') || '');
+  const [actorProfile, setActorProfile] = useState(
+    localStorage.getItem("actor-photo") || ""
+  );
   useEffect(() => {
     const fetchIt = async () => {
       const { data } = await axios.get(
@@ -45,10 +47,23 @@ const ActorInfo = () => {
   }
   return (
     <div>
-      <h2 style={{ textAlign: "center" , fontWeight:'900'}}>Filmography of {name}</h2>
-      {actorProfile && <div style={{ display:'flex', justifyContent:'center'}}><img style={{margin:'10px auto', width:'160px', height:'160px',objectFit: "cover", borderRadius:'50%'}} 
-        src={`https://image.tmdb.org/t/p/w500${actorProfile}`}
-        /> </div>}
+      <h2 style={{ textAlign: "center", fontWeight: "900", color: "white" }}>
+        Filmography of {name}
+      </h2>
+      {actorProfile && (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            style={{
+              margin: "10px auto",
+              width: "160px",
+              height: "160px",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+            src={`https://image.tmdb.org/t/p/w500${actorProfile}`}
+          />{" "}
+        </div>
+      )}
       <div
         style={{
           display: "flex",

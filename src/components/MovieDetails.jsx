@@ -717,7 +717,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               <h2>Watch Next !!!</h2>
               <div>
                 <img
-                  src={`https://image.tmdb.org/t/p/w1280${rMovies[0].backdrop_path}`}
+                  src={`https://image.tmdb.org/t/p/w1280${rMovies[0]?.backdrop_path}`}
                   width={"300px"}
                 />
               </div>

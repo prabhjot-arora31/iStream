@@ -90,6 +90,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
             objectFit: "cover",
             transform: `${id == hoveredDiv ? "scale(1.07)" : "scale(1)"}`,
             transition: ".13s ease-in-out",
+            boxShadow: hoveredDiv == id && "0 0 26px red",
           }}
         />
         <h4

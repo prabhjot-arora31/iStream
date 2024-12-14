@@ -24,6 +24,8 @@ const Header = () => {
           display: "flex",
           justifyContent: "center",
           gap: "30px",
+          marginTop: "30px",
+          marginBottom: "20px",
           alignItems: "center",
         }}
       >

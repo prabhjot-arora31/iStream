@@ -41,6 +41,66 @@ const History = ({ getMovieDetail }) => {
           margin: "0 auto",
         }}
       >
+        <button
+          onClick={() => {
+            window.scrollTo({
+              top: 0, // Scroll to the bottom
+              left: 0, // Scroll to the right
+              behavior: "smooth",
+            });
+          }}
+          style={{
+            color: "white",
+            position: "fixed",
+            left: "25px",
+            bottom: "25px",
+            zIndex: 20,
+            backgroundColor: "red",
+            border: "none",
+            padding: "0.3rem 0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10 5L3 13H17L10 5Z" fill="black" />
+          </svg>
+        </button>
+        <button
+          onClick={() => {
+            window.scrollTo({
+              top: document.documentElement.scrollHeight, // Scroll to the bottom
+              left: document.documentElement.scrollWidth, // Scroll to the right
+              behavior: "smooth",
+            });
+          }}
+          style={{
+            color: "white",
+            position: "fixed",
+            right: "25px",
+            bottom: "25px",
+            zIndex: 20,
+            backgroundColor: "red",
+            border: "none",
+            padding: "0.3rem 0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10 15L3 7H17L10 15Z" fill="black" />
+          </svg>
+        </button>
         <h3
           onClick={() => {
             setTab(1);

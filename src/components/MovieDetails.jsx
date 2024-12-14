@@ -267,6 +267,36 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           textAlign: "center", // Better alignment on smaller screens
         }}
       >
+        <button
+          onClick={() => {
+            window.scrollTo({
+              top: 0, // Scroll to the bottom
+              left: 0, // Scroll to the right
+              behavior: "smooth",
+            });
+          }}
+          style={{
+            color: "white",
+            position: "fixed",
+            left: "25px",
+            bottom: "25px",
+            zIndex: 20,
+            backgroundColor: "red",
+            border: "none",
+            padding: "0.3rem 0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10 5L3 13H17L10 5Z" fill="black" />
+          </svg>
+        </button>
         {/* Movie Player */}
         {movieToRender?.Type != "game" && (
           <div
@@ -542,6 +572,22 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                     color: !meetTeamHover ? "white" : "black",
                   }}
                   onClick={() => {
+                    localStorage.setItem(
+                      "watch-for-cast",
+                      movieToRender?.Title ||
+                        movieToRender?.title ||
+                        movieToRender?.name
+                    );
+                    localStorage.setItem(
+                      "watch-for-cast-img",
+                      movieToRender?.Poster
+                        ? movieToRender?.backdrop_path?.includes("themoviedb")
+                          ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                          : movieToRender?.backdrop_path ||
+                            "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                        : "https://image.tmdb.org/t/p/w1280" +
+                            movieToRender?.backdrop_path
+                    );
                     tv?.length > 0 && id.startsWith("tt")
                       ? navigate(`/cast-and-crew/${tmdbId}/tv`)
                       : tv?.length > 0 && !id.startsWith("tt")

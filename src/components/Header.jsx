@@ -69,6 +69,28 @@ const Header = () => {
             History
           </h3>
         </Link>
+        <Link
+          to={"/trending"}
+          style={{
+            textDecoration: "none",
+            color:
+              headerTab == 3 && location.pathname == "/trending"
+                ? "red"
+                : "white",
+            padding: "0.3rem",
+          }}
+          onClick={() => {
+            setHeaderTab(3);
+            localStorage.setItem("headerTab", 3);
+          }}
+        >
+          <h3
+            style={{ cursor: "pointer", margin: 0, padding: 0 }}
+            className="nav-link"
+          >
+            Trending
+          </h3>
+        </Link>
         {/* <Link to={"/country"} style={{ textDecoration: "none" }}>
           {" "}
           <h3 style={{ cursor: "pointer" }} className="nav-link">

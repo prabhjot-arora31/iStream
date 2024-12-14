@@ -23,7 +23,9 @@ const ActorInfo = () => {
     };
     fetchIt();
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    return () => {};
+    return () => {
+      setHoveredDiv();
+    };
   }, []);
   if (loading) {
     return (
@@ -51,6 +53,36 @@ const ActorInfo = () => {
       <h2 style={{ textAlign: "center", fontWeight: "900", color: "white" }}>
         Filmography of {name}
       </h2>
+      <button
+        onClick={() => {
+          window.scrollTo({
+            top: 0, // Scroll to the bottom
+            left: 0, // Scroll to the right
+            behavior: "smooth",
+          });
+        }}
+        style={{
+          color: "white",
+          position: "fixed",
+          left: "25px",
+          bottom: "25px",
+          zIndex: 20,
+          backgroundColor: "red",
+          border: "none",
+          padding: "0.3rem 0.5rem",
+          cursor: "pointer",
+        }}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M10 5L3 13H17L10 5Z" fill="black" />
+        </svg>
+      </button>
       <button
         onClick={() => {
           window.scrollTo({
@@ -91,10 +123,20 @@ const ActorInfo = () => {
               objectFit: "cover",
               borderRadius: "50%",
             }}
-            src={`https://image.tmdb.org/t/p/w500${actorProfile}`}
+            src={
+              actorProfile != "null" && actorProfile
+                ? `https://image.tmdb.org/t/p/w500${actorProfile}`
+                : "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+            }
           />{" "}
         </div>
       )}
+      <h3 style={{ textAlign: "center", color: "white", margin: 0 }}>
+        Total
+        <br />
+        Cast: {movies.cast.length} <br />
+        Crew: {movies.crew.length}
+      </h3>
       <div
         style={{
           display: "flex",

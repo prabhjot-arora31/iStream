@@ -30,18 +30,24 @@ import RecommendedMovies from "./pages/RecommendedMovies";
 import CastAndCrew from "./pages/CastAndCrew";
 import ActorInfo from "./pages/ActorInfo";
 import Footer from "./components/Footer";
+import Trending from "./pages/Trending";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [suggestedBtnHover, setSuggestedBtnHover] = useState("");
+  const [continueWatching, setContinueWatching] = useState(
+    JSON.parse(localStorage.getItem("movies")) || []
+  );
   const [topRatedTvShowsLoading, setTopRatedTvShowsLoading] = useState(true);
+  const [watchBtnHover, setWatchBtnHover] = useState(false);
   const [topRatedTvShows, setTopRatedTvShows] = useState([]);
   const [topRatedMovieLoading, setTopRatedMovieLoading] = useState(true);
   const topRatedTv = async () => {
     try {
       var page = Math.floor(Math.random() * 104);
+      if (page == 0) page = 1;
       const { data } = await axios.get(
         `https://api.tmdb.org/3/tv/top_rated?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&page=${page}`
       );
@@ -347,6 +353,36 @@ function App() {
                     <path d="M10 15L3 7H17L10 15Z" fill="black" />
                   </svg>
                 </button>
+                <button
+                  onClick={() => {
+                    window.scrollTo({
+                      top: 0, // Scroll to the bottom
+                      left: 0, // Scroll to the right
+                      behavior: "smooth",
+                    });
+                  }}
+                  style={{
+                    color: "white",
+                    position: "fixed",
+                    left: "25px",
+                    bottom: "25px",
+                    zIndex: 20,
+                    backgroundColor: "red",
+                    border: "none",
+                    padding: "0.3rem 0.5rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M10 5L3 13H17L10 5Z" fill="black" />
+                  </svg>
+                </button>
                 <div
                   style={{
                     // margin: "10px auto",
@@ -464,9 +500,10 @@ function App() {
                               <div
                                 key={id}
                                 onMouseOver={() => {
-                                  if (ele?.title)
-                                    setSuggestedBtnHover(ele?.title);
-                                  else setSuggestedBtnHover(ele?.name);
+                                  // if (ele?.title)
+                                  // setSuggestedBtnHover(ele?.title);
+                                  // else setSuggestedBtnHover(ele?.name);
+                                  setSuggestedBtnHover(id);
                                 }}
                                 onClick={() => {
                                   window.scrollTo({
@@ -552,13 +589,8 @@ function App() {
                                   border: "1px solid white",
                                   marginTop: "10px",
                                   alignItems: "center",
-                                  backgroundColor: ele?.title
-                                    ? suggestedBtnHover == ele?.title
-                                      ? "black"
-                                      : " white"
-                                    : suggestedBtnHover == ele?.name
-                                    ? "black"
-                                    : " white",
+                                  backgroundColor:
+                                    suggestedBtnHover == id ? "black" : "white",
                                 }}
                               >
                                 <div>
@@ -576,13 +608,10 @@ function App() {
                                       height: ele?.poster_path
                                         ? "90px"
                                         : "60px",
-                                      border: ele?.title
-                                        ? suggestedBtnHover == ele?.title
+                                      border:
+                                        suggestedBtnHover == id
                                           ? "1px solid white"
-                                          : "1px solid black"
-                                        : suggestedBtnHover == ele?.name
-                                        ? "1px solid white"
-                                        : " 1px solid black",
+                                          : "1px solid black",
                                       maxHeight: "230px",
                                       borderRadius: ele?.poster_path
                                         ? "10px"
@@ -601,13 +630,10 @@ function App() {
                                 >
                                   <h5
                                     style={{
-                                      color: ele?.title
-                                        ? suggestedBtnHover == ele?.title
+                                      color:
+                                        suggestedBtnHover == id
                                           ? "salmon"
-                                          : "black"
-                                        : suggestedBtnHover == ele?.name
-                                        ? "salmon"
-                                        : "black",
+                                          : "black",
                                       margin: 0,
                                       marginBottom: "6px",
                                       cursor: "pointer",
@@ -641,13 +667,10 @@ function App() {
                                       style={{
                                         margin: 0,
                                         fontSize: "13.5px",
-                                        color: ele?.title
-                                          ? suggestedBtnHover == ele?.title
+                                        color:
+                                          suggestedBtnHover == id
                                             ? "white"
-                                            : "black"
-                                          : suggestedBtnHover == ele?.name
-                                          ? "white"
-                                          : "black",
+                                            : "black",
                                       }}
                                     >
                                       {ele?.release_date
@@ -683,13 +706,10 @@ function App() {
                                       style={{
                                         margin: 0,
                                         fontSize: "13.5px",
-                                        color: ele?.title
-                                          ? suggestedBtnHover == ele?.title
+                                        color:
+                                          suggestedBtnHover == id
                                             ? "white"
-                                            : "black"
-                                          : suggestedBtnHover == ele?.name
-                                          ? "white"
-                                          : "black",
+                                            : "black",
                                       }}
                                     >
                                       {ele?.vote_average
@@ -701,13 +721,10 @@ function App() {
                                         style={{
                                           margin: 0,
                                           fontSize: "13.5px",
-                                          color: ele?.title
-                                            ? suggestedBtnHover == ele?.title
+                                          color:
+                                            suggestedBtnHover == id
                                               ? "white"
-                                              : "black"
-                                            : suggestedBtnHover == ele?.name
-                                            ? "white"
-                                            : "black",
+                                              : "black",
                                           padding: "0.3rem",
                                           border: ele?.title
                                             ? suggestedBtnHover == ele?.title
@@ -1010,6 +1027,12 @@ function App() {
                                     </p> */}
                                       <p>
                                         <button
+                                          onMouseOver={() => {
+                                            setWatchBtnHover(true);
+                                          }}
+                                          onMouseLeave={() => {
+                                            setWatchBtnHover(false);
+                                          }}
                                           onClick={() => {
                                             navigate(
                                               `/detail/${movies[0]?.id}`
@@ -1018,17 +1041,60 @@ function App() {
                                           style={{
                                             borderRadius: "10px",
                                             padding: "0.5rem 0.9rem",
-                                            backgroundColor: "red",
-                                            color: "white",
+                                            backgroundColor: watchBtnHover
+                                              ? "red"
+                                              : "black",
+                                            color: !watchBtnHover
+                                              ? "red"
+                                              : "white",
                                             border: "none",
                                             cursor: "pointer",
                                             fontWeight: "bold",
+                                            border: "1px solid red",
                                           }}
                                         >
                                           WATCH
                                         </button>
                                       </p>
                                     </div>
+                                  </div>
+                                </div>
+                                <div
+                                  style={{
+                                    backgroundColor: "black",
+                                    paddingTop: "6rem",
+                                  }}
+                                >
+                                  <h2
+                                    style={{
+                                      color: "white",
+                                      textAlign: "center",
+                                      marginBottom: "2.3rem",
+                                    }}
+                                  >
+                                    Continue Watching
+                                  </h2>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      gap: "0.7rem",
+                                      justifyContent: "center",
+                                      flexWrap: "wrap",
+                                    }}
+                                  >
+                                    {continueWatching
+                                      .slice(0, 6)
+                                      .map((movie, id) => {
+                                        return (
+                                          <MovieCard
+                                            data={movie}
+                                            id={id}
+                                            key={id}
+                                            hoveredDiv={hoveredDiv}
+                                            setHoveredDiv={setHoveredDiv}
+                                          />
+                                        );
+                                      })}
                                   </div>
                                 </div>
                                 <div
@@ -1451,6 +1517,7 @@ function App() {
           />
           <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
           <Route path="/actor-info/:id/:name" element={<ActorInfo />} />
+          <Route path="/trending" element={<Trending />} />
         </Routes>
       </div>
     </div>

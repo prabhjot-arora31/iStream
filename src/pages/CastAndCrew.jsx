@@ -8,6 +8,12 @@ const CastAndCrew = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [credits, setCredits] = useState([]);
   const [hover, setHover] = useState("");
+  const [watchForCast, setWatchForCast] = useState(
+    localStorage.getItem("watch-for-cast") || ""
+  );
+  const [watchForCastImg, setWatchForCastImg] = useState(
+    localStorage.getItem("watch-for-cast-img") || ""
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +54,61 @@ const CastAndCrew = () => {
 
   return (
     <>
-      <h2 style={{ textAlign: "center", color: "white" }}>Cast</h2>
+      {watchForCast && (
+        <h1
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontSize: "28.3px",
+            marginTop: "30px",
+          }}
+        >
+          {watchForCast}
+        </h1>
+      )}
+      {watchForCastImg && (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src={
+              watchForCastImg
+                ? watchForCastImg.includes("themoviedb")
+                  ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                  : watchForCastImg ||
+                    "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                : "https://image.tmdb.org/t/p/w1280" + watchForCastImg
+            }
+            alt="Movie Cover"
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              maxWidth: "850px",
+              margin: "0 auto",
+              height: "auto",
+            }}
+          />
+        </div>
+      )}
+      <h2
+        style={{
+          textAlign: "center",
+          color: "white",
+          marginBottom: 0,
+          marginTop: "45px",
+        }}
+      >
+        Cast
+      </h2>
+      <div
+        style={{
+          width: "60px",
+          height: "3px",
+          backgroundColor: "red",
+          margin: "0 auto",
+          marginBottom: "18px",
+        }}
+      >
+        {" "}
+      </div>
       <div
         style={{
           display: "flex",
@@ -78,10 +138,8 @@ const CastAndCrew = () => {
                 backgroundColor: hover === crew.id ? "white" : "black",
               }}
               onClick={() => {
-                if (crew.known_for_department === "Acting") {
-                  localStorage.setItem("actor-photo", crew.profile_path);
-                  navigate("/actor-info/" + crew.id + "/" + crew.name);
-                }
+                localStorage.setItem("actor-photo", crew.profile_path);
+                navigate("/actor-info/" + crew.id + "/" + crew.name);
               }}
               onMouseOver={() => {
                 setHover(crew.id);
@@ -156,13 +214,34 @@ const CastAndCrew = () => {
           <path d="M10 15L3 7H17L10 15Z" fill="black" />
         </svg>
       </button>
-      <h2 style={{ textAlign: "center", color: "white" }}>Crew</h2>
+      <h2
+        style={{
+          textAlign: "center",
+          color: "white",
+          margin: 0,
+          marginTop: "45px",
+        }}
+      >
+        Crew
+      </h2>
+      <div
+        style={{
+          width: "75px",
+          height: "3px",
+          backgroundColor: "red",
+          margin: "0 auto",
+          marginBottom: "18px",
+        }}
+      >
+        {" "}
+      </div>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           gap: "0.6rem",
+          paddingBottom: "2rem",
           flexWrap: "wrap",
         }}
       >

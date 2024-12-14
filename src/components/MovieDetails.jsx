@@ -595,7 +595,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                       : navigate(`/cast-and-crew/${id}`);
                   }}
                 >
-                  Meet the Whole Team
+                  Cast & Crew
                 </button>
               </div>
               <div

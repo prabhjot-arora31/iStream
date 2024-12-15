@@ -4,11 +4,20 @@ import axios from "axios";
 import { Puff } from "react-loading-icons";
 import MovieCard from "./MovieCard";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Bowser from "bowser";
 
 const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const { id, tv } = useParams(); // Get movie ID from route params
   const [idToUse, setIdToUse] = useState(id);
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
+  useEffect(() => {
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    const browserName = browser.getBrowser().name;
+    setBrowserName(browserName);
+
+    return () => {};
+  }, []);
+
   const tastediveURL = "https://tastedive.com/api/similar";
   const [movieToRender, setMovieToRender] = useState({});
   const [watchBtnHover, setWatchBtnHover] = useState(false);
@@ -221,6 +230,23 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       setIsLoading(false);
     }
   };
+  const [browserName, setBrowserName] = useState("");
+  const [isBrave, setIsBrave] = useState(false);
+
+  useEffect(() => {
+    // Get the browser name from Bowser
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    const browserDetected = browser.getBrowser().name;
+
+    // Check if the user is using Brave (handling Brave's unique user agent)
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isBraveBrowser = userAgent.includes("brave");
+
+    setBrowserName(browserDetected);
+
+    // Set whether the browser is Brave based on user agent or Bowser detection
+    setIsBrave(isBraveBrowser);
+  }, []);
 
   useEffect(() => {
     fetchById();
@@ -257,6 +283,19 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
         position: "relative",
       }}
     >
+      {!navigator.brave?.isBrave() && (
+        <p
+          style={{
+            color: "lightgray",
+            textAlign: "center",
+            margin: 0,
+            fontSize: "14.5px",
+          }}
+        >
+          Please use Brave Browser for an ad-free experience !!
+        </p>
+      )}
+
       <div
         style={{
           position: "relative",

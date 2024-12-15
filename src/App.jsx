@@ -37,9 +37,12 @@ function App() {
   const navigate = useNavigate();
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [suggestedBtnHover, setSuggestedBtnHover] = useState();
+
   const [continueWatching, setContinueWatching] = useState(
     JSON.parse(localStorage.getItem("movies")) || []
   );
+  const [isTopScreen, setIsTopScreen] = useState(true);
+  const [isBottomScreen, setIsBottomScreen] = useState(false);
   const [topRatedTvShowsLoading, setTopRatedTvShowsLoading] = useState(true);
   const [watchBtnHover, setWatchBtnHover] = useState(false);
   const [topRatedTvShows, setTopRatedTvShows] = useState([]);
@@ -58,6 +61,28 @@ function App() {
       setTopRatedTvShowsLoading(false);
     }
   };
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const screenHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Check if we're near the bottom of the page (tolerance threshold)
+      if (documentHeight - (scrollPosition + screenHeight) <= 1) {
+        setIsTopScreen(false); // We're at or near the bottom
+        setIsBottomScreen(true);
+      } else {
+        setIsTopScreen(true); // We're not at the bottom
+        setIsBottomScreen(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const topRated = async () => {
     try {
       var page = Math.floor(Math.random() * 500);
@@ -114,6 +139,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [hoveredDiv, setHoveredDiv] = useState();
+  const [hoveredDiv2, setHoveredDiv2] = useState();
   const [searchBtnHover, setSearchBtnHover] = useState(false);
   const getMovieDetail = (detail) => {
     setMovieDetail(detail);
@@ -194,9 +220,9 @@ function App() {
     }
   };
   useEffect(() => {
-    document.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-    });
+    // document.addEventListener("contextmenu", (e) => {
+    //   e.preventDefault();
+    // });
     fetchByDifAPI();
     topRated();
     topRatedTv();
@@ -323,66 +349,73 @@ function App() {
                   minHeight: "100%",
                 }}
               >
-                <button
-                  onClick={() => {
-                    window.scrollTo({
-                      top: document.documentElement.scrollHeight, // Scroll to the bottom
-                      left: document.documentElement.scrollWidth, // Scroll to the right
-                      behavior: "smooth",
-                    });
-                  }}
-                  style={{
-                    color: "white",
-                    position: "fixed",
-                    right: "25px",
-                    bottom: "25px",
-                    zIndex: 20,
-                    backgroundColor: "red",
-                    border: "none",
-                    padding: "0.3rem 0.5rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                {isTopScreen && (
+                  <button
+                    onClick={() => {
+                      window.scrollTo({
+                        top: document.documentElement.scrollHeight, // Scroll to the bottom
+                        left: document.documentElement.scrollWidth, // Scroll to the right
+                        behavior: "smooth",
+                      });
+                      setIsTopScreen(false);
+                    }}
+                    style={{
+                      color: "white",
+                      position: "fixed",
+                      right: "25px",
+                      bottom: "25px",
+                      zIndex: 20,
+                      backgroundColor: "red",
+                      border: "none",
+                      padding: "0.3rem 0.5rem",
+                      cursor: "pointer",
+                    }}
                   >
-                    <path d="M10 15L3 7H17L10 15Z" fill="black" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => {
-                    window.scrollTo({
-                      top: 0, // Scroll to the bottom
-                      left: 0, // Scroll to the right
-                      behavior: "smooth",
-                    });
-                  }}
-                  style={{
-                    color: "white",
-                    position: "fixed",
-                    left: "25px",
-                    bottom: "25px",
-                    zIndex: 20,
-                    backgroundColor: "red",
-                    border: "none",
-                    padding: "0.3rem 0.5rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10 15L3 7H17L10 15Z" fill="black" />
+                    </svg>
+                  </button>
+                )}
+                {isBottomScreen && (
+                  <button
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0, 
+                        left: 0, 
+                        behavior: "smooth",
+                      });
+                      setIsTopScreen(true);
+                    }}
+                    style={{
+                      color: "white",
+                      position: "fixed",
+                      left: "25px",
+                      bottom: "25px",
+                      zIndex: 20,
+                      backgroundColor: "red",
+                      border: "none",
+                      padding: "0.3rem 0.5rem",
+                      cursor: "pointer",
+                    }}
                   >
-                    <path d="M10 5L3 13H17L10 5Z" fill="black" />
-                  </svg>
-                </button>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10 5L3 13H17L10 5Z" fill="black" />
+                    </svg>
+                  </button>
+                )}
+
                 <div
                   style={{
                     // margin: "10px auto",
@@ -923,6 +956,8 @@ function App() {
                                     display: "flex",
                                     flexDirection: "column",
                                     position: "relative",
+                                    backgroundColor: "black",
+
                                     top: "30px",
                                   }}
                                 >
@@ -935,14 +970,16 @@ function App() {
                                       backgroundColor: "black",
                                       alignItems: "center",
                                       justifyContent: "center",
+                                      backgroundColor: "black",
                                     }}
                                   >
                                     <div
                                       style={{
-                                        maxWidth: "800px",
+                                        maxWidth: "1200px",
                                         display: "flex",
                                         flexWrap: "wrap",
                                         justifyContent: "center",
+                                        backgroundColor: "black",
                                       }}
                                     >
                                       <img
@@ -950,7 +987,7 @@ function App() {
                                         style={{
                                           objectFit: "cover",
                                           width: "100%",
-                                          maxWidth: "760px",
+                                          maxWidth: "960px",
                                           height: "auto",
                                         }}
                                       />
@@ -1090,8 +1127,8 @@ function App() {
                                             data={movie}
                                             id={id}
                                             key={id}
-                                            hoveredDiv={hoveredDiv}
-                                            setHoveredDiv={setHoveredDiv}
+                                            hoveredDiv={hoveredDiv2}
+                                            setHoveredDiv={setHoveredDiv2}
                                           />
                                         );
                                       })}

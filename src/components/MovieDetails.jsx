@@ -289,6 +289,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             color: "lightgray",
             textAlign: "center",
             margin: 0,
+            marginTop:'7.853px',
             fontSize: "14.5px",
           }}
         >

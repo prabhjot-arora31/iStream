@@ -36,7 +36,7 @@ function App() {
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
   const [topRatedMovies, setTopRatedMovies] = useState([]);
-  const [suggestedBtnHover, setSuggestedBtnHover] = useState("");
+  const [suggestedBtnHover, setSuggestedBtnHover] = useState();
   const [continueWatching, setContinueWatching] = useState(
     JSON.parse(localStorage.getItem("movies")) || []
   );

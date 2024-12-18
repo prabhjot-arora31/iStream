@@ -1119,7 +1119,7 @@ function App() {
                                       flexWrap: "wrap",
                                     }}
                                   >
-                                    {continueWatching
+                                    {continueWatching.reverse()
                                       .slice(0, 6)
                                       .map((movie, id) => {
                                         return (

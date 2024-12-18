@@ -5,7 +5,7 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
   const navigate = useNavigate();
   useEffect(() => {
     (() => {
-      // console.log("in movie card:", data);
+      console.log("in movie card:", data);
     })();
 
     return () => {};
@@ -127,7 +127,11 @@ const MovieCard = ({ data, getMovieDetail, id, setHoveredDiv, hoveredDiv }) => {
           }}
         >
           <span style={{ opacity: 1, color: "white" }}>
-            {data?.Type || data?.first_air_date ? "series" : "movie"}
+            {data?.Type
+              ? data?.Type
+              : data?.first_air_date
+              ? "series"
+              : "movie"}
           </span>
         </h4>
       </div>

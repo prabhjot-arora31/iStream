@@ -170,7 +170,7 @@ function App() {
   `
         );
         // //console.log("by name: " + data.data.result.data);
-        //console.log("all:", data);
+        console.log("all:", data);
         setMovies(data.data.Search);
         setTypeText("All");
         if (data.data.Search.length <= 0) {
@@ -386,8 +386,8 @@ function App() {
                   <button
                     onClick={() => {
                       window.scrollTo({
-                        top: 0, 
-                        left: 0, 
+                        top: 0,
+                        left: 0,
                         behavior: "smooth",
                       });
                       setIsTopScreen(true);
@@ -869,12 +869,12 @@ function App() {
                                     fontSize: "15px",
 
                                     backgroundColor:
-                                      typeText == "All" ? "purple" : "white",
+                                      typeText == "All" ? "red" : "white",
                                     color:
-                                      typeText != "All" ? "purple" : "white",
+                                      typeText != "All" ? "black" : "white",
                                     border:
                                       typeText != "All"
-                                        ? "1px solid purple"
+                                        ? "1px solid red"
                                         : "none",
                                     cursor: "pointer",
                                   }}
@@ -899,12 +899,12 @@ function App() {
                                     fontSize: "15px",
 
                                     backgroundColor:
-                                      typeText == "Movie" ? "purple" : "white",
+                                      typeText == "Movie" ? "red" : "white",
                                     color:
-                                      typeText != "Movie" ? "purple" : "white",
+                                      typeText != "Movie" ? "black" : "white",
                                     border:
                                       typeText != "Movie"
-                                        ? "1px solid purple"
+                                        ? "1px solid red"
                                         : "none",
                                     cursor: "pointer",
                                   }}
@@ -929,12 +929,12 @@ function App() {
                                     fontSize: "15px",
                                     borderRadius: "0.3rem",
                                     backgroundColor:
-                                      typeText == "Series" ? "purple" : "white",
+                                      typeText == "Series" ? "red" : "white",
                                     color:
-                                      typeText != "Series" ? "purple" : "white",
+                                      typeText != "Series" ? "black" : "white",
                                     border:
                                       typeText != "Series"
-                                        ? "1px solid purple"
+                                        ? "1px solid red"
                                         : "none",
                                   }}
                                 >
@@ -1119,7 +1119,8 @@ function App() {
                                       flexWrap: "wrap",
                                     }}
                                   >
-                                    {[...continueWatching].reverse()
+                                    {[...continueWatching]
+                                      .reverse()
                                       .slice(0, 6)
                                       .map((movie, id) => {
                                         return (
@@ -1439,14 +1440,12 @@ function App() {
                               padding: "0.38rem",
                               borderRadius: "0.3rem",
                               backgroundColor: `${
-                                typeText === "All" ? "purple" : "white"
+                                typeText === "All" ? "red" : "white"
                               }`,
                               border: `${
-                                typeText !== "All" ? "2px solid purple" : ""
+                                typeText !== "All" ? "2px solid red" : ""
                               }`,
-                              color: `${
-                                typeText !== "All" ? "purple" : "white"
-                              }`,
+                              color: `${typeText !== "All" ? "red" : "white"}`,
                               cursor: "pointer",
                             }}
                           >
@@ -1468,13 +1467,13 @@ function App() {
                               padding: "0.38rem",
                               borderRadius: "0.3rem",
                               backgroundColor: `${
-                                typeText === "Movie" ? "purple" : "white"
+                                typeText === "Movie" ? "red" : "white"
                               }`,
                               border: `${
-                                typeText !== "Movie" ? "2px solid purple" : ""
+                                typeText !== "Movie" ? "2px solid red" : ""
                               }`,
                               color: `${
-                                typeText !== "Movie" ? "purple" : "white"
+                                typeText !== "Movie" ? "red" : "white"
                               }`,
 
                               cursor: "pointer",
@@ -1500,13 +1499,13 @@ function App() {
 
                               borderRadius: "0.3rem",
                               backgroundColor: `${
-                                typeText === "Series" ? "purple" : "white"
+                                typeText === "Series" ? "red" : "white"
                               }`,
                               border: `${
-                                typeText !== "Series" ? "2px solid purple" : ""
+                                typeText !== "Series" ? "2px solid red" : ""
                               }`,
                               color: `${
-                                typeText !== "Series" ? "purple" : "white"
+                                typeText !== "Series" ? "red" : "white"
                               }`,
                             }}
                           >

@@ -386,7 +386,7 @@ const History = ({ getMovieDetail }) => {
                   );
                 })
               ) : (
-                <p style={{ fontWeight: "bold", fontSize: "18px" }}>
+                <p style={{ fontWeight: "bold", fontSize: "18px", color:'white' }}>
                   No Search History Available!!!
                 </p>
               )}

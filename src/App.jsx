@@ -1095,7 +1095,7 @@ function App() {
                                       </p>
                                     </div>
                                   </div>
-                                </div>
+                                </div> { continueWatching.length > 0 &&
                                 <div
                                   style={{
                                     backgroundColor: "black",
@@ -1134,7 +1134,7 @@ function App() {
                                         );
                                       })}
                                   </div>
-                                </div>
+                                </div> }
                                 <div
                                   style={{
                                     margin: 0,

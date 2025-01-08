@@ -220,9 +220,9 @@ function App() {
     }
   };
   useEffect(() => {
-    // document.addEventListener("contextmenu", (e) => {
-    //   e.preventDefault();
-    // });
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
     fetchByDifAPI();
     topRated();
     topRatedTv();
@@ -1095,46 +1095,48 @@ function App() {
                                       </p>
                                     </div>
                                   </div>
-                                </div> { continueWatching.length > 0 &&
-                                <div
-                                  style={{
-                                    backgroundColor: "black",
-                                    paddingTop: "6rem",
-                                  }}
-                                >
-                                  <h2
-                                    style={{
-                                      color: "white",
-                                      textAlign: "center",
-                                      marginBottom: "2.3rem",
-                                    }}
-                                  >
-                                    Continue Watching
-                                  </h2>
+                                </div>{" "}
+                                {continueWatching.length > 0 && (
                                   <div
                                     style={{
-                                      display: "flex",
-                                      gap: "0.7rem",
-                                      justifyContent: "center",
-                                      flexWrap: "wrap",
+                                      backgroundColor: "black",
+                                      paddingTop: "6rem",
                                     }}
                                   >
-                                    {[...continueWatching]
-                                      .reverse()
-                                      .slice(0, 6)
-                                      .map((movie, id) => {
-                                        return (
-                                          <MovieCard
-                                            data={movie}
-                                            id={id}
-                                            key={id}
-                                            hoveredDiv={hoveredDiv2}
-                                            setHoveredDiv={setHoveredDiv2}
-                                          />
-                                        );
-                                      })}
+                                    <h2
+                                      style={{
+                                        color: "white",
+                                        textAlign: "center",
+                                        marginBottom: "2.3rem",
+                                      }}
+                                    >
+                                      Continue Watching
+                                    </h2>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        gap: "0.7rem",
+                                        justifyContent: "center",
+                                        flexWrap: "wrap",
+                                      }}
+                                    >
+                                      {[...continueWatching]
+                                        .reverse()
+                                        .slice(0, 6)
+                                        .map((movie, id) => {
+                                          return (
+                                            <MovieCard
+                                              data={movie}
+                                              id={id}
+                                              key={id}
+                                              hoveredDiv={hoveredDiv2}
+                                              setHoveredDiv={setHoveredDiv2}
+                                            />
+                                          );
+                                        })}
+                                    </div>
                                   </div>
-                                </div> }
+                                )}
                                 <div
                                   style={{
                                     margin: 0,

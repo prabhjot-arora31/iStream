@@ -10,16 +10,24 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const { id, tv } = useParams(); // Get movie ID from route params
   const [idToUse, setIdToUse] = useState(id);
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
+  const location = useLocation();
+  const [movieToRender, setMovieToRender] = useState({});
+  // Set browser name when component mounts
   useEffect(() => {
     const browser = Bowser.getParser(window.navigator.userAgent);
     const browserName = browser.getBrowser().name;
     setBrowserName(browserName);
-
-    return () => {};
   }, []);
 
+  // Set document title when movieToRender changes
+  useEffect(() => {
+    if (movieToRender && Object.keys(movieToRender).length > 0) {
+      // Check if movieToRender is not empty
+      document.title = movieToRender?.Title || movieToRender?.name || "Watch";
+    }
+  }, [movieToRender?.Title, movieToRender?.name]);
+
   const tastediveURL = "https://tastedive.com/api/similar";
-  const [movieToRender, setMovieToRender] = useState({});
   const [watchBtnHover, setWatchBtnHover] = useState(false);
   const [castHover, setCastHover] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +42,6 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recommendedMovieLoading, setRecommendedMovieLoading] = useState(true);
   const [hoveredDiv, setHoveredDiv] = useState();
-  const location = useLocation();
   const navigate = useNavigate();
   const [rbHover, setRbHover] = useState(false);
   const [totalEpisodes, setTotalEpisodes] = useState([]);
@@ -289,7 +296,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
             color: "lightgray",
             textAlign: "center",
             margin: 0,
-            marginTop:'7.853px',
+            marginTop: "7.853px",
             fontSize: "14.5px",
           }}
         >

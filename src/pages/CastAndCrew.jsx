@@ -112,10 +112,9 @@ const CastAndCrew = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          overflowX: "auto",
+          scrollbarColor: "black red",
           gap: "0.6rem",
-          flexWrap: "wrap",
         }}
       >
         {credits?.cast?.map((crew, id) => {
@@ -134,7 +133,7 @@ const CastAndCrew = () => {
                 width: "160px",
                 borderRadius: "7px",
                 transition: "0.2s ease-in-out",
-                transform: hover === crew.id ? "scale(1.043)" : "scale(1)",
+                //transform: hover === crew.id ? "scale(1.043)" : "scale(1)",
                 backgroundColor: hover === crew.id ? "white" : "black",
               }}
               onClick={() => {
@@ -238,11 +237,10 @@ const CastAndCrew = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          overflowX: "auto",
+          scrollbarColor: "black red",
           gap: "0.6rem",
           paddingBottom: "2rem",
-          flexWrap: "wrap",
         }}
       >
         {credits?.crew?.map((crew, id) => {
@@ -256,7 +254,7 @@ const CastAndCrew = () => {
                 alignItems: "center",
                 flexDirection: "column",
                 backgroundColor: hover === id ? "white" : "black",
-                transform: hover === id ? "scale(1.043)" : "scale(1)",
+                //transform: hover === id ? "scale(1.043)" : "scale(1)",
                 cursor: "pointer",
                 gap: "0.3rem",
                 borderRadius: "7px",

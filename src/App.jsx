@@ -31,6 +31,7 @@ import CastAndCrew from "./pages/CastAndCrew";
 import ActorInfo from "./pages/ActorInfo";
 import Footer from "./components/Footer";
 import Trending from "./pages/Trending";
+import Gallery from "./pages/Gallery";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -220,9 +221,9 @@ function App() {
     }
   };
   useEffect(() => {
-    document.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-    });
+    // document.addEventListener("contextmenu", (e) => {
+    //   e.preventDefault();
+    // });
     fetchByDifAPI();
     topRated();
     topRatedTv();
@@ -1556,6 +1557,7 @@ function App() {
           <Route path="/cast-and-crew/:id/:tv?" element={<CastAndCrew />} />
           <Route path="/actor-info/:id/:name" element={<ActorInfo />} />
           <Route path="/trending" element={<Trending />} />
+          <Route path="/gallery/:id/:tv?" element={<Gallery />} />
         </Routes>
       </div>
     </div>

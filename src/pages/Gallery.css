@@ -1,0 +1,5 @@
+/* Firefox specific styling */
+.backdrop,
+.posters {
+  scrollbar-color: black red; /* thumb color, track color */
+}

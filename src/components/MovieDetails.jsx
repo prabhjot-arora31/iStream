@@ -33,6 +33,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [iFrameLoading, setIFrameLoading] = useState(false);
   const [meetTeamHover, setMeetTeamHover] = useState(false);
+  const [gallery, setGallery] = useState(false);
   const [tmdbId, setTmdbId] = useState("");
   const [credits, setCredits] = useState([]);
   const [crew, setCrew] = useState([]);
@@ -69,6 +70,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       if (id?.startsWith("tt")) {
         //alert("I am in tt");
         if (tv?.length > 0) {
+          const page = Math.floor(Math.random() * 10);
           const data1 = await axios.get(
             `https://api.tmdb.org/3/find/${id}?api_key=8cf43ad9c085135b9479ad5cf6bbcbda&language=en-US&external_source=imdb_id`
           );
@@ -114,8 +116,9 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           setRMovies([]);
           //console.log("mapping:", idToUse);
           // alert(id);
+          const page = Math.floor(Math.random() * 10);
           const { data } = await axios.get(
-            `https://api.tmdb.org/3/tv/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+            `https://api.tmdb.org/3/tv/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=${page}`
           );
           console.log("data is: ", data);
           setRMovies(data.results);
@@ -124,8 +127,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           setRecommendedMovieLoading(true);
           setRMovies([]);
           //console.log("mapping:", idToUse);
-          const { data } = await axios.get(
+          const data2 = await axios.get(
             `https://api.tmdb.org/3/movie/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=1`
+          );
+          const page = Math.floor(Math.random() * data2.data.total_pages) + 1;
+          const { data } = await axios.get(
+            `https://api.tmdb.org/3/movie/${id}/recommendations?api_key=fafef439971c0bedf1c12e7a5be971c2&page=${page}`
           );
           console.log("data is: ", data);
           setRMovies(data.results);
@@ -293,11 +300,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
       {!navigator.brave?.isBrave() && (
         <p
           style={{
-            color: "lightgray",
+            color: "gray",
             textAlign: "center",
             margin: 0,
             marginTop: "7.853px",
-            fontSize: "14.5px",
+            fontSize: "13.5px",
+            fontWeight: "700",
           }}
         >
           Please use Brave Browser for an ad-free experience !!
@@ -364,6 +372,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
               >
                 {!iFrameLoading ? (
                   <>
+                    {" "}
                     <iframe
                       style={{
                         // width: "100%",
@@ -402,12 +411,14 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                     />
                   </div>
                 )}
-                <div>
+                <div style={{ margin: 0 }}>
                   <h1
                     className="title"
                     style={{
                       fontWeight: "bolder",
                       fontSize: "2rem" /* Adjusted font-size */,
+                      margin: 0,
+                      marginBottom: "1.4rem",
                     }}
                   >
                     {movieToRender?.Title ||
@@ -643,6 +654,49 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                   }}
                 >
                   Cast & Crew
+                </button>
+                <button
+                  onMouseOver={() => {
+                    setGallery(true);
+                  }}
+                  onClick={() => {
+                    localStorage.setItem(
+                      "watch-for-cast",
+                      movieToRender?.Title ||
+                        movieToRender?.title ||
+                        movieToRender?.name
+                    );
+                    localStorage.setItem(
+                      "watch-for-cast-img",
+                      movieToRender?.Poster
+                        ? movieToRender?.backdrop_path?.includes("themoviedb")
+                          ? "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                          : movieToRender?.backdrop_path ||
+                            "https://moviereelist.com/wp-content/uploads/2019/07/poster-placeholder.jpg"
+                        : "https://image.tmdb.org/t/p/w1280" +
+                            movieToRender?.backdrop_path
+                    );
+                    tv?.length > 0 && id.startsWith("tt")
+                      ? navigate(`/gallery/${tmdbId}/tv`)
+                      : tv?.length > 0 && !id.startsWith("tt")
+                      ? navigate(`/gallery/${id}/tv`)
+                      : navigate(`/gallery/${id}`);
+                  }}
+                  onMouseLeave={() => {
+                    setGallery(false);
+                  }}
+                  style={{
+                    backgroundColor: !gallery ? "black" : "white",
+                    cursor: "pointer",
+                    border: "none",
+                    borderRadius: "10px",
+                    padding: "0.9rem",
+                    border: "1px solid white",
+                    marginLeft: "0.4rem",
+                    color: !gallery ? "white" : "black",
+                  }}
+                >
+                  Gallery
                 </button>
               </div>
               <div

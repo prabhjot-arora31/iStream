@@ -1,5 +1,8 @@
 .movie-suggestions::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
+}
+:root {
+  scrollbar-color: red;
 }
 html,
 body {
@@ -7,4 +10,16 @@ body {
   padding: 0;
   height: 100%; /* Allows the background to stretch */
   box-sizing: border-box;
+}
+.backdrop::-webkit-scrollbar-track {
+  background-color: red;
+}
+.backdrop::-webkit-scrollbar-thumb {
+  background-color: red; /* Gray thumb color */
+  border-radius: 10px; /* Optional: rounded corners for the thumb */
+}
+
+/* Hover effect for the scrollbar thumb */
+.backdrop::-webkit-scrollbar-thumb:hover {
+  background-color: red; /* Darker thumb color when hovered */
 }

@@ -11,6 +11,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
   const [idToUse, setIdToUse] = useState(id);
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const location = useLocation();
+  const [refreshPlayer, setRefreshPlayer] = useState(false);
+  const [refreshBtnHover, setRefreshBtnHover] = useState(false);
   const [movieToRender, setMovieToRender] = useState({});
   // Set browser name when component mounts
   useEffect(() => {
@@ -371,27 +373,97 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 }}
               >
                 {!iFrameLoading ? (
-                  <>
-                    {" "}
-                    <iframe
-                      style={{
-                        // width: "100%",
-                        // height: "100%",
-                        width: "420px",
-                        height: "420px",
-                        border: "1px solid white",
-                        borderRadius: "8px",
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column-reverse",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                    }}
+                  >
+                    <button
+                      onMouseOver={() => {
+                        setRefreshBtnHover(true);
                       }}
-                      allowFullScreen // Correct attribute
-                      scrolling="no"
-                      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      src={
-                        tv?.length > 0
-                          ? `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
-                          : `https://vidsrc.xyz/embed/movie/${id}`
-                      }
-                    ></iframe>
-                  </>
+                      onMouseLeave={() => {
+                        setRefreshBtnHover(false);
+                      }}
+                      onClick={() => {
+                        setRefreshPlayer(true);
+                        setTimeout(() => {
+                          setRefreshPlayer(false);
+                        }, 2000);
+                      }}
+                      style={{
+                        borderRadius: "0.4rem",
+                        cursor: "pointer",
+                        backgroundColor: "black",
+                        padding: "0.53rem",
+                        position: "relative",
+                        fontWeight: "bold",
+                        color: !refreshBtnHover ? "red" : "white",
+                        border: "2px solid red",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "red",
+                          width: "100%",
+                          height: "33px",
+                          position: "absolute",
+                          margin: 0,
+                          // zIndex: -1,
+                          top: !refreshBtnHover ? "40px" : "0px",
+                          left: !refreshBtnHover ? "10px" : 0,
+                          transition: "all .124215s ease-in-out",
+                          color: "black",
+                          paddingTop: "0.53rem",
+                        }}
+                      >
+                        Refresh Player
+                      </div>
+                      <span style={{ zIndex: 10 }}> Refresh Player</span>
+                    </button>{" "}
+                    {refreshPlayer ? (
+                      <div
+                        style={{
+                          width: "420px",
+                          height: "420px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Puff
+                          stroke="#ff0000"
+                          strokeOpacity={20.125}
+                          speed={0.75}
+                          width="50px"
+                          height="50px"
+                        />
+                      </div>
+                    ) : (
+                      <iframe
+                        style={{
+                          // width: "100%",
+                          // height: "100%",
+                          width: "420px",
+                          height: "420px",
+                          border: "1px solid white",
+                          borderRadius: "8px",
+                        }}
+                        allowFullScreen // Correct attribute
+                        scrolling="no"
+                        allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        src={
+                          tv?.length > 0
+                            ? `https://vidsrc.xyz/embed/tv/${id}/${currentSeason}/${currentEpisode}`
+                            : `https://vidsrc.xyz/embed/movie/${id}`
+                        }
+                      ></iframe>
+                    )}
+                  </div>
                 ) : (
                   <div
                     style={{

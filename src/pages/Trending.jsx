@@ -17,6 +17,20 @@ const Trending = () => {
   const [hoveredDiv, setHoveredDiv] = useState();
 
   useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+    div::-webkit-scrollbar {
+      width: 10px; /* Adjust scrollbar width */
+      border: 2px solid red; /* Add border */
+    }
+    div::-webkit-scrollbar-thumb {
+      background-color: red;
+    }
+    div::-webkit-scrollbar-track {
+      background-color: black;
+    }
+  `;
+    document.head.appendChild(style);
     (async () => {
       const randomM = Math.floor(Math.random() * 500) + 1;
       const randomTV = Math.floor(Math.random() * 500) + 1;
@@ -42,6 +56,7 @@ const Trending = () => {
 
     return () => {
       //   localStorage.removeItem("trending-set");
+      document.head.removeChild(style);
     };
   }, []);
   if (loading) {
@@ -160,11 +175,13 @@ const Trending = () => {
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
+              margin: "0 20px",
               alignItems: "center",
               gap: "0.7rem",
               backgroundColor: "black",
-              flexWrap: "wrap",
+              // flexWrap: "wrap",
+              overflowX: "auto",
+              scrollbarColor: "red white",
               paddingTop: "1.8rem",
             }}
           >
@@ -214,12 +231,14 @@ const Trending = () => {
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
+              scrollbarColor: "red white",
               alignItems: "center",
               gap: "0.7rem",
               backgroundColor: "black",
-              flexWrap: "wrap",
+              // flexWrap: "wrap",
+              overflowX: "auto",
               paddingTop: "1.8rem",
+              margin: "0 10px",
             }}
           >
             {trendingTV.map((movie, id) => {
@@ -269,12 +288,15 @@ const Trending = () => {
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
               gap: "0.7rem",
               backgroundColor: "black",
-              flexWrap: "wrap",
+              // flexWrap: "wrap",
+              overflowX: " auto",
+              scrollbarColor: "red white",
+              margin: "  0 20px",
               paddingTop: "1.8rem",
+              marginBottom: "2rem",
             }}
           >
             {trendingPerson.map((tp, id) => {
@@ -283,6 +305,7 @@ const Trending = () => {
                   style={{
                     border: "2px solid black",
                     padding: "0.4rem",
+                    paddingBottom: "0",
                     display: "flex",
                     justifyContent: "start",
                     alignItems: "center",
@@ -293,7 +316,6 @@ const Trending = () => {
                     width: "160px",
                     borderRadius: "7px",
                     transition: "0.2s ease-in-out",
-                    transform: hover === tp.id ? "scale(1.043)" : "scale(1)",
                     backgroundColor: hover === tp.id ? "white" : "black",
                   }}
                   onClick={() => {
@@ -337,7 +359,9 @@ const Trending = () => {
                       color: tp.character ? "gray" : "black",
                     }}
                   >
-                    <span style={{ fontWeight: "bold" }}>{tp?.character}</span>
+                    <span style={{ fontWeight: "bold", margin: 0 }}>
+                      {tp?.character}
+                    </span>
                   </p>
                 </div>
               );

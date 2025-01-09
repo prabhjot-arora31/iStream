@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Gallery.css";
+import Puff from "react-loading-icons/dist/esm/components/puff";
 const Gallery = () => {
   const { id, tv } = useParams();
   const [data, setdata] = useState([]);
   const [data2, setData2] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [detailedView, setDetailedView] = useState({
     isTrue: false,
     id: null,
@@ -24,6 +26,7 @@ const Gallery = () => {
         setData2(data2.data.results);
         console.log("data is: ", data2.data);
         setdata(data);
+        setLoading(false);
       } else {
         const { data } = await axios.get(
           `https://api.tmdb.org/3/tv/${id}/images?api_key=13e53ff644a8bd4ba37b3e1044ad24f3`
@@ -36,17 +39,37 @@ const Gallery = () => {
 
         console.log(data);
         setdata(data);
+        setLoading(false);
       }
     })();
 
     return () => {};
   }, []);
-  const bestLogo = data?.logos?.reduce((best, logo) => {
-    if (!best || logo.width > best.width) {
-      return logo;
-    }
-    return best;
-  }, null);
+  const bestLogo = data?.logos?.filter((ele) => {
+    console.log("ele:", ele);
+    return ele?.iso_639_1 == "en" && ele;
+  });
+  console.log("best logo is: ", bestLogo);
+  if (loading) {
+    return (
+      <div
+        style={{
+          margin: "0 auto",
+
+          width: "80px",
+          height: "80px",
+        }}
+      >
+        <Puff
+          stroke="#ff0000"
+          strokeOpacity={20.125}
+          speed={0.75}
+          width={"100%"}
+          height={"100%"}
+        />
+      </div>
+    );
+  }
   return (
     <div style={{ color: "white", position: "relative" }}>
       {detailedView.isTrue && (
@@ -54,7 +77,7 @@ const Gallery = () => {
           style={{
             position: "fixed",
             padding: "0.6rem",
-            top: "50%",
+            top: "65%",
             left: "50%",
             transform: "translate(-50%,-50%)",
             zIndex: "10",
@@ -62,7 +85,7 @@ const Gallery = () => {
         >
           <img
             src={`https://image.tmdb.org/t/p/w500/${detailedView.id}`}
-            style={{ margin: "0 auto" }}
+            style={{ margin: "0 auto", objectFit: "cover" }}
           />
           <p
             onClick={() => {
@@ -71,7 +94,9 @@ const Gallery = () => {
             style={{
               position: "absolute",
               top: 0,
-              right: "30px",
+              right: "50%",
+              padding: "0.5rem",
+              backgroundColor: "black",
               fontSize: "20px",
               cursor: "pointer",
               fontWeight: "bold",
@@ -91,8 +116,8 @@ const Gallery = () => {
           }}
         >
           <img
-            src={`https://image.tmdb.org/t/p/w500${bestLogo.file_path}`}
-            height={"190px"}
+            src={`https://image.tmdb.org/t/p/w500${bestLogo[0]?.file_path}`}
+            // height={"190px"}
             width={"190px"}
             style={{ margin: "0 auto" }}
           />
@@ -101,7 +126,7 @@ const Gallery = () => {
       <h2
         style={{ textAlign: "center", opacity: detailedView.isTrue && "40%" }}
       >
-        Backdrops
+        Backdrops {bestLogo?.file_path}
       </h2>
       <div
         className="backdrop"
@@ -109,7 +134,7 @@ const Gallery = () => {
           padding: "0.5rem",
           display: "flex",
           opacity: detailedView.isTrue && "40%",
-          scrollbarColor: "red",
+          scrollbarColor: "red white",
           gap: "0.4rem",
           overflowX: "auto",
           margin: "0 auto",
@@ -146,6 +171,7 @@ const Gallery = () => {
           overflowX: "auto",
           opacity: detailedView.isTrue && "40%",
           gap: "0.4rem",
+          scrollbarColor: "red white",
           marginBottom: "0.4rem",
         }}
       >
@@ -180,6 +206,7 @@ const Gallery = () => {
           overflowX: "auto",
           opacity: detailedView.isTrue && "40%",
           gap: "0.4rem",
+          scrollbarColor: "red white",
           marginBottom: "0.4rem",
         }}
       >
@@ -192,7 +219,14 @@ const Gallery = () => {
                   allowFullScreen
                 />
               )}
-              <p style={{ padding: "0.4rem", margin: 0, textAlign: "center" }}>
+              <p
+                style={{
+                  padding: "0.4rem",
+                  margin: 0,
+                  textAlign: "center",
+                  paddingBottom: 0,
+                }}
+              >
                 {ele.name} <span style={{ color: "gray" }}>({ele.type})</span>
               </p>
             </div>

@@ -6,19 +6,8 @@ import Header from "./components/Header";
 import axios from "axios";
 // import "./App.css";
 import MovieCard from "./components/MovieCard";
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import MovieDetails from "./components/MovieDetails";
-import { FaSpinner } from "react-icons/fa";
-import { FiLoader } from "react-icons/fi";
-import { LuLoader2 } from "react-icons/lu";
-import { TbLoaderQuarter } from "react-icons/tb";
-import { BiLoaderCircle } from "react-icons/bi";
 import Country from "./pages/Country";
 import MoviesByCountry from "./pages/MoviesByCountry";
 
@@ -29,7 +18,6 @@ import Puff from "react-loading-icons/dist/esm/components/puff";
 import RecommendedMovies from "./pages/RecommendedMovies";
 import CastAndCrew from "./pages/CastAndCrew";
 import ActorInfo from "./pages/ActorInfo";
-import Footer from "./components/Footer";
 import Trending from "./pages/Trending";
 import Gallery from "./pages/Gallery";
 
@@ -254,66 +242,7 @@ function App() {
   //     setMovies([]);
   //   };
   // }, [currentPage]);
-  const movieList = [
-    "The Dark Knight",
-    "Inception",
-    "Avengers: Endgame",
-    "Parasite",
-    "The Godfather",
-    "My Demon",
-    "Dilwale Dulhania Le Jayenge",
-    "3 Idiots",
-    "Thor",
-    "My Girlfriend Is An Alien",
-    "Kabhi Khushi Kabhie Gham",
-    "The Matrix",
-    "Joker",
-    "Pulp Fiction",
-    "The Lion King",
-    "Interstellar",
-    "Lagaan",
-    "12 Angry Men",
-    "Fight Club",
-    "The Pursuit of Happyness",
-    "Coco",
-    "Star Wars: A New Hope",
-    "Black Panther",
-    "Your Name",
-    "The Notebook",
-    "The Shawshank Redemption",
-    "Squid Game",
-    "The Avengers",
-    "The Walking Dead",
-    "The Grand Budapest Hotel",
-    "The Raid",
-    "A Quiet Place",
-    "The Witch",
-    "The Silence of the Lambs",
-    "La La Land",
-    "The Conjuring",
-    "The Exorcist",
-    "7 Khoon Maaf",
-    "Andhadhun",
-    "Taare Zameen Par",
-    "Sita Ramam",
-    "Koi Mil Gaya",
-    "The Family Man",
-    "Money Heist",
-    "Stranger Things",
-    "Game of Thrones",
-    "Goblin",
-    "Crash Landing on You",
-    "My Name",
-    "The King's Affection",
-    "The Notebook",
-    "Wonder Woman",
-  ];
 
-  const getRandomMovies = () => {
-    // Shuffle the movie list and get the first 5 items
-    const shuffledMovies = movieList.sort(() => 0.5 - Math.random());
-    return shuffledMovies.slice(0, 5);
-  };
   const [selectedMovies, setSelectedMovies] = useState([]);
 
   return (
@@ -968,7 +897,6 @@ function App() {
                                       display: "flex",
                                       flexWrap: "wrap",
                                       gap: "0.6rem",
-                                      backgroundColor: "black",
                                       alignItems: "center",
                                       justifyContent: "center",
                                       backgroundColor: "black",
@@ -1085,7 +1013,6 @@ function App() {
                                             color: !watchBtnHover
                                               ? "red"
                                               : "white",
-                                            border: "none",
                                             cursor: "pointer",
                                             fontWeight: "bold",
                                             border: "1px solid red",
@@ -1172,7 +1099,7 @@ function App() {
                                 </div>
                               </>
                             )}
-                            <div
+                            {/* <div
                               style={{
                                 display: "flex",
                                 justifyContent: "center",
@@ -1201,7 +1128,7 @@ function App() {
                                       />
                                     );
                                 })}
-                            </div>
+                            </div> */}
                             {movies[0].poster_path && (
                               <div
                                 style={{
@@ -1240,7 +1167,6 @@ function App() {
                                       style={{
                                         margin: 0,
                                         textAlign: "left",
-
                                         fontSize: "27px",
                                         color: "white",
                                       }}

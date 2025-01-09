@@ -175,7 +175,8 @@ const Trending = () => {
           <div
             style={{
               display: "flex",
-              margin: "0 20px",
+              margin: "0 10px",
+
               alignItems: "center",
               gap: "0.7rem",
               backgroundColor: "black",

@@ -448,8 +448,8 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                         style={{
                           // width: "100%",
                           // height: "100%",
-                          width: "420px",
-                          height: "420px",
+                          width: "380px",
+                          height: "380px",
                           border: "1px solid white",
                           borderRadius: "8px",
                         }}

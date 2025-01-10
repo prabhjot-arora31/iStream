@@ -209,9 +209,9 @@ function App() {
     }
   };
   useEffect(() => {
-    // document.addEventListener("contextmenu", (e) => {
-    //   e.preventDefault();
-    // });
+     document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
     fetchByDifAPI();
     topRated();
     topRatedTv();

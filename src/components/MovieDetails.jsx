@@ -141,8 +141,12 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
           setRecommendedMovieLoading(false);
         }
       }
+      if(rMovies.length == 0){
+        setRecommendedMovieLoading(false)
+      }
     } catch (e) {
       console.log(e.message);
+      setRecommendedMovieLoading(false)
     }
     try {
     } catch (error) {

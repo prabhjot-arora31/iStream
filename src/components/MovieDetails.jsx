@@ -925,7 +925,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 ))}
               </div>
             </div>
-            <div
+  { rMovies.length > 0 &&  <div
               style={{
                 padding: "0.8rem",
                 border: "1px solid red",
@@ -1004,6 +1004,7 @@ const MovieDetails = ({ getMovieDetail, MovieDetail }) => {
                 WATCH
               </button>
             </div>
+  }
           </div>
         </div>
       </div>
